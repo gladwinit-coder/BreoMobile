@@ -515,7 +515,7 @@ textarea{resize:vertical;min-height:80px;}
               <button class="vg-style-btn" data-style="neon" onclick="setVgStyle(this)">🌈 Neon</button>
               <button class="vg-style-btn" data-style="gold" onclick="setVgStyle(this)">👑 Gold</button>
               <button class="vg-style-btn" data-style="dark" onclick="setVgStyle(this)">🌑 Dark</button>
-              <button class="vg-style-btn" data-style="wan2" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(0,200,255,.10);border-color:rgba(0,200,255,.35);color:#00c8ff;font-size:12px;padding:10px;">🤖 Wan2.1 Real AI Video (via Replicate)</button>
+              <button class="vg-style-btn" data-style="wan2" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(0,200,255,.10);border-color:rgba(0,200,255,.35);color:#00c8ff;font-size:12px;padding:10px;">🤖 Free AI (HuggingFace) (via Replicate)</button>
             </div>
           </div>
           <button class="vg-generate-btn" id="vgGenerateBtn" onclick="handleGenerate()">
@@ -550,16 +550,16 @@ textarea{resize:vertical;min-height:80px;}
 
     <!-- WAN2.1 SETTINGS CARD (shown below videogen when wan2 style selected) -->
     <div class="wan2-card" id="wan2Card">
-      <h3>🤖 Wan2.1 AI Video — Real Video Generation</h3>
-      <p class="sub">Wan2.1 is an open-source AI video model by Alibaba. It generates realistic 5-second videos from text. Runs via <strong style="color:#00c8ff;">Replicate</strong> cloud API (free tier available).</p>
+      <h3>🤖 Free AI Video Generator (HuggingFace)</h3>
+      <p class="sub">100% free — no credit card needed. Uses HuggingFace's open-source text-to-video model. Just create a free account and get a token.</p>
       <div style="background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;">
-        <span class="wan2-step-badge">1</span> Sign up at <a href="https://replicate.com" target="_blank" style="color:#00c8ff;">replicate.com</a> and <strong style="color:#fbbf24;">add billing credits</strong> (required — ~$0.01/video)
-        <span class="wan2-step-badge">2</span> Go to Account → API tokens → copy your key
-        <span class="wan2-step-badge">3</span> Paste below once → key is saved for future sessions
+        <span class="wan2-step-badge">1</span> Sign up FREE at <a href="https://huggingface.co/join" target="_blank" style="color:#00c8ff;">huggingface.co/join</a> — no credit card required
+        <span class="wan2-step-badge">2</span> Go to Settings → Access Tokens → New token (read access)
+        <span class="wan2-step-badge">3</span> Paste below once → saved forever
       </div>
       <div id="wan2KeySetup">
         <div class="wan2-key-wrap">
-          <input type="password" id="wan2ApiKey" placeholder="r8_xxxxxxxxxxxxxxxxxxxx (your Replicate API key)">
+          <input type="password" id="wan2ApiKey" placeholder="hf_xxxxxxxxxxxxxxxxxxxx (your HuggingFace token)">
           <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
         </div>
       </div>
@@ -574,7 +574,7 @@ textarea{resize:vertical;min-height:80px;}
       </div>
       <button class="wan2-gen-btn" id="wan2GenBtn" onclick="generateWithWan2()">
         <span class="shimmer"></span>
-        🤖 Generate Real AI Video (~60–120s)
+        🤖 Generate Free AI Video (~60–120s)
       </button>
       <div class="wan2-status" id="wan2Status"></div>
       <video id="wan2ResultVideo" class="wan2-result-video" controls playsinline></video>
@@ -1233,13 +1233,13 @@ let wan2VideoUrl=null;
 function saveWan2Key(){
   const k=document.getElementById('wan2ApiKey').value.trim();
   if(!k){toast('Paste your Replicate API key first.');return;}
-  localStorage.setItem('breo_replicate_key',k);
+  localStorage.setItem('breo_hf_key',k);
   document.getElementById('wan2KeySetup').style.display='none';
   const saved=document.getElementById('wan2KeySaved');saved.style.display='flex';
   toast('🔑 API key saved — you won\'t need to enter it again!');
 }
 function clearWan2Key(){
-  localStorage.removeItem('breo_replicate_key');
+  localStorage.removeItem('breo_hf_key');
   document.getElementById('wan2ApiKey').value='';
   document.getElementById('wan2KeySetup').style.display='block';
   document.getElementById('wan2KeySaved').style.display='none';
@@ -1255,8 +1255,8 @@ function updateWan2Prompt(){
   document.getElementById('wan2Prompt').value=prompt;
 }
 async function generateWithWan2(){
-  const apiKey=localStorage.getItem('breo_replicate_key')||document.getElementById('wan2ApiKey').value.trim();
-  if(!apiKey){toast('Enter your Replicate API key first.');document.getElementById('wan2ApiKey').focus();return;}
+  const hfToken=localStorage.getItem('breo_hf_key')||document.getElementById('wan2ApiKey').value.trim();
+  if(!hfToken){toast('Enter your HuggingFace token first.');document.getElementById('wan2ApiKey').focus();return;}
   const prompt=document.getElementById('wan2Prompt').value.trim();
   if(!prompt){updateWan2Prompt();return;}
   const btn=document.getElementById('wan2GenBtn');
@@ -1264,47 +1264,25 @@ async function generateWithWan2(){
   const video=document.getElementById('wan2ResultVideo');
   const dlWrap=document.getElementById('wan2DlWrap');
   btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
-  status.innerHTML='<span style="color:#00c8ff;">⏳ Sending to Replicate...</span>';
+  status.innerHTML='<span style="color:#00c8ff;">⏳ Sending to HuggingFace AI...</span>';
   try{
-    // Create prediction via our CORS-safe serverless proxy
-    const createResp=await fetch('/api/wan2-create',{
+    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating AI video — this takes 60–120s on free tier...</span>';
+    const resp=await fetch('/api/hf-video',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt,apiKey})
+      body:JSON.stringify({prompt,hfToken})
     });
-    if(!createResp.ok){
-      const err=await createResp.json().catch(()=>({}));
-      throw new Error(err.error||'API error '+createResp.status+'. Check your API key.');
+    if(!resp.ok){
+      const err=await resp.json().catch(()=>({}));
+      throw new Error(err.error||'HuggingFace error '+resp.status);
     }
-    const pred=await createResp.json();
-    if(pred.detail||pred.error){throw new Error(pred.detail||pred.error);}
-    const predId=pred.id;
-    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating video (ID: '+predId.slice(0,8)+'...) This takes ~60–90s</span>';
-    // Poll via proxy
-    let attempts=0;const maxAttempts=90;
-    while(attempts<maxAttempts){
-      await new Promise(r=>setTimeout(r,2000));
-      attempts++;
-      const pollResp=await fetch('/api/wan2-poll',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({predictionId:predId,apiKey})});
-      const data=await pollResp.json();
-      const pct=Math.min(95,Math.round((attempts/maxAttempts)*100));
-      if(data.status==='succeeded'){
-        const outUrl=Array.isArray(data.output)?data.output[0]:data.output;
-        if(!outUrl)throw new Error('No output URL returned.');
-        wan2VideoUrl=outUrl;
-        video.src=outUrl;video.style.display='block';
-        dlWrap.style.display='block';
-        status.innerHTML='<span style="color:#34C759;">✅ Video ready! Download or Share to Instagram.</span>';
-        toast('🤖 Wan2.1 video generated!');
-        break;
-      } else if(data.status==='failed'){
-        throw new Error('Generation failed: '+(data.error||'unknown error'));
-      } else {
-        const phase=data.status==='starting'?'Starting model...':data.logs?data.logs.split('\n').filter(Boolean).pop()||'Processing...':'Processing...';
-        status.innerHTML='<span style="color:#00c8ff;">'+pct+'% — '+phase.slice(0,80)+'</span>';
-      }
-    }
-    if(!wan2VideoUrl)throw new Error('Timed out after 3 minutes. Try again.');
+    const blob=await resp.blob();
+    const objUrl=URL.createObjectURL(blob);
+    wan2VideoUrl=objUrl;
+    video.src=objUrl;video.style.display='block';
+    dlWrap.style.display='block';
+    status.innerHTML='<span style="color:#34C759;">✅ AI video ready! Download or post to Instagram.</span>';
+    toast('🤖 Free AI video generated!');
   }catch(e){
     status.innerHTML='<span style="color:var(--red);">❌ '+e.message+'</span>';
     toast('Error: '+e.message.slice(0,60));
@@ -1317,18 +1295,57 @@ function downloadWan2Video(){
 }
 async function shareWan2ToInstagram(){
   if(!wan2VideoUrl){toast('Generate a video first.');return;}
-  try{
-    const resp=await fetch(wan2VideoUrl);const blob=await resp.blob();
-    const file=new File([blob],'breo-offer.mp4',{type:'video/mp4'});
-    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-      const caption=document.getElementById('captionOutput')?.textContent||'Amazing iPhone deal!';
-      await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});return;
-    }
-  }catch(e){}
-  window.open(wan2VideoUrl,'_blank');
-  const ig=localStorage.getItem('breo_ig');
-  setTimeout(()=>window.open(ig?'https://www.instagram.com/'+ig+'/':'https://www.instagram.com/','_blank'),800);
-  toast('Video opened — save & upload to Instagram!');
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // ── Mobile: use Web Share API → opens system share sheet → Instagram ──
+  if(isMobile){
+    try{
+      let blob;
+      if(wan2VideoUrl.startsWith('blob:')){
+        const r=await fetch(wan2VideoUrl);blob=await r.blob();
+      } else {
+        const r=await fetch(wan2VideoUrl);blob=await r.blob();
+      }
+      const file=new File([blob],'breo-offer.mp4',{type:'video/mp4'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        const caption=document.getElementById('captionOutput')?.textContent||'Exclusive deals at Breo Mobile! 🔥 #Apple #iPhone #Dubai';
+        await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});
+        return;
+      }
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  // ── Desktop: download video + show Instagram instructions overlay ──
+  showInstagramOverlay();
+}
+function showInstagramOverlay(){
+  let ov=document.getElementById('igOverlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='igOverlay';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.innerHTML=`<div style="background:#0a1530;border:1px solid rgba(0,200,255,.3);border-radius:20px;padding:28px;max-width:380px;width:100%;text-align:center;">
+      <div style="font-size:32px;margin-bottom:8px;">📲</div>
+      <h3 style="color:#fff;font-size:17px;margin-bottom:6px;">Post to Instagram</h3>
+      <p style="color:rgba(255,255,255,.55);font-size:13px;margin-bottom:20px;line-height:1.6;">Follow these steps to post your video directly on Instagram:</p>
+      <div style="text-align:left;background:rgba(255,255,255,.04);border-radius:12px;padding:14px;margin-bottom:18px;font-size:13px;color:rgba(255,255,255,.75);line-height:2;">
+        <div>① Click <strong style="color:#34C759;">Download Video</strong> below</div>
+        <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap <strong>+</strong> → Reel or Post</div>
+        <div>③ Select the downloaded video from your gallery</div>
+        <div>④ Add caption & post! 🚀</div>
+      </div>
+      <button onclick="triggerWan2Download();document.getElementById('igOverlay').remove();" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;">⬇ Download Video</button>
+      <button onclick="window.open('https://www.instagram.com/','_blank');document.getElementById('igOverlay').remove();" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;">Open Instagram.com</button>
+      <button onclick="document.getElementById('igOverlay').remove();" style="background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
+    </div>`;
+    document.body.appendChild(ov);
+    ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  } else {
+    ov.style.display='flex';
+  }
+}
+function triggerWan2Download(){
+  if(!wan2VideoUrl)return;
+  const a=document.createElement('a');a.href=wan2VideoUrl;
+  a.download='breo-promo-'+Date.now()+'.mp4';document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
 
 // ─── CUSTOM PRODUCTS ───
@@ -1483,7 +1500,7 @@ function init(){
   if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
   renderDcPanel();
   // Restore wan2 key
-  const w2k=localStorage.getItem('breo_replicate_key');
+  const w2k=localStorage.getItem('breo_hf_key');
   if(w2k){
     const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
     const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
