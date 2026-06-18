@@ -252,6 +252,13 @@ textarea{resize:vertical;min-height:80px;}
   .dc-prod-row .dc-badge,.dc-prod-row .dc-price-input{display:none;}
 }
 
+/* ─── ADD PRODUCT ─── */
+.add-prod-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(52,199,89,.08);border:1px dashed rgba(52,199,89,.3);color:#34C759;padding:14px;font-size:14px;font-weight:700;cursor:pointer;border-radius:14px;transition:all .2s;width:100%;font-family:inherit;margin-top:16px;}
+.add-prod-btn:hover{background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.5);}
+.del-custom-btn{background:rgba(255,69,58,.1);color:var(--red);border:none;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}
+/* ─── IG SHARE ─── */
+.ig-share-btn{width:100%;max-width:280px;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:none;transition:opacity .2s,transform .15s;margin-top:8px;}
+.ig-share-btn:hover{opacity:.9;transform:translateY(-1px);}
 /* ─── RESPONSIVE ─── */
 @media(max-width:600px){
   .admin-body{padding:70px 16px 40px;}
@@ -485,6 +492,7 @@ textarea{resize:vertical;min-height:80px;}
           <div class="vg-field">
             <label>🎨 Video Style</label>
             <div class="vg-style-grid" id="vgStyleGrid">
+              <button class="vg-style-btn" data-style="presenter" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(255,140,0,.12);border-color:rgba(255,140,0,.35);color:#FFAA44;font-size:12px;padding:10px;">🇮🇳 Dubai Presenter (Recommended)</button>
               <button class="vg-style-btn active" data-style="luxury" onclick="setVgStyle(this)">✨ Luxury</button>
               <button class="vg-style-btn" data-style="bold" onclick="setVgStyle(this)">⚡ Bold</button>
               <button class="vg-style-btn" data-style="minimal" onclick="setVgStyle(this)">◻ Minimal</button>
@@ -509,12 +517,15 @@ textarea{resize:vertical;min-height:80px;}
             <div class="vg-progress-label" id="vgProgressLabel">Preparing...</div>
           </div>
           <button class="vg-download-btn" id="vgDownloadBtn" onclick="downloadVideo()">⬇ Download Video (.webm)</button>
+          <button class="ig-share-btn" id="igShareBtn" onclick="shareToInstagram()">📲 Share to Instagram</button>
           <div class="vg-tips">
+            <strong>🇮🇳 Dubai Presenter Style</strong>
+            Indian woman presenter against animated Dubai night skyline — Burj Khalifa, city lights, stars. Perfect for Instagram Reels & WhatsApp Status.<br><br>
             <strong>📋 How to use</strong>
-            1. Fill the form on the left<br>
-            2. Tap Generate Video — renders in ~15s<br>
-            3. Download the .webm file<br>
-            4. Upload to Instagram Reels, WhatsApp Status, or TikTok
+            1. Select 🇮🇳 Dubai Presenter above<br>
+            2. Fill the form → Generate Video (~15s)<br>
+            3. Download or tap Share to Instagram<br>
+            4. On mobile, Share opens Instagram directly
           </div>
         </div>
       </div>
@@ -534,6 +545,25 @@ textarea{resize:vertical;min-height:80px;}
       </div>
       <div class="dc-cat-bar" id="dcCatBar"></div>
       <div class="dc-prod-list" id="dcProdList"></div>
+      <!-- ADD PRODUCT FORM -->
+      <div class="form-panel" id="addProdForm" style="margin-top:16px;">
+        <h3>➕ Add New Product</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Product Name</label><input type="text" id="apName" placeholder="e.g. iPhone 17 Pro Max"></div>
+          <div class="form-group"><label>Category</label><select id="apCat"><option>iPhone</option><option>MacBook</option><option>iPad</option><option>Watch</option><option>AirPods</option><option>Other</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Emoji</label><select id="apEmoji"><option value="📱">📱 Phone</option><option value="💻">💻 Laptop</option><option value="🖥">🖥 Tablet</option><option value="⌚">⌚ Watch</option><option value="🎧">🎧 Audio</option><option value="✨">✨ New</option></select></div>
+          <div class="form-group"><label>Spec (e.g. 256GB)</label><input type="text" id="apSpec" placeholder="e.g. 256GB"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Price (AED)</label><input type="number" id="apPrice" placeholder="e.g. 6499"></div>
+          <div class="form-group"><label>Badge (optional)</label><input type="text" id="apBadge" placeholder="e.g. NEW"></div>
+        </div>
+        <button class="save-btn" onclick="saveNewProduct()">Add to Store</button>
+        <button class="cancel-btn" onclick="closeAddProdForm()">Cancel</button>
+      </div>
+      <button class="add-prod-btn" id="addProdBtn" onclick="openAddProdForm()">＋ Add New Product (e.g. iPhone 17, custom device)</button>
     </div>
 
   </div><!-- /admin-body -->
@@ -553,8 +583,7 @@ function doLogin(){
     document.getElementById('adminPanel').style.display='block';
     init();
   } else {
-    err.style.display='block';
-    err.style.animation='none';
+    err.style.display='block';err.style.animation='none';
     requestAnimationFrame(()=>err.style.animation='shake .3s');
   }
 }
@@ -573,8 +602,7 @@ const DEFAULT_DEALS=[
 ];
 function getDeals(){try{const s=localStorage.getItem('breo_deals');return s?JSON.parse(s):DEFAULT_DEALS;}catch(e){return DEFAULT_DEALS;}}
 function saveDeals(d){localStorage.setItem('breo_deals',JSON.stringify(d));updateStats();}
-
-let editIdx=-1; let selGrad='linear-gradient(135deg,#0A84FF,#5856D6)';
+let editIdx=-1;let selGrad='linear-gradient(135deg,#0A84FF,#5856D6)';
 function renderDealsAdmin(){
   const deals=getDeals();
   document.getElementById('dealsGrid').innerHTML=deals.map((d,i)=>`
@@ -590,36 +618,32 @@ function renderDealsAdmin(){
         </div>
       </div>
     </div>`).join('');
-  updateStats(); populateCaptionSelect();
+  updateStats();populateCaptionSelect();
 }
 function openAddForm(){
   editIdx=-1;
   document.getElementById('formTitle').textContent='Add New Deal';
-  document.getElementById('fPrice').value='';
-  document.getElementById('fOld').value='';
-  document.getElementById('fOffer').value='Today Only!';
-  document.getElementById('fBadge').value='HOT';
+  document.getElementById('fPrice').value='';document.getElementById('fOld').value='';
+  document.getElementById('fOffer').value='Today Only!';document.getElementById('fBadge').value='HOT';
   setGrad('linear-gradient(135deg,#0A84FF,#5856D6)');
   document.getElementById('dealForm').classList.add('open');
   document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
 }
 function openEditForm(i){
-  editIdx=i;
-  const d=getDeals()[i];
+  editIdx=i;const d=getDeals()[i];
   document.getElementById('formTitle').textContent='Edit Deal';
-  document.getElementById('fModel').value=d.title;
-  document.getElementById('fEmoji').value=d.emoji;
-  document.getElementById('fPrice').value=d.price;
-  document.getElementById('fOld').value=d.old;
-  document.getElementById('fOffer').value=d.offer;
-  document.getElementById('fBadge').value=d.badge;
+  document.getElementById('fModel').value=d.title;document.getElementById('fEmoji').value=d.emoji;
+  document.getElementById('fPrice').value=d.price;document.getElementById('fOld').value=d.old;
+  document.getElementById('fOffer').value=d.offer;document.getElementById('fBadge').value=d.badge;
   setGrad(d.grad);
   document.getElementById('dealForm').classList.add('open');
   document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
 }
 function closeForm(){document.getElementById('dealForm').classList.remove('open');editIdx=-1;}
 function saveDeal(){
-  const deal={title:document.getElementById('fModel').value,emoji:document.getElementById('fEmoji').value,price:document.getElementById('fPrice').value||'0',old:document.getElementById('fOld').value||'0',offer:document.getElementById('fOffer').value,badge:document.getElementById('fBadge').value,grad:selGrad};
+  const deal={title:document.getElementById('fModel').value,emoji:document.getElementById('fEmoji').value,
+    price:document.getElementById('fPrice').value||'0',old:document.getElementById('fOld').value||'0',
+    offer:document.getElementById('fOffer').value,badge:document.getElementById('fBadge').value,grad:selGrad};
   const deals=getDeals();
   if(editIdx>=0){deals[editIdx]=deal;}else{deals.push(deal);}
   saveDeals(deals);renderDealsAdmin();closeForm();
@@ -654,16 +678,14 @@ function updateStats(){
 function switchTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');
 }
 
 // ─── PROMO VIDEO ───
 function savePromoVideo(){
   const url=document.getElementById('promoVideoUrl').value.trim();
   if(!url){toast('Please enter a YouTube URL first.');return;}
-  localStorage.setItem('breo_promo_video',url);
-  previewVideo(url);updateStats();
+  localStorage.setItem('breo_promo_video',url);previewVideo(url);updateStats();
   toast('🎬 Video saved! Live on your homepage.');
 }
 function clearPromoVideo(){
@@ -675,13 +697,10 @@ function clearPromoVideo(){
 function previewVideo(url){
   const match=url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^?&"'>]+)/);
   if(match){
-    const vid=match[1];
-    const wrap=document.getElementById('videoPreviewWrap');
+    const vid=match[1];const wrap=document.getElementById('videoPreviewWrap');
     wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?rel=0" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
     wrap.style.cssText='position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;margin-top:16px;';
-  } else {
-    toast('Could not read that URL. Make sure it\'s a YouTube link.');
-  }
+  } else {toast('Could not read that URL. Make sure it\'s a YouTube link.');}
 }
 
 // ─── WHATSAPP ───
@@ -690,12 +709,9 @@ function saveWaNumber(){
   if(!n){toast('Please enter a number first.');return;}
   localStorage.setItem('breo_wa',n);
   document.getElementById('waLinkPreview').textContent=`https://wa.me/${n}`;
-  const bioEl=document.getElementById('bioLinkDisplay');
-  if(bioEl)bioEl.textContent=`https://wa.me/${n}`;
-  const confirm=document.getElementById('waSaveConfirm');
-  if(confirm)confirm.style.display='block';
-  updateStats();
-  toast('✅ WhatsApp number saved — checkout is now live!');
+  const bioEl=document.getElementById('bioLinkDisplay');if(bioEl)bioEl.textContent=`https://wa.me/${n}`;
+  const confirm=document.getElementById('waSaveConfirm');if(confirm)confirm.style.display='block';
+  updateStats();toast('✅ WhatsApp number saved — checkout is now live!');
 }
 function testWaLink(){
   const n=localStorage.getItem('breo_wa')||document.getElementById('waNumber').value.trim().replace(/\D/g,'');
@@ -732,22 +748,17 @@ document.addEventListener('DOMContentLoaded',function(){
 function saveIgHandle(){
   const h=document.getElementById('igHandle').value.trim().replace('@','');
   if(!h){toast('Please enter your Instagram username.');return;}
-  localStorage.setItem('breo_ig',h);
-  updateStats();toast('📸 Instagram handle saved!');
+  localStorage.setItem('breo_ig',h);updateStats();toast('📸 Instagram handle saved!');
 }
 function populateCaptionSelect(){
-  const sel=document.getElementById('captionDeal');
-  if(!sel)return;
+  const sel=document.getElementById('captionDeal');if(!sel)return;
   const deals=getDeals();
   sel.innerHTML=deals.map((d,i)=>`<option value="${i}">${d.title}</option>`).join('');
   genCaption();
 }
 function genCaption(){
-  const selEl=document.getElementById('captionDeal');
-  if(!selEl)return;
-  const i=parseInt(selEl.value);
-  const d=getDeals()[i];
-  if(!d)return;
+  const selEl=document.getElementById('captionDeal');if(!selEl)return;
+  const i=parseInt(selEl.value);const d=getDeals()[i];if(!d)return;
   const wa=localStorage.getItem('breo_wa')||'971500000000';
   const caption=`🔥 ${d.title} — Special Offer Today!\n\n💰 Only AED ${Number(d.price).toLocaleString()} (Was AED ${Number(d.old).toLocaleString()})\n✅ Brand new, sealed box, warranty included\n🚚 Same-day delivery across UAE\n\nDM us or tap link in bio to order on WhatsApp!\n👉 wa.me/${wa}\n\n#iPhone #iPhoneUAE #Dubai #UAEiPhone #DubaiTech #iPhoneDeals #BreoMobile #${d.title.replace(/\s+/g,'')}UAE`;
   document.getElementById('captionOutput').textContent=caption;
@@ -759,163 +770,441 @@ function copyCaption(){
 }
 
 // ─── VIDEO GENERATOR ───
-let vgStyle='luxury'; let vgVideoBlob=null;
+let vgStyle='luxury';let vgVideoBlob=null;
 function setVgStyle(btn){
   document.querySelectorAll('.vg-style-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active'); vgStyle=btn.dataset.style;
+  btn.classList.add('active');vgStyle=btn.dataset.style;
 }
 const VG_STYLES={
+  presenter:{bg1:'#030a1c',bg2:'#06122e',accent:'#FFB347',accent2:'#FF8C00',text:'#ffffff',badge:'#e8471e'},
   luxury:{bg1:'#0a0512',bg2:'#1a0530',accent:'#a78bfa',accent2:'#818cf8',text:'#f0e6ff',badge:'#7c3aed'},
-  bold:  {bg1:'#0a0000',bg2:'#1a0505',accent:'#ef4444',accent2:'#f97316',text:'#fff7f7',badge:'#dc2626'},
+  bold:{bg1:'#0a0000',bg2:'#1a0505',accent:'#ef4444',accent2:'#f97316',text:'#fff7f7',badge:'#dc2626'},
   minimal:{bg1:'#050508',bg2:'#0f0f18',accent:'#e2e8f0',accent2:'#94a3b8',text:'#f8fafc',badge:'#334155'},
-  neon:  {bg1:'#000510',bg2:'#00050a',accent:'#00f5ff',accent2:'#bf00ff',text:'#e0ffff',badge:'#0891b2'},
-  gold:  {bg1:'#0a0800',bg2:'#1a1200',accent:'#fbbf24',accent2:'#f59e0b',text:'#fffbeb',badge:'#92400e'},
-  dark:  {bg1:'#000000',bg2:'#111111',accent:'#ffffff',accent2:'#cccccc',text:'#ffffff',badge:'#333333'},
+  neon:{bg1:'#000510',bg2:'#00050a',accent:'#00f5ff',accent2:'#bf00ff',text:'#e0ffff',badge:'#0891b2'},
+  gold:{bg1:'#0a0800',bg2:'#1a1200',accent:'#fbbf24',accent2:'#f59e0b',text:'#fffbeb',badge:'#92400e'},
+  dark:{bg1:'#000000',bg2:'#111111',accent:'#ffffff',accent2:'#cccccc',text:'#ffffff',badge:'#333333'},
 };
 const DUBAI_EMOJIS={'Burj Khalifa':'🗼','Dubai Mall':'🛍️','JBR Beach':'🏖️','Dubai Marina':'⛵','Palm Jumeirah':'🌴','Downtown Dubai':'🌆','Dubai Frame':'🖼️','Global Village':'🎡'};
+function hexToRgb(hex){return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;}
+function easeOut(t){return 1-Math.pow(1-t,3);}
+function lerp(a,b,t){return a+(b-a)*Math.min(1,Math.max(0,t));}
+function clamp01(v){return Math.min(1,Math.max(0,v));}
 
-function hexToRgb(hex){const r=parseInt(hex.slice(1,3),16);const g=parseInt(hex.slice(3,5),16);const b=parseInt(hex.slice(5,7),16);return `${r},${g},${b}`;}
+// Dubai night skyline
+function drawDubaiSkyline(ctx,W,H,f){
+  const hY=H*0.60;
+  const bldCol='#06102a';
+  const wA=0.55+0.15*Math.sin(f/90);
+  function bld(x,y,w,h,taper){
+    ctx.fillStyle=bldCol;ctx.strokeStyle='rgba(60,110,220,0.18)';ctx.lineWidth=0.7;
+    ctx.beginPath();
+    if(taper){ctx.moveTo(x,y+h);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w-(w*(1-taper))/2,y);ctx.lineTo(x+(w*(1-taper))/2,y);}
+    else{ctx.rect(x,y,w,h);}
+    ctx.closePath();ctx.fill();ctx.stroke();
+    const cols=Math.max(1,Math.floor(w/14));const rows=Math.max(1,Math.floor(h/18));
+    for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){
+      if((c*7+r*13)%4<2){
+        ctx.globalAlpha=wA*0.5;
+        ctx.fillStyle=(c*3+r)%5===0?'rgba(160,200,255,0.8)':'rgba(255,220,130,0.75)';
+        const wx=x+3+c*14,wy=y+4+r*18;
+        if(wx+8<x+w&&wy+11<y+h){ctx.fillRect(wx,wy,7,10);}
+        ctx.globalAlpha=1;
+      }
+    }
+  }
+  ctx.globalAlpha=0.6;
+  bld(0,hY-H*.09,W*.09,H*.09);bld(W*.06,hY-H*.14,W*.07,H*.14,0.8);
+  bld(W*.48,hY-H*.11,W*.11,H*.11);bld(W*.74,hY-H*.12,W*.10,H*.12,0.75);
+  bld(W*.87,hY-H*.10,W*.13,H*.10);
+  ctx.globalAlpha=1;
+  bld(W*.01,hY-H*.20,W*.11,H*.20,0.85);bld(W*.13,hY-H*.16,W*.09,H*.16);
+  bld(W*.23,hY-H*.24,W*.08,H*.24,0.7);bld(W*.57,hY-H*.18,W*.09,H*.18);
+  bld(W*.67,hY-H*.22,W*.09,H*.22,0.8);bld(W*.77,hY-H*.19,W*.12,H*.19);
+  bld(W*.90,hY-H*.17,W*.10,H*.17);
+  // Burj Khalifa
+  const bkX=W*.65,bkH=H*.48;
+  ctx.fillStyle='#050f25';ctx.strokeStyle='rgba(80,140,255,0.4)';ctx.lineWidth=0.8;
+  [[28,0,20,.25],[20,.25,12,.50],[12,.50,6,.75],[3,.75,1,.99]].forEach(([w1,y1,w2,y2])=>{
+    ctx.beginPath();ctx.moveTo(bkX-w1,hY);ctx.lineTo(bkX+w1,hY);
+    ctx.lineTo(bkX+w2,hY-bkH*y2);ctx.lineTo(bkX-w2,hY-bkH*y2);
+    ctx.closePath();ctx.fill();ctx.stroke();
+  });
+  for(let i=0;i<9;i++){
+    const wy=hY-bkH*(0.04+i*.07);const ww=16-i*1.3;
+    ctx.globalAlpha=0.5+0.2*Math.sin(f/60+i);
+    ctx.fillStyle='rgba(255,215,140,0.6)';ctx.fillRect(bkX-ww/2,wy,ww,2);
+    ctx.globalAlpha=1;
+  }
+  ctx.globalAlpha=0.5+0.5*Math.abs(Math.sin(f/16));
+  ctx.fillStyle='#ff4444';ctx.beginPath();ctx.arc(bkX,hY-bkH*.99,2.5,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  const gnd=ctx.createLinearGradient(0,hY,0,hY+H*.06);
+  gnd.addColorStop(0,'rgba(255,160,60,0.22)');gnd.addColorStop(1,'rgba(255,160,60,0.03)');
+  ctx.fillStyle=gnd;ctx.fillRect(0,hY,W,H*.06);
+}
+
+// Indian woman presenter (illustrated silhouette)
+function drawPresenter(ctx,W,H,f){
+  const bob=Math.sin(f/30)*3;
+  const px=W*.30,py=H*.985;
+  const sc=H/960;
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,0.30)';
+  ctx.beginPath();ctx.ellipse(px,py,W*.17,H*.012,0,0,Math.PI*2);ctx.fill();
+  // spotlight glow
+  const spot=ctx.createRadialGradient(px,py-H*.3+bob,0,px,py-H*.3+bob,H*.32);
+  spot.addColorStop(0,'rgba(255,200,120,0.09)');spot.addColorStop(1,'transparent');
+  ctx.fillStyle=spot;ctx.fillRect(0,0,W,H);
+  // Saree lower
+  ctx.fillStyle='#b71c50';
+  ctx.beginPath();
+  ctx.moveTo(px-28*sc,py-H*.28+bob);ctx.lineTo(px+28*sc,py-H*.28+bob);
+  ctx.bezierCurveTo(px+38*sc,py-H*.12,px+44*sc,py-H*.04,px+38*sc,py);
+  ctx.lineTo(px-42*sc,py);
+  ctx.bezierCurveTo(px-46*sc,py-H*.04,px-40*sc,py-H*.12,px-28*sc,py-H*.28+bob);
+  ctx.closePath();ctx.fill();
+  // Gold border
+  ctx.strokeStyle='rgba(255,215,0,0.65)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(px-28*sc,py-H*.28+bob);
+  ctx.bezierCurveTo(px-42*sc,py-H*.12,px-46*sc,py-H*.04,px-42*sc,py);ctx.stroke();
+  // Blouse
+  ctx.fillStyle='#b71c50';
+  ctx.beginPath();ctx.roundRect(px-24*sc,py-H*.38+bob,48*sc,H*.10,5*sc);ctx.fill();
+  // Dupatta
+  ctx.fillStyle='rgba(220,60,100,0.70)';
+  ctx.beginPath();
+  ctx.moveTo(px-24*sc,py-H*.35+bob);
+  ctx.bezierCurveTo(px-48*sc,py-H*.32+bob,px-65*sc,py-H*.24+bob+Math.sin(f/22)*6*sc,px-68*sc,py-H*.12+bob);
+  ctx.bezierCurveTo(px-60*sc,py-H*.06,px-45*sc,py-H*.05,px-32*sc,py-H*.10);
+  ctx.bezierCurveTo(px-22*sc,py-H*.18,px-22*sc,py-H*.28,px-24*sc,py-H*.35+bob);
+  ctx.closePath();ctx.fill();
+  // Torso
+  ctx.fillStyle='#0d1830';
+  ctx.beginPath();
+  ctx.moveTo(px-26*sc,py-H*.38+bob);
+  ctx.bezierCurveTo(px-28*sc,py-H*.46+bob,px-24*sc,py-H*.50+bob,px-16*sc,py-H*.50+bob);
+  ctx.lineTo(px+18*sc,py-H*.50+bob);
+  ctx.bezierCurveTo(px+26*sc,py-H*.50+bob,px+30*sc,py-H*.46+bob,px+28*sc,py-H*.38+bob);
+  ctx.closePath();ctx.fill();
+  // Neck
+  ctx.fillStyle='#c0713a';
+  ctx.beginPath();ctx.roundRect(px-8*sc,py-H*.56+bob,16*sc,H*.06,4*sc);ctx.fill();
+  // Head
+  ctx.fillStyle='#c0713a';
+  ctx.beginPath();ctx.ellipse(px,py-H*.60+bob,27*sc,31*sc,0,0,Math.PI*2);ctx.fill();
+  // Hair top
+  ctx.fillStyle='#160800';
+  ctx.beginPath();ctx.ellipse(px,py-H*.63+bob,27*sc,14*sc,0,Math.PI,0);ctx.fill();
+  // Hair side
+  ctx.beginPath();
+  ctx.moveTo(px-22*sc,py-H*.62+bob);
+  ctx.bezierCurveTo(px-38*sc,py-H*.54+bob,px-44*sc,py-H*.46+bob,px-38*sc,py-H*.42+bob);
+  ctx.bezierCurveTo(px-30*sc,py-H*.40+bob,px-22*sc,py-H*.44+bob,px-18*sc,py-H*.50+bob);
+  ctx.closePath();ctx.fill();
+  // Hair bun
+  ctx.beginPath();ctx.ellipse(px+10*sc,py-H*.65+bob,14*sc,11*sc,0.35,0,Math.PI*2);ctx.fill();
+  // Eyes
+  ctx.fillStyle='#1a0800';
+  ctx.beginPath();ctx.ellipse(px-11*sc,py-H*.595+bob,11*sc,7*sc,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(px+11*sc,py-H*.595+bob,11*sc,7*sc,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.ellipse(px-10*sc,py-H*.594+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(px+12*sc,py-H*.594+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
+  // Eyebrows
+  ctx.strokeStyle='#1a0800';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(px-11*sc,py-H*.578+bob,14*sc,Math.PI*1.15,Math.PI*1.85);ctx.stroke();
+  ctx.beginPath();ctx.arc(px+11*sc,py-H*.578+bob,14*sc,Math.PI*1.15,Math.PI*1.85);ctx.stroke();
+  // Nose
+  ctx.fillStyle='#a85f2a';ctx.beginPath();ctx.ellipse(px,py-H*.582+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
+  // Smile
+  ctx.strokeStyle='#c05530';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py-H*.568+bob,16*sc,0,Math.PI);ctx.stroke();
+  // Bindi
+  ctx.fillStyle='#ff1744';ctx.beginPath();ctx.arc(px,py-H*.622+bob,7*sc,0,Math.PI*2);ctx.fill();
+  // Earrings
+  ctx.fillStyle='#FFD700';
+  ctx.beginPath();ctx.arc(px-24*sc,py-H*.59+bob,6*sc,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(px+24*sc,py-H*.59+bob,6*sc,0,Math.PI*2);ctx.fill();
+  // Right arm raised
+  ctx.fillStyle='#c0713a';
+  ctx.save();ctx.translate(px+28*sc,py-H*.47+bob);ctx.rotate(-0.55+Math.sin(f/40)*0.10);
+  ctx.beginPath();ctx.ellipse(0,H*.06,11*sc,H*.065,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(0,H*.125,13*sc,11*sc,0.2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  // Left arm with phone
+  ctx.fillStyle='#c0713a';
+  ctx.save();ctx.translate(px-28*sc,py-H*.47+bob);ctx.rotate(0.30+Math.sin(f/35+1)*0.06);
+  ctx.beginPath();ctx.ellipse(0,H*.055,11*sc,H*.06,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(0,H*.115,12*sc,10*sc,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#111';ctx.beginPath();ctx.roundRect(-10*sc,H*.11,20*sc,H*.046,3*sc);ctx.fill();
+  ctx.fillStyle='#1a6fff';ctx.beginPath();ctx.roundRect(-7*sc,H*.113,14*sc,H*.038,2*sc);ctx.fill();
+  ctx.restore();
+}
 
 function generateVideo(){
-  const model   =document.getElementById('vgModel').value;
-  const price   =document.getElementById('vgPrice').value||'3999';
+  const model=document.getElementById('vgModel').value;
+  const price=document.getElementById('vgPrice').value||'3999';
   const headline=document.getElementById('vgHeadline').value||'Special Offer!';
-  const script  =document.getElementById('vgScript').value||'';
+  const script=document.getElementById('vgScript').value||'';
   const location=document.getElementById('vgLocation').value;
-  const waNum   =localStorage.getItem('breo_wa')||'971500000000';
-  const s       =VG_STYLES[vgStyle]||VG_STYLES.luxury;
+  const waNum=localStorage.getItem('breo_wa')||'971500000000';
+  const s=VG_STYLES[vgStyle]||VG_STYLES.luxury;
   const locEmoji=DUBAI_EMOJIS[location]||'🏙️';
-  const canvas  =document.getElementById('vgCanvas');
-  const ctx     =canvas.getContext('2d');
-  const W=canvas.width, H=canvas.height;
+  const canvas=document.getElementById('vgCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
   const btn=document.getElementById('vgGenerateBtn');
-  const dl =document.getElementById('vgDownloadBtn');
-  const pw =document.getElementById('vgProgressWrap');
-  const pf =document.getElementById('vgProgressFill');
-  const pl =document.getElementById('vgProgressLabel');
-  btn.disabled=true; dl.style.display='none'; pw.style.display='block'; vgVideoBlob=null;
+  const dl=document.getElementById('vgDownloadBtn');
+  const igBtn=document.getElementById('igShareBtn');
+  const pw=document.getElementById('vgProgressWrap');
+  const pf=document.getElementById('vgProgressFill');
+  const pl=document.getElementById('vgProgressLabel');
+  btn.disabled=true;dl.style.display='none';if(igBtn)igBtn.style.display='none';
+  pw.style.display='block';vgVideoBlob=null;
   const FPS=30,DURATION=12,TOTAL=FPS*DURATION;
-  let frame=0; const chunks=[];
-  let recorder=null;
+  let frame=0;const chunks=[];let recorder=null;
   try{
     const stream=canvas.captureStream(FPS);
     const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
-    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
+    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5000000});
     recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
     recorder.onstop=()=>{
       vgVideoBlob=new Blob(chunks,{type:'video/webm'});
-      btn.disabled=false; dl.style.display='block';
-      pl.textContent='✅ Video ready! Click Download.';
-      toast('🎬 Video generated!');
+      btn.disabled=false;dl.style.display='block';
+      if(igBtn)igBtn.style.display='block';
+      pl.textContent='Video ready! Download or Share to Instagram.';
+      toast('Video generated!');
     };
     recorder.start(100);
-  }catch(e){btn.disabled=false;pw.style.display='none';toast('⚠️ Recording not supported in this browser.');}
+  }catch(e){btn.disabled=false;pw.style.display='none';toast('Recording not supported in this browser.');}
 
-  function easeOut(t){return 1-Math.pow(1-t,3);}
-  function lerp(a,b,t){return a+(b-a)*Math.min(1,Math.max(0,t));}
-
-  function drawFrame(f){
+  function drawPresenterFrame(f){
     const t=f/TOTAL;
-    const grad=ctx.createLinearGradient(0,0,W,H);
-    grad.addColorStop(0,s.bg1); grad.addColorStop(1,s.bg2);
-    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
-    const glowX=W/2+Math.sin(f/40)*80, glowY=H*0.45+Math.cos(f/55)*60;
-    const glow=ctx.createRadialGradient(glowX,glowY,0,glowX,glowY,W*0.7);
-    glow.addColorStop(0,`rgba(${hexToRgb(s.accent)},0.18)`); glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
-    // Particles
-    ctx.fillStyle=`rgba(${hexToRgb(s.accent)},0.35)`;
-    for(let i=0;i<18;i++){
-      const px=(W*((i*137.5+f*0.4)%100))/100;
-      const py=((H*((i*73.1+f*0.7)%100))/100+f*(0.3+i*0.05))%H;
-      ctx.beginPath();ctx.arc(px,py,1.5+Math.sin(f/20+i)*0.8,0,Math.PI*2);ctx.fill();
-    }
+    const sky=ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,'#020618');sky.addColorStop(0.5,'#08102e');sky.addColorStop(0.75,'#111838');sky.addColorStop(1,'#0c1020');
+    ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+    const stars=[[.12,.05],[.28,.08],[.45,.03],[.62,.07],[.78,.04],[.88,.09],[.05,.13],[.35,.11],[.55,.15],[.72,.10],[.92,.13],[.18,.19],[.42,.16],[.65,.20],[.82,.15],[.08,.23],[.52,.22],[.76,.25],[.20,.07],[.58,.12]];
+    stars.forEach(([sx,sy],i)=>{
+      ctx.globalAlpha=0.4+0.5*Math.abs(Math.sin(f/25+i*.8));
+      ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(sx*W,sy*H*0.58,1.3,0,Math.PI*2);ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    ctx.fillStyle='rgba(255,248,225,.92)';ctx.beginPath();ctx.arc(W*.84,H*.06,17,0,Math.PI*2);ctx.fill();
+    const moonGl=ctx.createRadialGradient(W*.84,H*.06,0,W*.84,H*.06,50);
+    moonGl.addColorStop(0,'rgba(255,245,200,.12)');moonGl.addColorStop(1,'transparent');
+    ctx.fillStyle=moonGl;ctx.beginPath();ctx.arc(W*.84,H*.06,50,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    drawDubaiSkyline(ctx,W,H,f);
+    drawPresenter(ctx,W,H,f);
+    // Top gradient
+    const topGrd=ctx.createLinearGradient(0,0,0,H*.14);
+    topGrd.addColorStop(0,'rgba(0,0,0,0.88)');topGrd.addColorStop(1,'rgba(0,0,0,0.0)');
+    ctx.fillStyle=topGrd;ctx.fillRect(0,0,W,H*.14);
     // Logo
-    const s1=Math.min(1,t/0.25);
-    const logoY=lerp(-60,H*0.12,easeOut(s1));
-    ctx.globalAlpha=easeOut(s1);
-    ctx.fillStyle=s.text; ctx.font=`900 ${W*0.13}px Inter,sans-serif`; ctx.textAlign='center';
-    ctx.fillText('breo.',W/2,logoY);
-    ctx.font=`400 ${W*0.038}px Inter,sans-serif`;
-    ctx.fillStyle=`rgba(${hexToRgb(s.accent)},0.9)`;
-    ctx.fillText('Premium Apple Store · UAE',W/2,logoY+W*0.07);
+    const la=easeOut(clamp01(t/0.2));
+    ctx.globalAlpha=la;
+    ctx.font='900 '+W*.10+'px Inter,sans-serif';ctx.textAlign='center';ctx.fillStyle='#ffffff';
+    ctx.fillText('breo.',W/2,H*.075);
+    ctx.font='500 '+W*.028+'px Inter,sans-serif';ctx.fillStyle='rgba(255,179,71,.9)';
+    ctx.fillText('Premium Apple Store · UAE',W/2,H*.100);
     ctx.globalAlpha=1;
     // Location badge
-    const bAlpha=easeOut(Math.min(1,(t-0.05)/0.2));
-    ctx.globalAlpha=bAlpha;
-    const bw=W*0.55,bh=W*0.1,bx=(W-bw)/2,by=H*0.22-bh/2;
-    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,bh/2);
-    ctx.fillStyle=`rgba(${hexToRgb(s.badge)},0.85)`; ctx.fill();
-    ctx.font=`700 ${W*0.042}px Inter,sans-serif`; ctx.fillStyle='#fff';
-    ctx.fillText(`${locEmoji} ${location}`,W/2,H*0.22+W*0.014);
+    const locA=easeOut(clamp01((t-.04)/.18));
+    ctx.globalAlpha=locA;
+    const lbW=W*.50,lbH=H*.032,lbX=W*.025,lbY=H*.008;
+    ctx.fillStyle='rgba(232,71,30,.88)';ctx.beginPath();ctx.roundRect(lbX,lbY,lbW,lbH,lbH/2);ctx.fill();
+    ctx.font='700 '+W*.026+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='left';
+    ctx.fillText('📍 '+location,lbX+lbW*.06,lbY+lbH*.73);ctx.textAlign='center';ctx.globalAlpha=1;
+    // Speech bubble
+    const sbA=easeOut(clamp01((t-.22)/.20));
+    ctx.globalAlpha=sbA;
+    const sbX=W*.70,sbY=H*.40,sbW=W*.52,sbH=H*.20;
+    ctx.fillStyle='rgba(255,255,255,.95)';
+    ctx.beginPath();ctx.roundRect(sbX-sbW/2,sbY-sbH/2,sbW,sbH,14);ctx.fill();
+    ctx.beginPath();ctx.moveTo(sbX-sbW/2,sbY+sbH*.08);ctx.lineTo(sbX-sbW/2-W*.06,sbY+sbH*.22);ctx.lineTo(sbX-sbW/2+W*.01,sbY+sbH*.28);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#111';
+    const wds=model.split(' ');const mid2=Math.ceil(wds.length/2);
+    ctx.font='800 '+W*.048+'px Inter,sans-serif';
+    ctx.fillText(wds.slice(0,mid2).join(' '),sbX,sbY-sbH*.06);
+    if(wds.length>mid2)ctx.fillText(wds.slice(mid2).join(' '),sbX,sbY+sbH*.10);
     ctx.globalAlpha=1;
-    // Phone emoji
-    const s2=Math.min(1,Math.max(0,(t-0.25)/0.3));
-    ctx.globalAlpha=easeOut(s2);
-    ctx.save(); ctx.translate(W/2,H*0.44); ctx.scale(easeOut(s2),easeOut(s2));
-    ctx.font=`${W*0.36}px serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('📱',0,Math.sin(f/25)*8);
-    ctx.restore(); ctx.textBaseline='alphabetic'; ctx.globalAlpha=1;
-    // Product name
-    const nAlpha=easeOut(Math.min(1,Math.max(0,(t-0.35)/0.15)));
-    ctx.globalAlpha=nAlpha; ctx.fillStyle=s.text;
-    ctx.font=`800 ${W*0.072}px Inter,sans-serif`; ctx.textAlign='center';
-    const words=model.split(' '),mid=Math.ceil(words.length/2);
-    ctx.fillText(words.slice(0,mid).join(' '),W/2,H*0.66);
-    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2,H*0.66+W*0.088);
+    // Bottom panel
+    const btmA=easeOut(clamp01((t-.50)/.22));
+    ctx.globalAlpha=btmA;
+    const btmY=H*.72;
+    const btm=ctx.createLinearGradient(0,btmY,0,H);
+    btm.addColorStop(0,'rgba(0,0,0,0)');btm.addColorStop(0.25,'rgba(0,0,0,0.88)');btm.addColorStop(1,'rgba(0,0,0,0.96)');
+    ctx.fillStyle=btm;ctx.fillRect(0,btmY,W,H-btmY);
+    ctx.fillStyle='#FFD60A';ctx.font='900 '+W*.13+'px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,H*.835);
+    ctx.fillStyle='#fff';ctx.font='700 '+W*.044+'px Inter,sans-serif';
+    ctx.fillText(headline,W/2,H*.870);
+    const wA2=easeOut(clamp01((t-.70)/.22));
+    ctx.globalAlpha=btmA*wA2;
+    const wbW=W*.84,wbH=H*.055,wbX=(W-wbW)/2,wbY=H*.900;
+    ctx.fillStyle='#25D366';ctx.beginPath();ctx.roundRect(wbX,wbY,wbW,wbH,wbH/2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='700 '+W*.034+'px Inter,sans-serif';
+    ctx.fillText('Order on WhatsApp · wa.me/'+waNum,W/2,wbY+wbH*.67);
     ctx.globalAlpha=1;
-    // Price card
-    const s3=Math.min(1,Math.max(0,(t-0.55)/0.25));
-    ctx.globalAlpha=easeOut(s3);
-    const cw=W*0.75,ch=W*0.18,cx2=(W-cw)/2,cardY=H*0.73;
-    const gp=ctx.createLinearGradient(cx2,0,cx2+cw,0);
-    gp.addColorStop(0,s.accent); gp.addColorStop(1,s.accent2);
-    ctx.beginPath(); ctx.roundRect(cx2,cardY,cw,ch,16); ctx.fillStyle=gp; ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font=`900 ${W*0.11}px Inter,sans-serif`;
-    ctx.fillText(`AED ${Number(price).toLocaleString()}`,W/2,cardY+ch*0.65);
-    ctx.globalAlpha=1;
-    // Headline
-    const hlA=easeOut(Math.min(1,Math.max(0,(t-0.65)/0.15)));
-    ctx.globalAlpha=hlA; ctx.fillStyle=s.accent;
-    ctx.font=`700 ${W*0.055}px Inter,sans-serif`; ctx.textAlign='center';
-    ctx.fillText(headline,W/2,H*0.84); ctx.globalAlpha=1;
-    // WhatsApp CTA
-    const s4=Math.min(1,Math.max(0,(t-0.78)/0.22));
-    ctx.globalAlpha=easeOut(s4);
-    const waw=W*0.78,wah=W*0.125,wax=(W-waw)/2,way=H*0.875;
-    ctx.beginPath(); ctx.roundRect(wax,way,waw,wah,wah/2);
-    ctx.fillStyle='#25D366'; ctx.fill();
-    ctx.font=`700 ${W*0.042}px Inter,sans-serif`; ctx.fillStyle='#fff';
-    ctx.fillText(`Order · wa.me/${waNum}`,W/2,way+wah*0.63);
     if(script){
-      ctx.fillStyle=`rgba(${hexToRgb(s.text)},0.45)`;
-      ctx.font=`300 ${W*0.03}px Inter,sans-serif`;
-      const maxW=W*0.82; const words2=script.split(' ');
-      let line='',lines2=[]; let y2=H*0.945;
-      words2.forEach(w=>{const test=line+w+' ';if(ctx.measureText(test).width>maxW&&line){lines2.push(line.trim());line=w+' ';}else line=test;});
-      if(line)lines2.push(line.trim());
-      lines2.slice(0,2).forEach((l,i)=>ctx.fillText(l,W/2,y2+i*W*0.038));
+      const sA=easeOut(clamp01((t-.75)/.2));
+      ctx.globalAlpha=sA*.7;
+      ctx.fillStyle='#fff';ctx.font='300 '+W*.028+'px Inter,sans-serif';
+      const mxW=W*.86;const wdsS=script.split(' ');let ln='';const lns=[];
+      wdsS.forEach(w=>{const ts=ln+w+' ';if(ctx.measureText(ts).width>mxW&&ln){lns.push(ln.trim());ln=w+' ';}else ln=ts;});
+      if(ln)lns.push(ln.trim());
+      lns.slice(0,2).forEach((l,i)=>ctx.fillText(l,W/2,H*.958+i*H*.034));
+      ctx.globalAlpha=1;
     }
+  }
+
+  function drawAbstractFrame(f){
+    const t=f/TOTAL;
+    const grad=ctx.createLinearGradient(0,0,W,H);
+    grad.addColorStop(0,s.bg1);grad.addColorStop(1,s.bg2);
+    ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+    const glowX=W/2+Math.sin(f/40)*80,glowY=H*.45+Math.cos(f/55)*60;
+    const glow=ctx.createRadialGradient(glowX,glowY,0,glowX,glowY,W*.7);
+    glow.addColorStop(0,'rgba('+hexToRgb(s.accent)+',0.18)');glow.addColorStop(1,'transparent');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba('+hexToRgb(s.accent)+',0.35)';
+    for(let i=0;i<18;i++){
+      const px2=(W*((i*137.5+f*.4)%100))/100;
+      const py2=((H*((i*73.1+f*.7)%100))/100+f*(.3+i*.05))%H;
+      ctx.beginPath();ctx.arc(px2,py2,1.5+Math.sin(f/20+i)*.8,0,Math.PI*2);ctx.fill();
+    }
+    const s1=clamp01(t/.25);const logoY=lerp(-60,H*.12,easeOut(s1));
+    ctx.globalAlpha=easeOut(s1);ctx.fillStyle=s.text;
+    ctx.font='900 '+W*.13+'px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText('breo.',W/2,logoY);
+    ctx.font='400 '+W*.038+'px Inter,sans-serif';
+    ctx.fillStyle='rgba('+hexToRgb(s.accent)+',0.9)';
+    ctx.fillText('Premium Apple Store · UAE',W/2,logoY+W*.07);
     ctx.globalAlpha=1;
+    const bAlpha=easeOut(clamp01((t-.05)/.2));
+    ctx.globalAlpha=bAlpha;
+    const bw=W*.55,bh=W*.10,bx=(W-bw)/2,by=H*.22-bh/2;
+    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,bh/2);
+    ctx.fillStyle='rgba('+hexToRgb(s.badge)+',0.85)';ctx.fill();
+    ctx.font='700 '+W*.042+'px Inter,sans-serif';ctx.fillStyle='#fff';
+    ctx.fillText(locEmoji+' '+location,W/2,H*.22+W*.014);ctx.globalAlpha=1;
+    const s2=clamp01(Math.max(0,(t-.25)/.3));
+    ctx.globalAlpha=easeOut(s2);
+    ctx.save();ctx.translate(W/2,H*.44);ctx.scale(easeOut(s2),easeOut(s2));
+    ctx.font=W*.36+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('📱',0,Math.sin(f/25)*8);
+    ctx.restore();ctx.textBaseline='alphabetic';ctx.globalAlpha=1;
+    const nA=easeOut(clamp01(Math.max(0,(t-.35)/.15)));
+    ctx.globalAlpha=nA;ctx.fillStyle=s.text;
+    ctx.font='800 '+W*.072+'px Inter,sans-serif';ctx.textAlign='center';
+    const words=model.split(' ');const mid=Math.ceil(words.length/2);
+    ctx.fillText(words.slice(0,mid).join(' '),W/2,H*.66);
+    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2,H*.66+W*.088);
+    ctx.globalAlpha=1;
+    const s3=clamp01(Math.max(0,(t-.55)/.25));
+    ctx.globalAlpha=easeOut(s3);
+    const cw=W*.75,ch=W*.18,cx2=(W-cw)/2,cardY=H*.73;
+    const gp=ctx.createLinearGradient(cx2,0,cx2+cw,0);
+    gp.addColorStop(0,s.accent);gp.addColorStop(1,s.accent2);
+    ctx.beginPath();ctx.roundRect(cx2,cardY,cw,ch,16);ctx.fillStyle=gp;ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='900 '+W*.11+'px Inter,sans-serif';
+    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,cardY+ch*.65);ctx.globalAlpha=1;
+    const hlA=easeOut(clamp01(Math.max(0,(t-.65)/.15)));
+    ctx.globalAlpha=hlA;ctx.fillStyle=s.accent;
+    ctx.font='700 '+W*.055+'px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(headline,W/2,H*.84);ctx.globalAlpha=1;
+    const s4=clamp01(Math.max(0,(t-.78)/.22));
+    ctx.globalAlpha=easeOut(s4);
+    const waw=W*.78,wah=W*.125,wax=(W-waw)/2,way=H*.875;
+    ctx.beginPath();ctx.roundRect(wax,way,waw,wah,wah/2);
+    ctx.fillStyle='#25D366';ctx.fill();
+    ctx.font='700 '+W*.042+'px Inter,sans-serif';ctx.fillStyle='#fff';
+    ctx.fillText('Order · wa.me/'+waNum,W/2,way+wah*.63);ctx.globalAlpha=1;
   }
 
   function tick(){
-    drawFrame(frame);
+    if(vgStyle==='presenter')drawPresenterFrame(frame);else drawAbstractFrame(frame);
     pf.style.width=(frame/TOTAL*100)+'%';
-    pl.textContent=`Generating... ${Math.max(0,Math.round((TOTAL-frame)/FPS))}s remaining`;
+    pl.textContent='Generating... '+Math.max(0,Math.round((TOTAL-frame)/FPS))+'s left';
     frame++;
     if(frame<=TOTAL){requestAnimationFrame(tick);}
     else{if(recorder&&recorder.state!=='inactive')recorder.stop();if(!recorder){btn.disabled=false;pw.style.display='none';}}
   }
-  drawFrame(0); requestAnimationFrame(tick);
+  if(vgStyle==='presenter')drawPresenterFrame(0);else drawAbstractFrame(0);
+  requestAnimationFrame(tick);
 }
 function downloadVideo(){
   if(!vgVideoBlob)return;
   const model=document.getElementById('vgModel').value.replace(/\s+/g,'-');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(vgVideoBlob);
-  a.download=`breo-offer-${model}-${Date.now()}.webm`;
+  a.download='breo-offer-'+model+'-'+Date.now()+'.webm';
   a.click();
+}
+async function shareToInstagram(){
+  if(!vgVideoBlob){toast('Generate a video first.');return;}
+  if(navigator.share&&navigator.canShare){
+    try{
+      const file=new File([vgVideoBlob],'breo-offer.webm',{type:'video/webm'});
+      if(navigator.canShare({files:[file]})){
+        const caption=document.getElementById('captionOutput')?.textContent||'Amazing iPhone deal from Breo Mobile UAE!';
+        await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});
+        return;
+      }
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  const canvas=document.getElementById('vgCanvas');
+  canvas.toBlob(blob=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='breo-offer-'+Date.now()+'.png';a.click();
+    setTimeout(()=>{
+      const ig=localStorage.getItem('breo_ig');
+      window.open(ig?'https://www.instagram.com/'+ig+'/':'https://www.instagram.com/','_blank');
+      toast('Image saved — now upload to Instagram!');
+    },600);
+  },'image/png');
+}
+
+// ─── CUSTOM PRODUCTS ───
+function getCustomProducts(){try{const s=localStorage.getItem('breo_custom_products');return s?JSON.parse(s):[];}catch(e){return [];}}
+function openAddProdForm(){
+  document.getElementById('addProdForm').classList.add('open');
+  document.getElementById('addProdBtn').style.display='none';
+  document.getElementById('addProdForm').scrollIntoView({behavior:'smooth'});
+}
+function closeAddProdForm(){
+  document.getElementById('addProdForm').classList.remove('open');
+  document.getElementById('addProdBtn').style.display='flex';
+}
+function saveNewProduct(){
+  const name=document.getElementById('apName').value.trim();
+  const cat=document.getElementById('apCat').value;
+  const emoji=document.getElementById('apEmoji').value;
+  const spec=document.getElementById('apSpec').value.trim()||'—';
+  const price=parseInt(document.getElementById('apPrice').value)||0;
+  const badge=document.getElementById('apBadge').value.trim();
+  if(!name){toast('Please enter a product name.');return;}
+  const custom=getCustomProducts();
+  const id='c'+Date.now();
+  custom.push({id,cat,emoji,name,spec,defaultPrice:price,badge,custom:true});
+  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
+  const settings=getDcSettings();
+  settings[id]={on:true,price};
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  ['apName','apSpec','apBadge'].forEach(k=>document.getElementById(k).value='');
+  document.getElementById('apPrice').value='';
+  closeAddProdForm();renderDcPanel();
+  toast(name+' added to your store!');
+}
+function deleteCustomProduct(id){
+  if(!confirm('Remove this product from store?'))return;
+  let custom=getCustomProducts();
+  const name=custom.find(p=>p.id===id)?.name||'Product';
+  custom=custom.filter(p=>p.id!==id);
+  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
+  const settings=getDcSettings();delete settings[id];
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  renderDcPanel();toast(name+' removed.');
 }
 
 // ─── DISPLAY CONTROL ───
@@ -939,45 +1228,43 @@ const DC_PRODUCTS=[
 ];
 function getDcSettings(){
   try{const s=localStorage.getItem('breo_display');if(s)return JSON.parse(s);}catch(e){}
-  const def={};
-  DC_PRODUCTS.forEach(p=>{def[p.id]={on:p.cat==='iPhone',price:p.defaultPrice};});
-  return def;
+  const def={};DC_PRODUCTS.forEach(p=>{def[p.id]={on:p.cat==='iPhone',price:p.defaultPrice};});return def;
 }
+function getAllDcProducts(){return [...DC_PRODUCTS,...getCustomProducts()];}
 function renderDcPanel(){
   const settings=getDcSettings();
-  const cats=[...new Set(DC_PRODUCTS.map(p=>p.cat))];
+  const allProds=getAllDcProducts();
+  const cats=[...new Set(allProds.map(p=>p.cat))];
   const catBar=document.getElementById('dcCatBar');
   const list=document.getElementById('dcProdList');
   if(!catBar||!list)return;
   catBar.innerHTML=cats.map(cat=>{
-    const anyOn=DC_PRODUCTS.filter(p=>p.cat===cat).some(p=>settings[p.id]?.on);
-    const em=cat==='iPhone'?'📱':cat==='MacBook'?'💻':cat==='iPad'?'🖥':cat==='Watch'?'⌚':'🎧';
-    return `<div class="dc-cat-toggle${anyOn?' on':''}" onclick="dcToggleCat('${cat}',this)">${em} ${cat}</div>`;
+    const anyOn=allProds.filter(p=>p.cat===cat).some(p=>settings[p.id]?.on);
+    const em=cat==='iPhone'?'📱':cat==='MacBook'?'💻':cat==='iPad'?'🖥':cat==='Watch'?'⌚':cat==='AirPods'?'🎧':'📦';
+    return '<div class="dc-cat-toggle'+(anyOn?' on':'')+'" onclick="dcToggleCat(\''+cat+'\',this)">'+em+' '+cat+'</div>';
   }).join('');
-  list.innerHTML=DC_PRODUCTS.map(p=>{
+  list.innerHTML=allProds.map(p=>{
     const cfg=settings[p.id]||{on:false,price:p.defaultPrice};
-    return `<div class="dc-prod-row${cfg.on?'':' off'}" id="dcrow-${p.id}">
-      <div class="dc-prod-emoji">${p.emoji}</div>
-      <div class="dc-prod-info"><div class="dc-prod-name">${p.name}</div><div class="dc-prod-cat">${p.cat} · ${p.spec}</div></div>
-      ${p.badge?`<span class="dc-badge">${p.badge}</span>`:'<span></span>'}
-      <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--muted);">AED</span>
-        <input class="dc-price-input" id="dcprice-${p.id}" type="number" value="${cfg.price}" onchange="dcPriceChange(${p.id},this.value)">
-      </div>
-      <label class="dc-toggle">
-        <input type="checkbox" id="dctoggle-${p.id}" ${cfg.on?'checked':''} onchange="dcToggleProd(${p.id},this.checked)">
-        <span class="dc-toggle-slider"></span>
-      </label>
-    </div>`;
+    const delBtn=p.custom?'<button class="del-custom-btn" onclick="deleteCustomProduct(\''+p.id+'\')">✕ Remove</button>':'<span></span>';
+    const custLabel=p.custom?' <span style="font-size:10px;color:#34C759;background:rgba(52,199,89,.12);padding:1px 6px;border-radius:4px;">Custom</span>':'';
+    return '<div class="dc-prod-row'+(cfg.on?'':' off')+'" id="dcrow-'+p.id+'">'+
+      '<div class="dc-prod-emoji">'+p.emoji+'</div>'+
+      '<div class="dc-prod-info"><div class="dc-prod-name">'+p.name+custLabel+'</div><div class="dc-prod-cat">'+p.cat+' · '+p.spec+'</div></div>'+
+      (p.badge?'<span class="dc-badge">'+p.badge+'</span>':delBtn)+
+      '<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--muted);">AED</span>'+
+      '<input class="dc-price-input" id="dcprice-'+p.id+'" type="number" value="'+cfg.price+'" onchange="dcPriceChange(\''+p.id+'\',this.value)">'+
+      '</div><label class="dc-toggle"><input type="checkbox" id="dctoggle-'+p.id+'" '+(cfg.on?'checked':'')+' onchange="dcToggleProd(\''+p.id+'\',this.checked)">'+
+      '<span class="dc-toggle-slider"></span></label></div>';
   }).join('');
   updateDcCount(settings);
 }
 function dcToggleProd(id,on){
   const settings=getDcSettings();
-  if(!settings[id])settings[id]={on:false,price:DC_PRODUCTS.find(p=>p.id===id)?.defaultPrice||0};
+  const allP=getAllDcProducts();
+  if(!settings[id])settings[id]={on:false,price:allP.find(p=>String(p.id)===String(id))?.defaultPrice||0};
   settings[id].on=on;
   localStorage.setItem('breo_display',JSON.stringify(settings));
-  const row=document.getElementById(`dcrow-${id}`);
-  if(row)row.classList.toggle('off',!on);
+  const row=document.getElementById('dcrow-'+id);if(row)row.classList.toggle('off',!on);
   updateDcCount(settings);
 }
 function dcPriceChange(id,val){
@@ -988,16 +1275,14 @@ function dcPriceChange(id,val){
 }
 function dcToggleCat(cat,el){
   const settings=getDcSettings();
-  const catProds=DC_PRODUCTS.filter(p=>p.cat===cat);
+  const catProds=getAllDcProducts().filter(p=>p.cat===cat);
   const anyOn=catProds.some(p=>settings[p.id]?.on);
   const newState=!anyOn;
   catProds.forEach(p=>{
     if(!settings[p.id])settings[p.id]={on:newState,price:p.defaultPrice};
     settings[p.id].on=newState;
-    const cb=document.getElementById(`dctoggle-${p.id}`);
-    if(cb)cb.checked=newState;
-    const row=document.getElementById(`dcrow-${p.id}`);
-    if(row)row.classList.toggle('off',!newState);
+    const cb=document.getElementById('dctoggle-'+p.id);if(cb)cb.checked=newState;
+    const row=document.getElementById('dcrow-'+p.id);if(row)row.classList.toggle('off',!newState);
   });
   el.classList.toggle('on',newState);
   localStorage.setItem('breo_display',JSON.stringify(settings));
@@ -1005,14 +1290,13 @@ function dcToggleCat(cat,el){
 }
 function updateDcCount(settings){
   const count=Object.values(settings).filter(v=>v.on).length;
-  const el=document.getElementById('dcActiveCount');
-  if(el)el.textContent=count;
+  const el=document.getElementById('dcActiveCount');if(el)el.textContent=count;
 }
 function saveDisplaySettings(){
   const settings=getDcSettings();
   localStorage.setItem('breo_display',JSON.stringify(settings));
   const count=Object.values(settings).filter(v=>v.on).length;
-  toast(`✅ ${count} products now live on your store!`);
+  toast(count+' products now live on your store!');
 }
 
 // ─── TOAST ───
@@ -1024,8 +1308,7 @@ function toast(msg){
 
 // ─── INIT ───
 function init(){
-  renderDealsAdmin();
-  renderWaPreview();
+  renderDealsAdmin();renderWaPreview();
   const waNum=localStorage.getItem('breo_wa');
   if(waNum){document.getElementById('waNumber').value=waNum;const c=document.getElementById('waSaveConfirm');if(c)c.style.display='block';}
   const igH=localStorage.getItem('breo_ig');
@@ -1033,14 +1316,13 @@ function init(){
   const vid=localStorage.getItem('breo_promo_video');
   if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
   renderDcPanel();
-  // Blank canvas
   const cv=document.getElementById('vgCanvas');
   if(cv){
     const cx=cv.getContext('2d');
     cx.fillStyle='#0d0d1a';cx.fillRect(0,0,cv.width,cv.height);
     cx.font='48px serif';cx.textAlign='center';cx.fillText('🎬',cv.width/2,cv.height/2-20);
     cx.font='700 16px Inter,sans-serif';cx.fillStyle='rgba(167,139,250,0.4)';
-    cx.fillText('Fill the form to generate',cv.width/2,cv.height/2+30);
+    cx.fillText('Select style & Generate',cv.width/2,cv.height/2+30);
   }
   updateStats();
 }
