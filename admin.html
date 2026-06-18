@@ -1264,19 +1264,40 @@ async function generateWithWan2(){
   const video=document.getElementById('wan2ResultVideo');
   const dlWrap=document.getElementById('wan2DlWrap');
   btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
-  status.innerHTML='<span style="color:#00c8ff;">⏳ Sending to HuggingFace AI...</span>';
+  status.innerHTML='<span style="color:#00c8ff;">⏳ Connecting to HuggingFace AI...</span>';
   try{
-    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating AI video — this takes 60–120s on free tier...</span>';
-    const resp=await fetch('/api/hf-video',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt,hfToken})
-    });
-    if(!resp.ok){
-      const err=await resp.json().catch(()=>({}));
-      throw new Error(err.error||'HuggingFace error '+resp.status);
+    // Call HuggingFace directly from browser (they support CORS — no proxy needed)
+    // Try primary model first, fallback to secondary
+    const MODELS=['cerspense/zeroscope_v2_576w','damo-vilab/text-to-video-ms-1.7b'];
+    let blob=null,lastErr='';
+    for(const model of MODELS){
+      status.innerHTML='<span style="color:#00c8ff;">🎬 Generating with '+model.split('/')[1]+'... (~60–120s)</span>';
+      let attempts=0;
+      while(attempts<8){
+        attempts++;
+        const resp=await fetch('https://api-inference.huggingface.co/models/'+model,{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+hfToken,'Content-Type':'application/json','x-wait-for-model':'true'},
+          body:JSON.stringify({inputs:prompt})
+        });
+        if(resp.status===503){
+          const j=await resp.json().catch(()=>({}));
+          const wait=Math.min((j.estimated_time||20),30)*1000;
+          status.innerHTML='<span style="color:#00c8ff;">⏳ Model warming up (~'+Math.round(wait/1000)+'s)... attempt '+attempts+'/8</span>';
+          await new Promise(r=>setTimeout(r,wait));
+          continue;
+        }
+        if(!resp.ok){
+          const j=await resp.json().catch(()=>({}));
+          lastErr=j.error||'Error '+resp.status+' on '+model;
+          break;
+        }
+        blob=await resp.blob();
+        break;
+      }
+      if(blob)break;
     }
-    const blob=await resp.blob();
+    if(!blob)throw new Error(lastErr||'Both models failed. Check your HuggingFace token.');
     const objUrl=URL.createObjectURL(blob);
     wan2VideoUrl=objUrl;
     video.src=objUrl;video.style.display='block';
