@@ -1017,12 +1017,13 @@ function generateVideo(){
   const pl=document.getElementById('vgProgressLabel');
   btn.disabled=true;dl.style.display='none';if(igBtn)igBtn.style.display='none';
   pw.style.display='block';vgVideoBlob=null;
-  const FPS=30,DURATION=12,TOTAL=FPS*DURATION;
+  const FPS=24,DURATION=6,TOTAL=FPS*DURATION;
   let frame=0;const chunks=[];let recorder=null;
   try{
     const stream=canvas.captureStream(FPS);
-    const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
-    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5000000});
+    const mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
+    const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
     recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
     recorder.onstop=()=>{
       vgVideoBlob=new Blob(chunks,{type:'video/webm'});
@@ -1114,44 +1115,89 @@ function generateVideo(){
     }
   }
 
-  // ── Draw iPhone Pro silhouette ──
+  // ── Draw iPhone Pro with product content on screen ──
   function drawIphone(cx,cy,sc,glowColor){
     const iW=200*sc,iH=430*sc,iR=40*sc;
     const ix=cx-iW/2,iy=cy-iH/2;
-    // Shadow
-    ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=30;
+    const sx=ix+6*sc,sy=iy+6*sc,sw=iW-12*sc,sh=iH-12*sc,sr=iR-6*sc;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=35*sc;
     ctx.fillStyle='#1C1C1E';ctx.beginPath();ctx.roundRect(ix,iy,iW,iH,iR);ctx.fill();
     ctx.shadowBlur=0;
-    // Screen bezel
-    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(ix+6*sc,iy+6*sc,iW-12*sc,iH-12*sc,iR-6*sc);ctx.fill();
-    // Screen gradient
-    const sg=ctx.createLinearGradient(ix,iy,ix,iy+iH);
-    sg.addColorStop(0,'rgba('+hexToRgb(glowColor||s.accent)+',0.45)');
-    sg.addColorStop(0.4,'rgba('+hexToRgb(glowColor||s.accent)+',0.15)');
-    sg.addColorStop(1,'rgba(0,0,0,0.2)');
-    ctx.fillStyle=sg;ctx.beginPath();ctx.roundRect(ix+6*sc,iy+6*sc,iW-12*sc,iH-12*sc,iR-6*sc);ctx.fill();
+    // Screen black base
+    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(sx,sy,sw,sh,sr);ctx.fill();
+    // ── Screen content ──
+    ctx.save();ctx.beginPath();ctx.roundRect(sx,sy,sw,sh,sr);ctx.clip();
+    // Screen background gradient (deep blue/purple like iOS wallpaper)
+    const scBg=ctx.createLinearGradient(sx,sy,sx,sy+sh);
+    scBg.addColorStop(0,'#0a0a1e');scBg.addColorStop(0.4,'#12082a');scBg.addColorStop(1,'#050510');
+    ctx.fillStyle=scBg;ctx.fillRect(sx,sy,sw,sh);
+    // Subtle radial glow on screen
+    const scGl=ctx.createRadialGradient(cx,sy+sh*.4,0,cx,sy+sh*.4,sw*.7);
+    scGl.addColorStop(0,'rgba('+hexToRgb(glowColor||s.accent)+',0.30)');
+    scGl.addColorStop(1,'transparent');
+    ctx.fillStyle=scGl;ctx.fillRect(sx,sy,sw,sh);
+    // Status bar
+    ctx.fillStyle='rgba(255,255,255,0.7)';
+    ctx.font='bold '+10*sc+'px -apple-system,Inter,sans-serif';ctx.textAlign='left';
+    ctx.fillText('9:41',sx+12*sc,sy+18*sc);
+    ctx.textAlign='right';ctx.font='10px -apple-system,Inter,sans-serif';
+    ctx.fillText('●●●● 🔋',sx+sw-10*sc,sy+18*sc);
+    ctx.textAlign='center';
+    // Product emoji — large, centered
+    const emojiFontSz=Math.round(55*sc);
+    ctx.font=emojiFontSz+'px serif';ctx.textBaseline='middle';
+    const emojiY=sy+sh*.30;
+    ctx.fillText(locEmoji,cx,emojiY);
+    ctx.textBaseline='alphabetic';
+    // Model name on screen
+    const modelWords=model.split(' ');
+    const mFontSz=Math.max(9,Math.round(13*sc));
+    ctx.fillStyle='#fff';ctx.font='700 '+mFontSz+'px -apple-system,Inter,sans-serif';
+    if(modelWords.length<=3){
+      ctx.fillText(model,cx,sy+sh*.46);
+    } else {
+      const mid=Math.ceil(modelWords.length/2);
+      ctx.fillText(modelWords.slice(0,mid).join(' '),cx,sy+sh*.44);
+      ctx.fillText(modelWords.slice(mid).join(' '),cx,sy+sh*.44+mFontSz*1.4);
+    }
+    // Price on screen — gold
+    ctx.fillStyle='#FFD60A';
+    ctx.font='900 '+Math.round(18*sc)+'px -apple-system,Inter,sans-serif';
+    ctx.fillText('AED '+Number(price).toLocaleString(),cx,sy+sh*.60);
+    // Divider
+    ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(sx+sw*.1,sy+sh*.65);ctx.lineTo(sx+sw*.9,sy+sh*.65);ctx.stroke();
+    // WhatsApp mini CTA
+    const btnW=sw*.78,btnH=20*sc,btnX=cx-btnW/2,btnY=sy+sh*.675;
+    ctx.fillStyle='#25D366';ctx.beginPath();ctx.roundRect(btnX,btnY,btnW,btnH,btnH/2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='700 '+Math.round(9*sc)+'px -apple-system,Inter,sans-serif';
+    ctx.fillText('Order on WhatsApp',cx,btnY+btnH*.68);
+    // Breo watermark
+    ctx.fillStyle='rgba(255,255,255,0.35)';
+    ctx.font='600 '+Math.round(9*sc)+'px -apple-system,Inter,sans-serif';
+    ctx.fillText('breo. · Premium Apple Store UAE',cx,sy+sh*.93);
+    ctx.restore();
     // Dynamic Island
     ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(cx-28*sc,iy+18*sc,56*sc,22*sc,11*sc);ctx.fill();
     // Camera module
     const cmX=ix+iW*.1,cmY=iy-28*sc,cmW=iW*.58,cmH=82*sc,cmR=20*sc;
     ctx.fillStyle='#2C2C2E';ctx.beginPath();ctx.roundRect(cmX,cmY,cmW,cmH,cmR);ctx.fill();
-    // 3 lenses
     [[cmX+cmW*.22,cmY+cmH*.32],[cmX+cmW*.65,cmY+cmH*.32],[cmX+cmW*.44,cmY+cmH*.72]].forEach(([lx,ly])=>{
       ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(lx,ly,16*sc,0,Math.PI*2);ctx.fill();
       ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2;ctx.stroke();
-      ctx.fillStyle='rgba(40,80,180,0.6)';ctx.beginPath();ctx.arc(lx,ly,10*sc,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.arc(lx-3*sc,ly-3*sc,3*sc,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(30,60,160,0.7)';ctx.beginPath();ctx.arc(lx,ly,10*sc,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(lx-3*sc,ly-3*sc,3*sc,0,Math.PI*2);ctx.fill();
     });
     // Side buttons
     ctx.fillStyle='#2a2a2a';ctx.beginPath();ctx.roundRect(ix-4*sc,iy+iH*.22,4*sc,iH*.12,2);ctx.fill();
     ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.18,4*sc,iH*.08,2);ctx.fill();
     ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.28,4*sc,iH*.14,2);ctx.fill();
-    // Lens flare
-    const flareA=0.15+0.1*Math.sin(f/20);
-    ctx.globalAlpha=flareA;
-    const fl=ctx.createRadialGradient(cx+iW*.22,iy+iH*.12,0,cx+iW*.22,iy+iH*.12,iW*.4);
-    fl.addColorStop(0,'rgba(255,255,255,0.9)');fl.addColorStop(1,'transparent');
-    ctx.fillStyle=fl;ctx.fillRect(cx,iy,iW,iH*.35);
+    // Screen edge gloss
+    ctx.globalAlpha=0.12+0.06*Math.sin(f/20);
+    const gloss=ctx.createLinearGradient(sx,sy,sx+sw*.6,sy);
+    gloss.addColorStop(0,'rgba(255,255,255,0)');gloss.addColorStop(0.3,'rgba(255,255,255,0.8)');gloss.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=gloss;ctx.beginPath();ctx.roundRect(sx,sy,sw*.6,sh*.4,sr);ctx.fill();
     ctx.globalAlpha=1;
   }
 
@@ -1289,11 +1335,11 @@ function generateVideo(){
     pf.style.width=(frame/TOTAL*100)+'%';
     pl.textContent='Generating... '+Math.max(0,Math.round((TOTAL-frame)/FPS))+'s left';
     frame++;
-    if(frame<=TOTAL){requestAnimationFrame(tick);}
+    if(frame<=TOTAL){setTimeout(tick,0);}
     else{if(recorder&&recorder.state!=='inactive')recorder.stop();if(!recorder){btn.disabled=false;pw.style.display='none';}}
   }
   if(vgStyle==='presenter')drawPresenterFrame(0);else drawAbstractFrame(0);
-  requestAnimationFrame(tick);
+  setTimeout(tick,0);
 }
 function downloadVideo(){
   if(!vgVideoBlob)return;
