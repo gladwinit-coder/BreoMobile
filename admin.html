@@ -173,6 +173,85 @@ textarea{resize:vertical;min-height:80px;}
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--surface2);border:1px solid rgba(52,199,89,0.4);color:var(--text);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(0.34,1.56,0.64,1);}
 .toast.show{transform:translateY(0);opacity:1;}
 
+/* ─── VIDEO GENERATOR (HiggsField style) ─── */
+.vg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+@media(max-width:800px){.vg-wrap{grid-template-columns:1fr;}}
+.vg-form-card{background:linear-gradient(145deg,#0d0d1a,#111120);border:1px solid rgba(120,80,255,0.25);border-radius:22px;padding:28px;}
+.vg-form-card h3{font-size:16px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.vg-form-card .sub{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.vg-field{margin-bottom:16px;}
+.vg-field label{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(167,139,250,.7);margin-bottom:6px;}
+.vg-field input,.vg-field select,.vg-field textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(120,80,255,.2);color:var(--text);padding:11px 14px;border-radius:12px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;}
+.vg-field input:focus,.vg-field select:focus,.vg-field textarea:focus{border-color:rgba(120,80,255,.6);box-shadow:0 0 0 3px rgba(120,80,255,.1);}
+.vg-field textarea{resize:vertical;min-height:90px;line-height:1.6;}
+.vg-field select option{background:#1a1a2e;}
+.vg-style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+.vg-style-btn{background:rgba(255,255,255,.04);border:1px solid rgba(120,80,255,.2);color:var(--muted);padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;}
+.vg-style-btn.active{background:rgba(120,80,255,.2);border-color:rgba(120,80,255,.6);color:#a78bfa;}
+.vg-generate-btn{
+  width:100%;padding:14px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;font-size:15px;font-weight:700;font-family:inherit;
+  cursor:pointer;margin-top:8px;position:relative;overflow:hidden;
+  transition:opacity .2s,transform .15s;
+}
+.vg-generate-btn:hover{opacity:.9;transform:translateY(-1px);}
+.vg-generate-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.vg-generate-btn .shimmer{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimmer 1.5s infinite;}
+@keyframes shimmer{to{left:100%}}
+.vg-preview-card{background:linear-gradient(145deg,#0d0d1a,#111120);border:1px solid rgba(120,80,255,.25);border-radius:22px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.vg-preview-card h3{font-size:14px;font-weight:700;color:rgba(167,139,250,.8);align-self:flex-start;}
+.vg-canvas-wrap{width:100%;max-width:280px;border-radius:16px;overflow:hidden;border:1px solid rgba(120,80,255,.3);background:#000;aspect-ratio:9/16;position:relative;}
+#vgCanvas{width:100%;height:100%;display:block;}
+.vg-canvas-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,.2);}
+.vg-canvas-placeholder svg{width:40px;height:40px;opacity:.3;}
+.vg-progress-wrap{width:100%;max-width:280px;display:none;}
+.vg-progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.vg-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb);border-radius:2px;width:0%;transition:width .1s linear;}
+.vg-progress-label{font-size:12px;color:var(--muted);margin-top:6px;text-align:center;}
+.vg-download-btn{
+  width:100%;max-width:280px;padding:12px;border-radius:12px;
+  background:linear-gradient(135deg,#059669,#10b981);color:#fff;
+  border:none;font-size:14px;font-weight:700;font-family:inherit;
+  cursor:pointer;display:none;transition:opacity .2s,transform .15s;
+}
+.vg-download-btn:hover{opacity:.9;transform:translateY(-1px);}
+.vg-tips{background:rgba(120,80,255,.06);border:1px solid rgba(120,80,255,.15);border-radius:14px;padding:16px;font-size:12px;color:var(--muted);line-height:1.7;max-width:280px;width:100%;}
+.vg-tips strong{color:rgba(167,139,250,.9);display:block;margin-bottom:4px;}
+
+/* ─── DISPLAY CONTROL ─── */
+.dc-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.dc-publish-btn{background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+.dc-publish-btn:hover{opacity:.85;}
+.dc-cat-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.dc-cat-toggle{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
+.dc-cat-toggle.on{background:rgba(10,132,255,.12);border-color:rgba(10,132,255,.3);color:var(--blue);}
+.dc-prod-list{display:flex;flex-direction:column;gap:10px;}
+.dc-prod-row{
+  display:grid;grid-template-columns:40px 1fr auto auto 100px auto;
+  align-items:center;gap:12px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;
+  transition:border-color .2s,opacity .3s;
+}
+.dc-prod-row.off{opacity:.4;}
+.dc-prod-emoji{font-size:24px;text-align:center;}
+.dc-prod-info .dc-prod-name{font-size:14px;font-weight:600;}
+.dc-prod-info .dc-prod-cat{font-size:11px;color:var(--muted);margin-top:2px;}
+.dc-price-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:9px;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:100px;text-align:right;transition:border-color .2s;}
+.dc-price-input:focus{border-color:var(--gold);}
+.dc-toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+.dc-toggle input{opacity:0;width:0;height:0;}
+.dc-toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;cursor:pointer;transition:background .2s;}
+.dc-toggle-slider::before{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;}
+.dc-toggle input:checked+.dc-toggle-slider{background:var(--blue);}
+.dc-toggle input:checked+.dc-toggle-slider::before{transform:translateX(20px);}
+.dc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(255,214,10,.15);color:var(--gold);white-space:nowrap;}
+@media(max-width:640px){
+  .dc-prod-row{grid-template-columns:32px 1fr auto;gap:8px;}
+  .dc-prod-row .dc-badge,.dc-prod-row .dc-price-input{display:none;}
+}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:600px){
   .admin-body{padding:70px 16px 40px;}
@@ -228,6 +307,8 @@ textarea{resize:vertical;min-height:80px;}
       <button class="tab" onclick="switchTab('video',this)">🎬 Promo Video</button>
       <button class="tab" onclick="switchTab('whatsapp',this)">💬 WhatsApp</button>
       <button class="tab" onclick="switchTab('instagram',this)">📸 Instagram</button>
+      <button class="tab" onclick="switchTab('videogen',this)">🎥 Video Generator</button>
+      <button class="tab" onclick="switchTab('display',this)">📱 Display Control</button>
     </div>
 
     <!-- DEALS TAB -->
@@ -363,6 +444,98 @@ textarea{resize:vertical;min-height:80px;}
       </div>
     </div>
 
+    <!-- VIDEO GENERATOR TAB -->
+    <div class="tab-content" id="tab-videogen">
+      <div class="sec-title">🎥 AI Video Generator</div>
+      <p class="sec-sub">Create professional offer videos for your iPhone deals. Post directly to Instagram, WhatsApp Status, and TikTok.</p>
+      <div class="vg-wrap">
+        <!-- Form -->
+        <div class="vg-form-card">
+          <h3>✦ Generate Offer Video</h3>
+          <p class="sub">Fill in the offer details. Your video generates in ~15 seconds.</p>
+          <div class="vg-field">
+            <label>📱 iPhone Model</label>
+            <select id="vgModel">
+              <option>iPhone 16 Pro Max</option><option>iPhone 16 Pro</option><option>iPhone 16</option>
+              <option>iPhone 15 Pro Max</option><option>iPhone 15 Pro</option><option>iPhone 15</option>
+              <option>iPhone 14 Pro Max</option><option>iPhone 14</option><option>iPhone SE</option>
+            </select>
+          </div>
+          <div class="vg-field">
+            <label>💰 Sale Price (AED)</label>
+            <input type="number" id="vgPrice" placeholder="e.g. 3999">
+          </div>
+          <div class="vg-field">
+            <label>🔥 Offer Headline</label>
+            <input type="text" id="vgHeadline" placeholder="e.g. Flash Sale Today Only!">
+          </div>
+          <div class="vg-field">
+            <label>📝 Script / Comment</label>
+            <textarea id="vgScript" placeholder="e.g. Hey Dubai! Today only we have the iPhone 16 Pro Max at AED 3,999. Brand new, sealed box, official warranty. Order on WhatsApp now before it's gone!"></textarea>
+          </div>
+          <div class="vg-field">
+            <label>📍 Dubai Location</label>
+            <select id="vgLocation">
+              <option>Burj Khalifa</option><option>Dubai Mall</option>
+              <option>JBR Beach</option><option>Dubai Marina</option>
+              <option>Palm Jumeirah</option><option>Downtown Dubai</option>
+              <option>Dubai Frame</option><option>Global Village</option>
+            </select>
+          </div>
+          <div class="vg-field">
+            <label>🎨 Video Style</label>
+            <div class="vg-style-grid" id="vgStyleGrid">
+              <button class="vg-style-btn active" data-style="luxury" onclick="setVgStyle(this)">✨ Luxury</button>
+              <button class="vg-style-btn" data-style="bold" onclick="setVgStyle(this)">⚡ Bold</button>
+              <button class="vg-style-btn" data-style="minimal" onclick="setVgStyle(this)">◻ Minimal</button>
+              <button class="vg-style-btn" data-style="neon" onclick="setVgStyle(this)">🌈 Neon</button>
+              <button class="vg-style-btn" data-style="gold" onclick="setVgStyle(this)">👑 Gold</button>
+              <button class="vg-style-btn" data-style="dark" onclick="setVgStyle(this)">🌑 Dark</button>
+            </div>
+          </div>
+          <button class="vg-generate-btn" id="vgGenerateBtn" onclick="generateVideo()">
+            <span class="shimmer"></span>
+            🎬 Generate Video
+          </button>
+        </div>
+        <!-- Preview -->
+        <div class="vg-preview-card">
+          <h3>Preview</h3>
+          <div class="vg-canvas-wrap">
+            <canvas id="vgCanvas" width="540" height="960"></canvas>
+          </div>
+          <div class="vg-progress-wrap" id="vgProgressWrap">
+            <div class="vg-progress-bar"><div class="vg-progress-fill" id="vgProgressFill"></div></div>
+            <div class="vg-progress-label" id="vgProgressLabel">Preparing...</div>
+          </div>
+          <button class="vg-download-btn" id="vgDownloadBtn" onclick="downloadVideo()">⬇ Download Video (.webm)</button>
+          <div class="vg-tips">
+            <strong>📋 How to use</strong>
+            1. Fill the form on the left<br>
+            2. Tap Generate Video — renders in ~15s<br>
+            3. Download the .webm file<br>
+            4. Upload to Instagram Reels, WhatsApp Status, or TikTok
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPLAY CONTROL TAB -->
+    <div class="tab-content" id="tab-display">
+      <div class="dc-header">
+        <div>
+          <div class="sec-title">📱 Display Control</div>
+          <p class="sec-sub" style="margin-bottom:0;">Choose which products appear on your store and set their prices.</p>
+        </div>
+        <button class="dc-publish-btn" onclick="saveDisplaySettings()">✅ Save &amp; Publish to Site</button>
+      </div>
+      <div style="background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#60A5FA;">
+        💡 Your store currently shows <strong id="dcActiveCount">0</strong> products. Toggle products on/off and edit prices below — changes go live instantly when you Save.
+      </div>
+      <div class="dc-cat-bar" id="dcCatBar"></div>
+      <div class="dc-prod-list" id="dcProdList"></div>
+    </div>
+
   </div><!-- /admin-body -->
 </div><!-- /adminPanel -->
 
@@ -374,243 +547,4 @@ function doLogin(){
   const p=document.getElementById('loginPass').value.trim();
   const err=document.getElementById('loginErr');
   if(u===CREDS.user&&p===CREDS.pass){
-    sessionStorage.setItem('breo_auth','1');
-    err.style.display='none';
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').style.display='block';
-    init();
-  } else {
-    err.style.display='block';
-    err.style.animation='none';
-    requestAnimationFrame(()=>err.style.animation='shake .3s');
-  }
-}
-function doLogout(){sessionStorage.removeItem('breo_auth');location.reload();}
-if(sessionStorage.getItem('breo_auth')==='1'){
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('adminPanel').style.display='block';
-}
-
-// ─── DEALS DATA ───
-const DEFAULT_DEALS=[
-  {emoji:'📱',title:'iPhone 15 Pro Max',price:'3999',old:'4500',offer:'Today Only!',badge:'HOT',grad:'linear-gradient(135deg,#0A84FF,#5856D6)'},
-  {emoji:'✨',title:'iPhone 15 Pro',price:'3299',old:'3800',offer:'Flash Deal',badge:'FLASH',grad:'linear-gradient(135deg,#FF375F,#FF9F0A)'},
-  {emoji:'🎁',title:'iPhone 14 Pro Max',price:'2799',old:'3200',offer:'Bundle Available',badge:'-12%',grad:'linear-gradient(135deg,#34C759,#30B0C7)'},
-  {emoji:'💜',title:'iPhone 14',price:'1999',old:'2400',offer:'In Stock Now',badge:'DEAL',grad:'linear-gradient(135deg,#BF5AF2,#5856D6)'}
-];
-function getDeals(){try{const s=localStorage.getItem('breo_deals');return s?JSON.parse(s):DEFAULT_DEALS;}catch(e){return DEFAULT_DEALS;}}
-function saveDeals(d){localStorage.setItem('breo_deals',JSON.stringify(d));updateStats();}
-
-let editIdx=-1;let selGrad='linear-gradient(135deg,#0A84FF,#5856D6)';
-function renderDealsAdmin(){
-  const deals=getDeals();
-  document.getElementById('dealsGrid').innerHTML=deals.map((d,i)=>`
-    <div class="deal-card">
-      <div class="deal-card-thumb" style="background:${d.grad}"><span>${d.emoji}</span></div>
-      <div class="deal-card-body">
-        <div class="deal-card-title">${d.title}</div>
-        <div class="deal-card-price">AED ${Number(d.price).toLocaleString()}</div>
-        <div class="deal-card-old">Was AED ${Number(d.old).toLocaleString()}</div>
-        <div class="deal-card-actions">
-          <button class="edit-btn" onclick="openEditForm(${i})">✏️ Edit</button>
-          <button class="del-btn" onclick="deleteDeal(${i})">🗑 Delete</button>
-        </div>
-      </div>
-    </div>`).join('');
-  updateStats();
-  populateCaptionSelect();
-}
-function openAddForm(){
-  editIdx=-1;
-  document.getElementById('formTitle').textContent='Add New Deal';
-  document.getElementById('fPrice').value='';
-  document.getElementById('fOld').value='';
-  document.getElementById('fOffer').value='Today Only!';
-  document.getElementById('fBadge').value='HOT';
-  setGrad('linear-gradient(135deg,#0A84FF,#5856D6)');
-  document.getElementById('dealForm').classList.add('open');
-  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
-}
-function openEditForm(i){
-  editIdx=i;
-  const d=getDeals()[i];
-  document.getElementById('formTitle').textContent='Edit Deal';
-  document.getElementById('fModel').value=d.title;
-  document.getElementById('fEmoji').value=d.emoji;
-  document.getElementById('fPrice').value=d.price;
-  document.getElementById('fOld').value=d.old;
-  document.getElementById('fOffer').value=d.offer;
-  document.getElementById('fBadge').value=d.badge;
-  setGrad(d.grad);
-  document.getElementById('dealForm').classList.add('open');
-  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
-}
-function closeForm(){document.getElementById('dealForm').classList.remove('open');editIdx=-1;}
-function saveDeal(){
-  const deal={
-    title:document.getElementById('fModel').value,
-    emoji:document.getElementById('fEmoji').value,
-    price:document.getElementById('fPrice').value||'0',
-    old:document.getElementById('fOld').value||'0',
-    offer:document.getElementById('fOffer').value,
-    badge:document.getElementById('fBadge').value,
-    grad:selGrad
-  };
-  const deals=getDeals();
-  if(editIdx>=0){deals[editIdx]=deal;}else{deals.push(deal);}
-  saveDeals(deals);renderDealsAdmin();closeForm();
-  toast('✅ Deal saved! Now live on your site.');
-}
-function deleteDeal(i){
-  if(!confirm('Delete this deal?'))return;
-  const deals=getDeals();deals.splice(i,1);saveDeals(deals);renderDealsAdmin();
-  toast('Deal removed.');
-}
-function setGrad(g){selGrad=g;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('sel',s.dataset.grad===g));}
-document.getElementById('colorRow').addEventListener('click',function(e){const sw=e.target.closest('.color-swatch');if(sw)setGrad(sw.dataset.grad);});
-
-// ─── STATS ───
-function updateStats(){
-  document.getElementById('statDeals').textContent=getDeals().length;
-  const num=localStorage.getItem('breo_wa')||'';
-  document.getElementById('statWa').textContent=num?'+'+num:'Not set';
-  document.getElementById('statWa').style.color=num?'var(--green)':'var(--muted)';
-  const ig=localStorage.getItem('breo_ig')||'';
-  document.getElementById('statIg').textContent=ig?'@'+ig:'Not set';
-  document.getElementById('statIg').style.color=ig?'#E1306C':'var(--muted)';
-  const vid=localStorage.getItem('breo_promo_video')||'';
-  document.getElementById('statVideo').textContent=vid?'Active':'None';
-  document.getElementById('statVideo').style.color=vid?'var(--blue)':'var(--muted)';
-}
-
-// ─── TABS ───
-function switchTab(name,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-}
-
-// ─── PROMO VIDEO ───
-function savePromoVideo(){
-  const url=document.getElementById('promoVideoUrl').value.trim();
-  if(!url){toast('Please enter a YouTube URL first.');return;}
-  localStorage.setItem('breo_promo_video',url);
-  previewVideo(url);
-  updateStats();
-  toast('🎬 Video saved! Live on your homepage.');
-}
-function clearPromoVideo(){
-  localStorage.removeItem('breo_promo_video');
-  document.getElementById('promoVideoUrl').value='';
-  document.getElementById('videoPreviewWrap').innerHTML='<div class="video-placeholder" id="videoPlaceholder"><span class="big-icon">🏙️</span><span>Paste a YouTube URL above to preview your video</span></div>';
-  updateStats();
-  toast('Video removed.');
-}
-function previewVideo(url){
-  const match=url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^?&"'>]+)/);
-  if(match){
-    const vid=match[1];
-    const wrap=document.getElementById('videoPreviewWrap');
-    wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?rel=0" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
-    wrap.style.cssText='position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;margin-top:16px;';
-  } else {
-    toast('Could not read that URL. Make sure it\'s a YouTube link.');
-  }
-}
-
-// ─── WHATSAPP ───
-function saveWaNumber(){
-  const n=document.getElementById('waNumber').value.trim().replace(/\D/g,'');
-  if(!n){toast('Please enter a number first.');return;}
-  localStorage.setItem('breo_wa',n);
-  document.getElementById('waLinkPreview').textContent=`https://wa.me/${n}`;
-  const bioEl=document.getElementById('bioLinkDisplay');
-  if(bioEl)bioEl.textContent=`https://wa.me/${n}`;
-  const confirm=document.getElementById('waSaveConfirm');
-  if(confirm){confirm.style.display='block';}
-  updateStats();
-  toast('✅ WhatsApp number saved — checkout is now live!');
-}
-function testWaLink(){
-  const n=localStorage.getItem('breo_wa')||document.getElementById('waNumber').value.trim().replace(/\D/g,'');
-  if(!n){toast('Save a number first.');return;}
-  const msg=encodeURIComponent('Hi Breo Mobile! 👋\n\nThis is a test order:\n\n• iPhone 16 Pro (256GB) x1 = AED 5,199\n\n💰 Total: AED 5,199\n\nPlease confirm availability and delivery details. Thank you!');
-  window.open(`https://wa.me/${n}?text=${msg}`,'_blank');
-}
-function copyWaLink(){
-  const num=localStorage.getItem('breo_wa')||'971500000000';
-  navigator.clipboard.writeText(`https://wa.me/${num}?text=Hi%20I%20want%20to%20buy%20an%20iPhone`).then(()=>toast('📋 WhatsApp link copied!'));
-}
-function copyGreeting(){
-  navigator.clipboard.writeText(`Welcome to Breo Mobile! 👋 We have the latest iPhones at the best prices in UAE 🇦🇪. Reply with:\n\n1️⃣ DEALS — Today's offers\n2️⃣ PRICE — Full price list\n3️⃣ ORDER — Buy now\n\nOr just tell me which iPhone you want!`).then(()=>toast('Greeting copied! Paste in WhatsApp Business.'));
-}
-function buildPriceList(){
-  const deals=getDeals();
-  return `📱 Breo Mobile — Price List\n${'─'.repeat(28)}\n\n${deals.map(d=>`${d.title}\n💰 AED ${Number(d.price).toLocaleString()} (Was ${Number(d.old).toLocaleString()})`).join('\n\n')}\n\n${'─'.repeat(28)}\nAll brand new · Warranty included\nSame-day delivery across UAE 🇦🇪\nReply with the model you want!`;
-}
-function renderWaPreview(){
-  document.getElementById('priceListPreview').textContent=buildPriceList();
-  const num=localStorage.getItem('breo_wa')||'971500000000';
-  document.getElementById('waLinkPreview').textContent=`https://wa.me/${num}`;
-}
-function copyPriceList(){navigator.clipboard.writeText(buildPriceList()).then(()=>toast('Price list copied!'));}
-
-// ─── INSTAGRAM ───
-function saveIgHandle(){
-  const h=document.getElementById('igHandle').value.trim().replace('@','');
-  if(!h){toast('Please enter your Instagram username.');return;}
-  localStorage.setItem('breo_ig',h);
-  updateStats();
-  toast('📸 Instagram handle saved!');
-}
-function populateCaptionSelect(){
-  const sel=document.getElementById('captionDeal');
-  const deals=getDeals();
-  sel.innerHTML=deals.map((d,i)=>`<option value="${i}">${d.title}</option>`).join('');
-  genCaption();
-}
-function genCaption(){
-  const i=parseInt(document.getElementById('captionDeal').value);
-  const d=getDeals()[i];
-  if(!d)return;
-  const ig=localStorage.getItem('breo_ig')||'breomobile';
-  const wa=localStorage.getItem('breo_wa')||'971500000000';
-  const caption=`🔥 ${d.title} — Special Offer Today!\n\n💰 Only AED ${Number(d.price).toLocaleString()} (Was AED ${Number(d.old).toLocaleString()})\n✅ Brand new, sealed box, warranty included\n🚚 Same-day delivery across UAE\n\nDM us or tap link in bio to order on WhatsApp!\n👉 wa.me/${wa}\n\n#iPhone #iPhoneUAE #Dubai #UAEiPhone #DubaiTech #iPhoneDeals #BreoMobile #${d.title.replace(/\s+/g,'')}UAE`;
-  document.getElementById('captionOutput').textContent=caption;
-}
-function copyCaption(){
-  const txt=document.getElementById('captionOutput').textContent;
-  if(txt.includes('Select'))return;
-  navigator.clipboard.writeText(txt).then(()=>toast('Caption copied! Paste in Instagram.'));
-}
-
-// ─── NUMBER INPUT LIVE PREVIEW ───
-document.getElementById('waNumber').addEventListener('input',function(){
-  const n=this.value.trim().replace(/\D/g,'');
-  document.getElementById('waLinkPreview').textContent=n?`https://wa.me/${n}`:'https://wa.me/...';
-});
-
-// ─── TOAST ───
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
-
-// ─── INIT ───
-function init(){
-  renderDealsAdmin();
-  renderWaPreview();
-  const waNum=localStorage.getItem('breo_wa');
-  if(waNum)document.getElementById('waNumber').value=waNum;
-  const igH=localStorage.getItem('breo_ig');
-  if(igH)document.getElementById('igHandle').value=igH;
-  const vid=localStorage.getItem('breo_promo_video');
-  if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
-  updateStats();
-}
-if(sessionStorage.getItem('breo_auth')==='1')init();
-</script>
-</body>
-</html>
+    se

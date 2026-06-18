@@ -1101,9 +1101,24 @@ const PRODUCTS = [
 ];
 
 let currentFilter = 'All';
+function getDisplaySettings(){
+  try{ const s=localStorage.getItem('breo_display'); if(s) return JSON.parse(s); } catch(e){}
+  // Default: only iPhones on
+  const def={};
+  PRODUCTS.forEach((p,i)=>{ def[p.id]={on:p.cat==='iPhone',price:p.price}; });
+  return def;
+}
 function renderProducts(filter){
   const grid = document.getElementById('productGrid');
-  const filtered = filter === 'All' ? PRODUCTS : PRODUCTS.filter(p => p.cat === filter);
+  const settings = getDisplaySettings();
+  // Apply admin prices and filter to visible products only
+  const visibleProducts = PRODUCTS.map(p => {
+    const cfg = settings[p.id];
+    if(!cfg) return null;
+    if(!cfg.on) return null;
+    return {...p, price: cfg.price || p.price};
+  }).filter(Boolean);
+  const filtered = filter === 'All' ? visibleProducts : visibleProducts.filter(p => p.cat === filter);
   grid.innerHTML = filtered.map(p => `
     <div class="prod-card reveal" data-cat="${p.cat}">
       ${p.badge ? `<div class="prod-badge ${p.badgeType}">${p.badge}</div>` : ''}
@@ -1254,20 +1269,4 @@ function scrollBS(dir){
 ════════════════════════════════ */
 function subscribeNewsletter(e){
   e.preventDefault();
-  const btn = e.target.querySelector('.nl-btn');
-  btn.textContent = '✓ Subscribed!';
-  btn.style.background = '#34C759';
-  setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; e.target.reset(); }, 3000);
-}
-
-/* ════════════════════════════════
-   INIT
-════════════════════════════════ */
-renderProducts('All');
-renderCart();
-
-// Keyboard: close cart on Escape
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeCart(); });
-</script>
-</body>
-</html>
+  const btn = e.target.querySelector('.n
