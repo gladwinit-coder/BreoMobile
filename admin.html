@@ -1251,25 +1251,26 @@ async function generateWithWan2(){
   btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
   status.innerHTML='<span style="color:#00c8ff;">⏳ Sending to Replicate...</span>';
   try{
-    // Create prediction using Wan2.1 480p model
-    const createResp=await fetch('https://api.replicate.com/v1/models/wavespeedai/wan-2.1-t2v-480p/predictions',{
+    // Create prediction via our CORS-safe serverless proxy
+    const createResp=await fetch('/api/wan2-create',{
       method:'POST',
-      headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json'},
-      body:JSON.stringify({input:{prompt,num_frames:81,sample_steps:30,sample_guide_scale:6,negative_prompt:'blur, low quality, distorted, ugly, watermark'}})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt,apiKey})
     });
     if(!createResp.ok){
       const err=await createResp.json().catch(()=>({}));
-      throw new Error(err.detail||'API error '+createResp.status+'. Check your API key.');
+      throw new Error(err.error||'API error '+createResp.status+'. Check your API key.');
     }
     const pred=await createResp.json();
+    if(pred.detail||pred.error){throw new Error(pred.detail||pred.error);}
     const predId=pred.id;
     status.innerHTML='<span style="color:#00c8ff;">🎬 Generating video (ID: '+predId.slice(0,8)+'...) This takes ~60–90s</span>';
-    // Poll for completion
+    // Poll via proxy
     let attempts=0;const maxAttempts=90;
     while(attempts<maxAttempts){
       await new Promise(r=>setTimeout(r,2000));
       attempts++;
-      const pollResp=await fetch('https://api.replicate.com/v1/predictions/'+predId,{headers:{'Authorization':'Bearer '+apiKey}});
+      const pollResp=await fetch('/api/wan2-poll',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({predictionId:predId,apiKey})});
       const data=await pollResp.json();
       const pct=Math.min(95,Math.round((attempts/maxAttempts)*100));
       if(data.status==='succeeded'){
