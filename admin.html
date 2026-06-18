@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breo Admin — Control Panel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050508;--surface:#0f0f18;--surface2:#181820;--surface3:#1e1e28;
+  --border:rgba(255,255,255,0.08);--blue:#0A84FF;--pink:#FF375F;
+  --gold:#FFD60A;--green:#25D366;--red:#FF453A;
+  --text:#F5F5F7;--muted:rgba(255,255,255,0.5);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ─── LOGIN ─── */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(10,132,255,0.1) 0%,transparent 70%);
+}
+.login-box{
+  background:var(--surface);border:1px solid var(--border);border-radius:28px;
+  padding:48px 40px;width:380px;text-align:center;
+  animation:loginIn .5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes loginIn{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.login-icon{font-size:48px;margin-bottom:12px;display:block;animation:iconPop .5s .15s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes iconPop{from{transform:scale(0)}to{transform:scale(1)}}
+.login-logo{font-size:24px;font-weight:900;margin-bottom:4px;}
+.login-logo span{background:linear-gradient(135deg,#0A84FF,#FF375F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:36px;}
+.input-wrap{position:relative;margin-bottom:12px;}
+.input-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
+.login-box input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);padding:13px 16px 13px 42px;border-radius:13px;
+  font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.login-box input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,132,255,0.12);}
+.login-btn{
+  width:100%;background:linear-gradient(135deg,var(--blue),#5856D6);color:#fff;
+  border:none;padding:14px;border-radius:13px;font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .2s,transform .2s;margin-top:4px;font-family:inherit;
+}
+.login-btn:hover{opacity:.9;transform:translateY(-1px);}
+.login-btn:active{transform:translateY(0);}
+.login-err{color:var(--red);font-size:13px;margin-top:12px;display:none;animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.login-note{font-size:11px;color:rgba(255,255,255,0.18);margin-top:20px;}
+
+/* ─── ADMIN PANEL ─── */
+#adminPanel{display:none;}
+.admin-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:58px;
+  background:rgba(5,5,8,0.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.admin-logo{font-size:16px;font-weight:900;}
+.admin-logo span{background:linear-gradient(135deg,#0A84FF,#FF375F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.admin-logo em{font-style:normal;color:rgba(255,255,255,0.3);font-size:11px;margin-left:6px;background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;}
+.admin-nav-right{display:flex;align-items:center;gap:10px;}
+.view-site-btn{
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  padding:7px 14px;border-radius:10px;font-size:13px;cursor:pointer;
+  text-decoration:none;transition:all .2s;font-family:inherit;
+}
+.view-site-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.logout-btn{
+  background:rgba(255,69,58,0.1);border:1px solid rgba(255,69,58,0.2);
+  color:var(--red);font-size:13px;cursor:pointer;font-family:inherit;
+  padding:7px 14px;border-radius:10px;transition:all .2s;
+}
+.logout-btn:hover{background:rgba(255,69,58,0.2);}
+.admin-body{padding:78px 28px 60px;max-width:1000px;margin:0 auto;}
+
+/* ─── STATS ─── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;
+  transition:border-color .2s,transform .2s;
+}
+.stat-card:hover{border-color:rgba(10,132,255,0.2);transform:translateY(-2px);}
+.stat-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.stat-val{font-size:28px;font-weight:900;}
+.stat-note{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--surface);border-radius:14px;padding:5px;width:fit-content;flex-wrap:wrap;}
+.tab{padding:8px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:6px;}
+.tab.active{background:var(--surface2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:tabIn .25s ease;}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-size:20px;font-weight:800;margin-bottom:6px;}
+.sec-sub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+
+/* ─── DEAL CARDS ─── */
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:20px;}
+.deal-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:border-color .2s;}
+.deal-card:hover{border-color:rgba(10,132,255,0.25);}
+.deal-card-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;}
+.deal-card-body{padding:14px 16px;}
+.deal-card-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+.deal-card-price{font-size:22px;font-weight:900;color:var(--gold);}
+.deal-card-old{font-size:12px;color:var(--muted);text-decoration:line-through;}
+.deal-card-actions{display:flex;gap:8px;margin-top:12px;}
+.edit-btn,.del-btn{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:opacity .2s;}
+.edit-btn{background:rgba(10,132,255,0.15);color:#60A5FA;}
+.del-btn{background:rgba(255,69,58,0.12);color:var(--red);}
+.edit-btn:hover,.del-btn:hover{opacity:.75;}
+.add-deal-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:rgba(10,132,255,0.08);border:1px dashed rgba(10,132,255,0.3);
+  color:#60A5FA;padding:14px;font-size:14px;font-weight:700;cursor:pointer;
+  border-radius:18px;transition:all .2s;width:100%;font-family:inherit;
+}
+.add-deal-btn:hover{background:rgba(10,132,255,0.15);border-color:rgba(10,132,255,0.5);}
+
+/* ─── FORM PANEL ─── */
+.form-panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;display:none;margin-bottom:20px;}
+.form-panel.open{display:block;animation:tabIn .25s ease;}
+.form-panel h3{font-size:16px;font-weight:700;margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+input[type="text"],input[type="number"],input[type="url"],select,textarea{
+  background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  padding:11px 14px;border-radius:11px;font-size:14px;font-family:inherit;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,132,255,0.1);}
+textarea{resize:vertical;min-height:80px;}
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.color-swatch{width:36px;height:36px;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.color-swatch.sel{border-color:#fff;transform:scale(1.15);}
+.save-btn{background:var(--blue);color:#fff;border:none;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit;}
+.save-btn:hover{opacity:.85;}
+.cancel-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-left:10px;}
+
+/* ─── SETTINGS CARDS ─── */
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:20px;}
+.settings-card h3{font-size:16px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.settings-card .card-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:12px;}
+.copy-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.wa-preview{background:#0B141A;border-radius:16px;padding:16px;margin-top:14px;font-size:13px;line-height:1.6;}
+.wa-msg{background:#1F2C34;border-radius:4px 12px 12px 12px;padding:10px 14px;display:inline-block;max-width:85%;margin-bottom:8px;}
+.link-preview{font-size:12px;color:#60A5FA;background:rgba(10,132,255,0.08);padding:10px 14px;border-radius:10px;margin-top:10px;word-break:break-all;font-family:monospace;}
+
+/* ─── VIDEO SECTION ─── */
+.video-preview-wrap{position:relative;border-radius:16px;overflow:hidden;background:var(--surface2);aspect-ratio:16/9;margin-top:16px;}
+.video-preview-wrap iframe{width:100%;height:100%;border:none;display:block;}
+.video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:14px;}
+.video-placeholder .big-icon{font-size:40px;}
+
+/* ─── INSTAGRAM GUIDE ─── */
+.ig-steps{display:flex;flex-direction:column;gap:14px;}
+.ig-step{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:flex-start;transition:border-color .2s;}
+.ig-step:hover{border-color:rgba(225,48,108,0.2);}
+.step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#E1306C,#833AB4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
+.step-body h4{font-size:15px;font-weight:700;margin-bottom:4px;}
+.step-body p{font-size:13px;color:var(--muted);line-height:1.6;}
+.step-body a{color:#60A5FA;text-decoration:none;}
+.step-body code{background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;font-size:12px;color:#60A5FA;}
+.tool-badge{display:inline-block;background:rgba(131,58,180,0.2);border:1px solid rgba(131,58,180,0.4);color:#C085F5;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700;margin:4px 4px 0 0;}
+.free-badge{display:inline-block;background:rgba(52,199,89,0.15);border:1px solid rgba(52,199,89,0.3);color:#34C759;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700;margin-left:4px;}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--surface2);border:1px solid rgba(52,199,89,0.4);color:var(--text);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(0.34,1.56,0.64,1);}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .admin-body{padding:70px 16px 40px;}
+  .form-row{grid-template-columns:1fr;}
+  .tabs{width:100%;}
+  .tab{flex:1;text-align:center;padding:8px 10px;font-size:13px;}
+  .login-box{width:100%;max-width:360px;padding:36px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- ─── LOGIN ─── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <span class="login-icon">🔐</span>
+    <div class="login-logo"><span>Breo</span>mobile</div>
+    <p class="login-sub">Admin Control Panel</p>
+    <div class="input-wrap">
+      <span class="input-icon">👤</span>
+      <input type="text" id="loginUser" placeholder="Username" onkeypress="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="input-wrap">
+      <span class="input-icon">🔑</span>
+      <input type="password" id="loginPass" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <p class="login-err" id="loginErr">❌ Wrong credentials, try again</p>
+    <p class="login-note">Default login: admin / breo2025</p>
+  </div>
+</div>
+
+<!-- ─── ADMIN PANEL ─── -->
+<div id="adminPanel">
+  <nav class="admin-nav">
+    <div class="admin-logo"><span>Breo</span>mobile <em>Admin</em></div>
+    <div class="admin-nav-right">
+      <a href="index.html" class="view-site-btn" target="_blank">👁 View Site</a>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </nav>
+  <div class="admin-body">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-val" id="statDeals">4</div><div class="stat-note">Shown on homepage</div></div>
+      <div class="stat-card"><div class="stat-label">WhatsApp</div><div class="stat-val" id="statWa" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your business number</div></div>
+      <div class="stat-card"><div class="stat-label">Instagram</div><div class="stat-val" id="statIg" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your handle</div></div>
+      <div class="stat-card"><div class="stat-label">Promo Video</div><div class="stat-val" id="statVideo" style="font-size:16px;margin-top:4px;">None</div><div class="stat-note">Dubai offer video</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('deals',this)">📦 Deals</button>
+      <button class="tab" onclick="switchTab('video',this)">🎬 Promo Video</button>
+      <button class="tab" onclick="switchTab('whatsapp',this)">💬 WhatsApp</button>
+      <button class="tab" onclick="switchTab('instagram',this)">📸 Instagram</button>
+    </div>
+
+    <!-- DEALS TAB -->
+    <div class="tab-content active" id="tab-deals">
+      <div class="sec-title">Manage Deals</div>
+      <p class="sec-sub">These cards appear as offer tiles on your public site. Add, edit or remove deals here.</p>
+      <div class="form-panel" id="dealForm">
+        <h3 id="formTitle">Add New Deal</h3>
+        <div class="form-row">
+          <div class="form-group"><label>iPhone Model</label><select id="fModel"><option>iPhone 16 Pro Max</option><option>iPhone 16 Pro</option><option>iPhone 16</option><option>iPhone 15 Pro Max</option><option>iPhone 15 Pro</option><option>iPhone 15</option><option>iPhone 14 Pro Max</option><option>iPhone 14 Pro</option><option>iPhone 14</option><option>iPhone 13 Pro</option><option>iPhone 13</option><option>iPhone SE</option></select></div>
+          <div class="form-group"><label>Emoji Icon</label><select id="fEmoji"><option value="📱">📱 Phone</option><option value="✨">✨ Sparkle</option><option value="🎁">🎁 Gift</option><option value="⚡">⚡ Flash</option><option value="💜">💜 Purple</option><option value="🔥">🔥 Fire</option><option value="💎">💎 Diamond</option><option value="🌟">🌟 Star</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Sale Price (AED)</label><input type="number" id="fPrice" placeholder="e.g. 3999"></div>
+          <div class="form-group"><label>Old Price (AED)</label><input type="number" id="fOld" placeholder="e.g. 4500"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Offer Text</label><input type="text" id="fOffer" placeholder="e.g. Today Only!"></div>
+          <div class="form-group"><label>Badge Label</label><input type="text" id="fBadge" placeholder="e.g. HOT"></div>
+        </div>
+        <div class="form-group" style="margin-bottom:20px;"><label>Card Colour</label>
+          <div class="color-row" id="colorRow">
+            <div class="color-swatch sel" data-grad="linear-gradient(135deg,#0A84FF,#5856D6)" style="background:linear-gradient(135deg,#0A84FF,#5856D6)"></div>
+            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF375F,#FF9F0A)" style="background:linear-gradient(135deg,#FF375F,#FF9F0A)"></div>
+            <div class="color-swatch" data-grad="linear-gradient(135deg,#34C759,#30B0C7)" style="background:linear-gradient(135deg,#34C759,#30B0C7)"></div>
+            <div class="color-swatch" data-grad="linear-gradient(135deg,#BF5AF2,#5856D6)" style="background:linear-gradient(135deg,#BF5AF2,#5856D6)"></div>
+            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF9F0A,#FFD60A)" style="background:linear-gradient(135deg,#FF9F0A,#FFD60A)"></div>
+            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF375F,#BF5AF2)" style="background:linear-gradient(135deg,#FF375F,#BF5AF2)"></div>
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveDeal()">Save Deal</button>
+        <button class="cancel-btn" onclick="closeForm()">Cancel</button>
+      </div>
+      <div class="deals-grid" id="dealsGrid"></div>
+      <button class="add-deal-btn" onclick="openAddForm()">＋ Add New Deal</button>
+    </div>
+
+    <!-- PROMO VIDEO TAB -->
+    <div class="tab-content" id="tab-video">
+      <div class="sec-title">Dubai Promo Video</div>
+      <p class="sec-sub">Add a YouTube video of your person announcing offers in front of Dubai landmarks. It shows at the top of your homepage.</p>
+      <div class="settings-card">
+        <h3>🎬 YouTube Video URL</h3>
+        <p class="card-sub">Record a short video in front of Burj Khalifa, Dubai Mall, JBR, or any Dubai location. Upload to YouTube (can be Unlisted), then paste the link here.</p>
+        <div class="form-group" style="max-width:600px;">
+          <label>YouTube URL</label>
+          <input type="url" id="promoVideoUrl" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <button class="save-btn" style="margin-top:14px;" onclick="savePromoVideo()">Save & Publish Video</button>
+        <button class="cancel-btn" onclick="clearPromoVideo()">Remove Video</button>
+        <div class="video-preview-wrap" id="videoPreviewWrap">
+          <div class="video-placeholder" id="videoPlaceholder">
+            <span class="big-icon">🏙️</span>
+            <span>Paste a YouTube URL above to preview your video</span>
+          </div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>💡 Video Tips for Dubai</h3>
+        <p class="card-sub" style="margin-bottom:0;">Film a 30–60 second clip. Hold your phone, say the offer clearly, and show the Dubai landmark behind you. Keep it energetic and personal — customers trust faces more than text.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px;">
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🗼<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Burj Khalifa</div></div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🛍️<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Dubai Mall</div></div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🏖️<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">JBR Beach</div></div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">⛵<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Dubai Marina</div></div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🏰<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Palm Jumeirah</div></div>
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🌅<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Downtown Dubai</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHATSAPP TAB -->
+    <div class="tab-content" id="tab-whatsapp">
+      <div class="sec-title">WhatsApp Setup</div>
+      <p class="sec-sub">Set your UAE number and copy your auto-reply messages for WhatsApp Business.</p>
+      <div class="settings-card" style="border-color:rgba(37,211,102,.3);">
+        <h3>📱 Your WhatsApp Number <span style="font-size:11px;font-weight:600;background:rgba(37,211,102,.15);color:#25D366;padding:3px 10px;border-radius:6px;margin-left:6px;">Controls Checkout</span></h3>
+        <p class="card-sub">This number receives ALL orders from your store. When a customer taps "Order via WhatsApp" on the checkout, their full order is sent here as a WhatsApp message.</p>
+        <div class="form-group" style="max-width:320px;">
+          <label>UAE Number — country code first, no spaces or +</label>
+          <input type="text" id="waNumber" placeholder="971500000000" style="font-size:18px;font-weight:700;letter-spacing:.04em;">
+        </div>
+        <div class="link-preview" id="waLinkPreview">https://wa.me/971500000000</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <button class="save-btn" style="background:#25D366;" onclick="saveWaNumber()">✅ Save &amp; Activate</button>
+          <button class="copy-btn" onclick="copyWaLink()">📋 Copy Link</button>
+          <button class="copy-btn" onclick="testWaLink()" style="border-color:rgba(37,211,102,.4);color:#25D366;">▶ Test It</button>
+        </div>
+        <p id="waSaveConfirm" style="font-size:12px;color:#25D366;margin-top:8px;display:none;">✓ Active — all store checkouts now route to this number.</p>
+      </div>
+      <div class="settings-card">
+        <h3>💬 Greeting Message</h3>
+        <p class="card-sub">Copy this and set it as your Greeting Message in WhatsApp Business app → Settings → Business Tools → Greeting Message.</p>
+        <div class="wa-preview"><div class="wa-msg">Welcome to Breo Mobile! 👋 We have the latest iPhones at the best prices in UAE 🇦🇪. Reply with:<br><br>1️⃣ DEALS — Today's offers<br>2️⃣ PRICE — Full price list<br>3️⃣ ORDER — Buy now<br><br>Or just tell me which iPhone you want!</div></div>
+        <button class="save-btn" style="margin-top:14px;background:var(--green);" onclick="copyGreeting()">Copy Greeting</button>
+      </div>
+      <div class="settings-card">
+        <h3>📋 Price List Quick Reply</h3>
+        <p class="card-sub">Save this as a Quick Reply with shortcut /price in WhatsApp Business.</p>
+        <div style="background:#0B141A;border-radius:12px;padding:14px;font-size:12px;line-height:1.9;white-space:pre-line;font-family:monospace;color:rgba(255,255,255,0.75);" id="priceListPreview"></div>
+        <button class="save-btn" style="margin-top:14px;background:var(--green);" onclick="copyPriceList()">Copy Price List</button>
+      </div>
+    </div>
+
+    <!-- INSTAGRAM TAB -->
+    <div class="tab-content" id="tab-instagram">
+      <div class="sec-title">Instagram Setup</div>
+      <p class="sec-sub">Link your Instagram and follow the daily post guide to drive orders.</p>
+      <div class="settings-card">
+        <h3>📸 Your Instagram Handle</h3>
+        <p class="card-sub">This adds your Instagram link to your website nav and footer.</p>
+        <div class="form-group" style="max-width:320px;">
+          <label>Instagram Username (without @)</label>
+          <input type="text" id="igHandle" placeholder="breomobile.uae">
+        </div>
+        <button class="save-btn" style="margin-top:14px;background:linear-gradient(135deg,#E1306C,#833AB4);" onclick="saveIgHandle()">Save Instagram</button>
+      </div>
+      <div class="settings-card" style="margin-top:20px;">
+        <h3>✍️ Caption Generator</h3>
+        <p class="card-sub">Generate a ready-to-post Instagram caption from your deals:</p>
+        <select id="captionDeal" onchange="genCaption()" style="max-width:300px;margin-bottom:14px;"></select>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.85);white-space:pre-line;font-family:monospace;" id="captionOutput">Select a deal above to generate caption...</div>
+        <button class="save-btn" style="margin-top:14px;background:linear-gradient(135deg,#E1306C,#833AB4);" onclick="copyCaption()">📋 Copy Caption</button>
+      </div>
+      <div class="settings-card" style="margin-top:20px;">
+        <h3>🗓️ Daily Auto-Post Guide</h3>
+        <div class="ig-steps">
+          <div class="ig-step"><div class="step-num">1</div><div class="step-body"><h4>Create Your Video in Canva</h4><p>Go to <a href="https://canva.com" target="_blank">canva.com</a> — search "iPhone sale story" templates. Record or use video clips. Export as MP4. Do 7 versions on Sunday for the whole week.</p><span class="tool-badge">Canva</span><span class="free-badge">FREE</span></div></div>
+          <div class="ig-step"><div class="step-num">2</div><div class="step-body"><h4>Connect to Meta Business Suite</h4><p>Go to <a href="https://business.facebook.com" target="_blank">business.facebook.com</a>, connect your Instagram page, then use the free Content Planner to schedule posts.</p><span class="tool-badge">Meta Business Suite</span><span class="free-badge">FREE</span></div></div>
+          <div class="ig-step"><div class="step-num">3</div><div class="step-body"><h4>Put WhatsApp Link in Bio</h4><p>Edit Profile → Website → paste your WhatsApp link: <code id="bioLinkDisplay">https://wa.me/971500000000</code>. Every post ends with "Link in bio to order".</p></div></div>
+          <div class="ig-step"><div class="step-num">4</div><div class="step-body"><h4>Schedule 7 Days at Once</h4><p>Upload all 7 videos to Meta Suite every Sunday. Set time to 9:00 AM UAE daily. Instagram runs itself all week while you close deals on WhatsApp.</p><span class="tool-badge">30 min / week</span></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /adminPanel -->
+
+<script>
+// ─── AUTH ───
+const CREDS={user:'admin',pass:'breo2025'};
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  const err=document.getElementById('loginErr');
+  if(u===CREDS.user&&p===CREDS.pass){
+    sessionStorage.setItem('breo_auth','1');
+    err.style.display='none';
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    init();
+  } else {
+    err.style.display='block';
+    err.style.animation='none';
+    requestAnimationFrame(()=>err.style.animation='shake .3s');
+  }
+}
+function doLogout(){sessionStorage.removeItem('breo_auth');location.reload();}
+if(sessionStorage.getItem('breo_auth')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+}
+
+// ─── DEALS DATA ───
+const DEFAULT_DEALS=[
+  {emoji:'📱',title:'iPhone 15 Pro Max',price:'3999',old:'4500',offer:'Today Only!',badge:'HOT',grad:'linear-gradient(135deg,#0A84FF,#5856D6)'},
+  {emoji:'✨',title:'iPhone 15 Pro',price:'3299',old:'3800',offer:'Flash Deal',badge:'FLASH',grad:'linear-gradient(135deg,#FF375F,#FF9F0A)'},
+  {emoji:'🎁',title:'iPhone 14 Pro Max',price:'2799',old:'3200',offer:'Bundle Available',badge:'-12%',grad:'linear-gradient(135deg,#34C759,#30B0C7)'},
+  {emoji:'💜',title:'iPhone 14',price:'1999',old:'2400',offer:'In Stock Now',badge:'DEAL',grad:'linear-gradient(135deg,#BF5AF2,#5856D6)'}
+];
+function getDeals(){try{const s=localStorage.getItem('breo_deals');return s?JSON.parse(s):DEFAULT_DEALS;}catch(e){return DEFAULT_DEALS;}}
+function saveDeals(d){localStorage.setItem('breo_deals',JSON.stringify(d));updateStats();}
+
+let editIdx=-1;let selGrad='linear-gradient(135deg,#0A84FF,#5856D6)';
+function renderDealsAdmin(){
+  const deals=getDeals();
+  document.getElementById('dealsGrid').innerHTML=deals.map((d,i)=>`
+    <div class="deal-card">
+      <div class="deal-card-thumb" style="background:${d.grad}"><span>${d.emoji}</span></div>
+      <div class="deal-card-body">
+        <div class="deal-card-title">${d.title}</div>
+        <div class="deal-card-price">AED ${Number(d.price).toLocaleString()}</div>
+        <div class="deal-card-old">Was AED ${Number(d.old).toLocaleString()}</div>
+        <div class="deal-card-actions">
+          <button class="edit-btn" onclick="openEditForm(${i})">✏️ Edit</button>
+          <button class="del-btn" onclick="deleteDeal(${i})">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+  updateStats();
+  populateCaptionSelect();
+}
+function openAddForm(){
+  editIdx=-1;
+  document.getElementById('formTitle').textContent='Add New Deal';
+  document.getElementById('fPrice').value='';
+  document.getElementById('fOld').value='';
+  document.getElementById('fOffer').value='Today Only!';
+  document.getElementById('fBadge').value='HOT';
+  setGrad('linear-gradient(135deg,#0A84FF,#5856D6)');
+  document.getElementById('dealForm').classList.add('open');
+  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
+}
+function openEditForm(i){
+  editIdx=i;
+  const d=getDeals()[i];
+  document.getElementById('formTitle').textContent='Edit Deal';
+  document.getElementById('fModel').value=d.title;
+  document.getElementById('fEmoji').value=d.emoji;
+  document.getElementById('fPrice').value=d.price;
+  document.getElementById('fOld').value=d.old;
+  document.getElementById('fOffer').value=d.offer;
+  document.getElementById('fBadge').value=d.badge;
+  setGrad(d.grad);
+  document.getElementById('dealForm').classList.add('open');
+  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
+}
+function closeForm(){document.getElementById('dealForm').classList.remove('open');editIdx=-1;}
+function saveDeal(){
+  const deal={
+    title:document.getElementById('fModel').value,
+    emoji:document.getElementById('fEmoji').value,
+    price:document.getElementById('fPrice').value||'0',
+    old:document.getElementById('fOld').value||'0',
+    offer:document.getElementById('fOffer').value,
+    badge:document.getElementById('fBadge').value,
+    grad:selGrad
+  };
+  const deals=getDeals();
+  if(editIdx>=0){deals[editIdx]=deal;}else{deals.push(deal);}
+  saveDeals(deals);renderDealsAdmin();closeForm();
+  toast('✅ Deal saved! Now live on your site.');
+}
+function deleteDeal(i){
+  if(!confirm('Delete this deal?'))return;
+  const deals=getDeals();deals.splice(i,1);saveDeals(deals);renderDealsAdmin();
+  toast('Deal removed.');
+}
+function setGrad(g){selGrad=g;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('sel',s.dataset.grad===g));}
+document.getElementById('colorRow').addEventListener('click',function(e){const sw=e.target.closest('.color-swatch');if(sw)setGrad(sw.dataset.grad);});
+
+// ─── STATS ───
+function updateStats(){
+  document.getElementById('statDeals').textContent=getDeals().length;
+  const num=localStorage.getItem('breo_wa')||'';
+  document.getElementById('statWa').textContent=num?'+'+num:'Not set';
+  document.getElementById('statWa').style.color=num?'var(--green)':'var(--muted)';
+  const ig=localStorage.getItem('breo_ig')||'';
+  document.getElementById('statIg').textContent=ig?'@'+ig:'Not set';
+  document.getElementById('statIg').style.color=ig?'#E1306C':'var(--muted)';
+  const vid=localStorage.getItem('breo_promo_video')||'';
+  document.getElementById('statVideo').textContent=vid?'Active':'None';
+  document.getElementById('statVideo').style.color=vid?'var(--blue)':'var(--muted)';
+}
+
+// ─── TABS ───
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ─── PROMO VIDEO ───
+function savePromoVideo(){
+  const url=document.getElementById('promoVideoUrl').value.trim();
+  if(!url){toast('Please enter a YouTube URL first.');return;}
+  localStorage.setItem('breo_promo_video',url);
+  previewVideo(url);
+  updateStats();
+  toast('🎬 Video saved! Live on your homepage.');
+}
+function clearPromoVideo(){
+  localStorage.removeItem('breo_promo_video');
+  document.getElementById('promoVideoUrl').value='';
+  document.getElementById('videoPreviewWrap').innerHTML='<div class="video-placeholder" id="videoPlaceholder"><span class="big-icon">🏙️</span><span>Paste a YouTube URL above to preview your video</span></div>';
+  updateStats();
+  toast('Video removed.');
+}
+function previewVideo(url){
+  const match=url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^?&"'>]+)/);
+  if(match){
+    const vid=match[1];
+    const wrap=document.getElementById('videoPreviewWrap');
+    wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?rel=0" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
+    wrap.style.cssText='position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;margin-top:16px;';
+  } else {
+    toast('Could not read that URL. Make sure it\'s a YouTube link.');
+  }
+}
+
+// ─── WHATSAPP ───
+function saveWaNumber(){
+  const n=document.getElementById('waNumber').value.trim().replace(/\D/g,'');
+  if(!n){toast('Please enter a number first.');return;}
+  localStorage.setItem('breo_wa',n);
+  document.getElementById('waLinkPreview').textContent=`https://wa.me/${n}`;
+  const bioEl=document.getElementById('bioLinkDisplay');
+  if(bioEl)bioEl.textContent=`https://wa.me/${n}`;
+  const confirm=document.getElementById('waSaveConfirm');
+  if(confirm){confirm.style.display='block';}
+  updateStats();
+  toast('✅ WhatsApp number saved — checkout is now live!');
+}
+function testWaLink(){
+  const n=localStorage.getItem('breo_wa')||document.getElementById('waNumber').value.trim().replace(/\D/g,'');
+  if(!n){toast('Save a number first.');return;}
+  const msg=encodeURIComponent('Hi Breo Mobile! 👋\n\nThis is a test order:\n\n• iPhone 16 Pro (256GB) x1 = AED 5,199\n\n💰 Total: AED 5,199\n\nPlease confirm availability and delivery details. Thank you!');
+  window.open(`https://wa.me/${n}?text=${msg}`,'_blank');
+}
+function copyWaLink(){
+  const num=localStorage.getItem('breo_wa')||'971500000000';
+  navigator.clipboard.writeText(`https://wa.me/${num}?text=Hi%20I%20want%20to%20buy%20an%20iPhone`).then(()=>toast('📋 WhatsApp link copied!'));
+}
+function copyGreeting(){
+  navigator.clipboard.writeText(`Welcome to Breo Mobile! 👋 We have the latest iPhones at the best prices in UAE 🇦🇪. Reply with:\n\n1️⃣ DEALS — Today's offers\n2️⃣ PRICE — Full price list\n3️⃣ ORDER — Buy now\n\nOr just tell me which iPhone you want!`).then(()=>toast('Greeting copied! Paste in WhatsApp Business.'));
+}
+function buildPriceList(){
+  const deals=getDeals();
+  return `📱 Breo Mobile — Price List\n${'─'.repeat(28)}\n\n${deals.map(d=>`${d.title}\n💰 AED ${Number(d.price).toLocaleString()} (Was ${Number(d.old).toLocaleString()})`).join('\n\n')}\n\n${'─'.repeat(28)}\nAll brand new · Warranty included\nSame-day delivery across UAE 🇦🇪\nReply with the model you want!`;
+}
+function renderWaPreview(){
+  document.getElementById('priceListPreview').textContent=buildPriceList();
+  const num=localStorage.getItem('breo_wa')||'971500000000';
+  document.getElementById('waLinkPreview').textContent=`https://wa.me/${num}`;
+}
+function copyPriceList(){navigator.clipboard.writeText(buildPriceList()).then(()=>toast('Price list copied!'));}
+
+// ─── INSTAGRAM ───
+function saveIgHandle(){
+  const h=document.getElementById('igHandle').value.trim().replace('@','');
+  if(!h){toast('Please enter your Instagram username.');return;}
+  localStorage.setItem('breo_ig',h);
+  updateStats();
+  toast('📸 Instagram handle saved!');
+}
+function populateCaptionSelect(){
+  const sel=document.getElementById('captionDeal');
+  const deals=getDeals();
+  sel.innerHTML=deals.map((d,i)=>`<option value="${i}">${d.title}</option>`).join('');
+  genCaption();
+}
+function genCaption(){
+  const i=parseInt(document.getElementById('captionDeal').value);
+  const d=getDeals()[i];
+  if(!d)return;
+  const ig=localStorage.getItem('breo_ig')||'breomobile';
+  const wa=localStorage.getItem('breo_wa')||'971500000000';
+  const caption=`🔥 ${d.title} — Special Offer Today!\n\n💰 Only AED ${Number(d.price).toLocaleString()} (Was AED ${Number(d.old).toLocaleString()})\n✅ Brand new, sealed box, warranty included\n🚚 Same-day delivery across UAE\n\nDM us or tap link in bio to order on WhatsApp!\n👉 wa.me/${wa}\n\n#iPhone #iPhoneUAE #Dubai #UAEiPhone #DubaiTech #iPhoneDeals #BreoMobile #${d.title.replace(/\s+/g,'')}UAE`;
+  document.getElementById('captionOutput').textContent=caption;
+}
+function copyCaption(){
+  const txt=document.getElementById('captionOutput').textContent;
+  if(txt.includes('Select'))return;
+  navigator.clipboard.writeText(txt).then(()=>toast('Caption copied! Paste in Instagram.'));
+}
+
+// ─── NUMBER INPUT LIVE PREVIEW ───
+document.getElementById('waNumber').addEventListener('input',function(){
+  const n=this.value.trim().replace(/\D/g,'');
+  document.getElementById('waLinkPreview').textContent=n?`https://wa.me/${n}`:'https://wa.me/...';
+});
+
+// ─── TOAST ───
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ─── INIT ───
+function init(){
+  renderDealsAdmin();
+  renderWaPreview();
+  const waNum=localStorage.getItem('breo_wa');
+  if(waNum)document.getElementById('waNumber').value=waNum;
+  const igH=localStorage.getItem('breo_ig');
+  if(igH)document.getElementById('igHandle').value=igH;
+  const vid=localStorage.getItem('breo_promo_video');
+  if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
+  updateStats();
+}
+if(sessionStorage.getItem('breo_auth')==='1')init();
+</script>
+</body>
+</html>
