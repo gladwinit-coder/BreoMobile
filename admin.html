@@ -1114,68 +1114,174 @@ function generateVideo(){
     }
   }
 
+  // ── Draw iPhone Pro silhouette ──
+  function drawIphone(cx,cy,sc,glowColor){
+    const iW=200*sc,iH=430*sc,iR=40*sc;
+    const ix=cx-iW/2,iy=cy-iH/2;
+    // Shadow
+    ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=30;
+    ctx.fillStyle='#1C1C1E';ctx.beginPath();ctx.roundRect(ix,iy,iW,iH,iR);ctx.fill();
+    ctx.shadowBlur=0;
+    // Screen bezel
+    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(ix+6*sc,iy+6*sc,iW-12*sc,iH-12*sc,iR-6*sc);ctx.fill();
+    // Screen gradient
+    const sg=ctx.createLinearGradient(ix,iy,ix,iy+iH);
+    sg.addColorStop(0,'rgba('+hexToRgb(glowColor||s.accent)+',0.45)');
+    sg.addColorStop(0.4,'rgba('+hexToRgb(glowColor||s.accent)+',0.15)');
+    sg.addColorStop(1,'rgba(0,0,0,0.2)');
+    ctx.fillStyle=sg;ctx.beginPath();ctx.roundRect(ix+6*sc,iy+6*sc,iW-12*sc,iH-12*sc,iR-6*sc);ctx.fill();
+    // Dynamic Island
+    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(cx-28*sc,iy+18*sc,56*sc,22*sc,11*sc);ctx.fill();
+    // Camera module
+    const cmX=ix+iW*.1,cmY=iy-28*sc,cmW=iW*.58,cmH=82*sc,cmR=20*sc;
+    ctx.fillStyle='#2C2C2E';ctx.beginPath();ctx.roundRect(cmX,cmY,cmW,cmH,cmR);ctx.fill();
+    // 3 lenses
+    [[cmX+cmW*.22,cmY+cmH*.32],[cmX+cmW*.65,cmY+cmH*.32],[cmX+cmW*.44,cmY+cmH*.72]].forEach(([lx,ly])=>{
+      ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(lx,ly,16*sc,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle='rgba(40,80,180,0.6)';ctx.beginPath();ctx.arc(lx,ly,10*sc,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.arc(lx-3*sc,ly-3*sc,3*sc,0,Math.PI*2);ctx.fill();
+    });
+    // Side buttons
+    ctx.fillStyle='#2a2a2a';ctx.beginPath();ctx.roundRect(ix-4*sc,iy+iH*.22,4*sc,iH*.12,2);ctx.fill();
+    ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.18,4*sc,iH*.08,2);ctx.fill();
+    ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.28,4*sc,iH*.14,2);ctx.fill();
+    // Lens flare
+    const flareA=0.15+0.1*Math.sin(f/20);
+    ctx.globalAlpha=flareA;
+    const fl=ctx.createRadialGradient(cx+iW*.22,iy+iH*.12,0,cx+iW*.22,iy+iH*.12,iW*.4);
+    fl.addColorStop(0,'rgba(255,255,255,0.9)');fl.addColorStop(1,'transparent');
+    ctx.fillStyle=fl;ctx.fillRect(cx,iy,iW,iH*.35);
+    ctx.globalAlpha=1;
+  }
+
+  function drawParticles(f){
+    const pts=[[.08,.12],[.22,.05],[.34,.19],[.48,.08],[.62,.14],[.76,.06],[.90,.17],[.14,.35],[.28,.28],[.44,.38],[.58,.25],[.72,.32],[.86,.40],[.06,.52],[.18,.60],[.32,.50],[.46,.58],[.60,.46],[.74,.55],[.88,.62],[.12,.72],[.26,.80],[.40,.70],[.54,.76],[.68,.68],[.82,.75],[.94,.82],[.04,.88],[.16,.92],[.30,.85]];
+    pts.forEach(([px2,py2],i)=>{
+      const pulse=0.3+0.5*Math.abs(Math.sin(f/22+i*0.7));
+      const sz=1.5+Math.sin(f/15+i*1.3)*0.8;
+      ctx.globalAlpha=pulse*0.7;
+      ctx.fillStyle=i%3===0?s.accent:i%3===1?s.accent2:'#ffffff';
+      ctx.beginPath();ctx.arc(px2*W,py2*H,sz,0,Math.PI*2);ctx.fill();
+    });
+    ctx.globalAlpha=1;
+  }
+
   function drawAbstractFrame(f){
     const t=f/TOTAL;
-    const grad=ctx.createLinearGradient(0,0,W,H);
-    grad.addColorStop(0,s.bg1);grad.addColorStop(1,s.bg2);
+    // Background
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,s.bg1);grad.addColorStop(0.6,s.bg2);grad.addColorStop(1,s.bg1);
     ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-    const glowX=W/2+Math.sin(f/40)*80,glowY=H*.45+Math.cos(f/55)*60;
-    const glow=ctx.createRadialGradient(glowX,glowY,0,glowX,glowY,W*.7);
-    glow.addColorStop(0,'rgba('+hexToRgb(s.accent)+',0.18)');glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba('+hexToRgb(s.accent)+',0.35)';
-    for(let i=0;i<18;i++){
-      const px2=(W*((i*137.5+f*.4)%100))/100;
-      const py2=((H*((i*73.1+f*.7)%100))/100+f*(.3+i*.05))%H;
-      ctx.beginPath();ctx.arc(px2,py2,1.5+Math.sin(f/20+i)*.8,0,Math.PI*2);ctx.fill();
-    }
-    const s1=clamp01(t/.25);const logoY=lerp(-60,H*.12,easeOut(s1));
-    ctx.globalAlpha=easeOut(s1);ctx.fillStyle=s.text;
-    ctx.font='900 '+W*.13+'px Inter,sans-serif';ctx.textAlign='center';
-    ctx.fillText('breo.',W/2,logoY);
-    ctx.font='400 '+W*.038+'px Inter,sans-serif';
-    ctx.fillStyle='rgba('+hexToRgb(s.accent)+',0.9)';
-    ctx.fillText('Premium Apple Store · UAE',W/2,logoY+W*.07);
+    // Radial glow center
+    const glowX=W/2+Math.sin(f/50)*40,glowY=H*.42+Math.cos(f/65)*30;
+    const rgl=ctx.createRadialGradient(glowX,glowY,0,glowX,glowY,W*.75);
+    rgl.addColorStop(0,'rgba('+hexToRgb(s.accent)+',0.22)');rgl.addColorStop(0.5,'rgba('+hexToRgb(s.accent)+',0.05)');rgl.addColorStop(1,'transparent');
+    ctx.fillStyle=rgl;ctx.fillRect(0,0,W,H);
+    drawParticles(f);
+    // Vignette
+    const vig=ctx.createRadialGradient(W/2,H/2,H*.28,W/2,H/2,H*.72);
+    vig.addColorStop(0,'transparent');vig.addColorStop(1,'rgba(0,0,0,0.55)');
+    ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+
+    // ── Phase 1: Logo (0-2.5s) ──
+    const s1=clamp01(t/.20);
+    const logoAlpha=easeOut(s1);
+    ctx.globalAlpha=logoAlpha;
+    // Logo glow
+    ctx.shadowColor=s.accent;ctx.shadowBlur=40;
+    ctx.font='900 '+W*.115+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
+    const lgr=ctx.createLinearGradient(W*.2,0,W*.8,0);
+    lgr.addColorStop(0,s.accent);lgr.addColorStop(0.5,'#ffffff');lgr.addColorStop(1,s.accent2);
+    ctx.fillStyle=lgr;ctx.fillText('breo.',W/2,H*.115);
+    ctx.shadowBlur=0;
+    ctx.font='400 '+W*.032+'px Inter,sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.60)';
+    ctx.fillText('PREMIUM APPLE STORE  ·  UAE',W/2,H*.148);
     ctx.globalAlpha=1;
-    const bAlpha=easeOut(clamp01((t-.05)/.2));
-    ctx.globalAlpha=bAlpha;
-    const bw=W*.55,bh=W*.10,bx=(W-bw)/2,by=H*.22-bh/2;
-    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,bh/2);
-    ctx.fillStyle='rgba('+hexToRgb(s.badge)+',0.85)';ctx.fill();
-    ctx.font='700 '+W*.042+'px Inter,sans-serif';ctx.fillStyle='#fff';
-    ctx.fillText(locEmoji+' '+location,W/2,H*.22+W*.014);ctx.globalAlpha=1;
-    const s2=clamp01(Math.max(0,(t-.25)/.3));
-    ctx.globalAlpha=easeOut(s2);
-    ctx.save();ctx.translate(W/2,H*.44);ctx.scale(easeOut(s2),easeOut(s2));
-    ctx.font=W*.36+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('📱',0,Math.sin(f/25)*8);
-    ctx.restore();ctx.textBaseline='alphabetic';ctx.globalAlpha=1;
-    const nA=easeOut(clamp01(Math.max(0,(t-.35)/.15)));
-    ctx.globalAlpha=nA;ctx.fillStyle=s.text;
-    ctx.font='800 '+W*.072+'px Inter,sans-serif';ctx.textAlign='center';
+
+    // ── Phase 2: Location badge (0.4s) ──
+    const bA=easeOut(clamp01((t-.06)/.18));
+    ctx.globalAlpha=bA;
+    const bw2=W*.58,bh2=W*.092,bx2=(W-bw2)/2,by2=H*.178;
+    const bg2=ctx.createLinearGradient(bx2,0,bx2+bw2,0);
+    bg2.addColorStop(0,s.badge);bg2.addColorStop(1,s.accent2);
+    ctx.beginPath();ctx.roundRect(bx2,by2,bw2,bh2,bh2/2);ctx.fillStyle=bg2;ctx.fill();
+    ctx.font='700 '+W*.038+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText(locEmoji+' '+location,W/2,by2+bh2*.68);
+    ctx.globalAlpha=1;
+
+    // ── Phase 3: iPhone slides in (1.2s-4.5s) ──
+    const s2=easeOut(clamp01((t-.16)/.32));
+    const iphoneY=lerp(H*1.1,H*.435,s2)+Math.sin(f/28)*6;
+    const iphoneSc=lerp(0.6,1.0,s2)*W/540;
+    ctx.globalAlpha=s2;
+    drawIphone(W/2,iphoneY,iphoneSc,s.accent);
+    ctx.globalAlpha=1;
+
+    // ── Phase 4: Model name (2s) ──
+    const nA=easeOut(clamp01((t-.32)/.18));
+    ctx.globalAlpha=nA;
     const words=model.split(' ');const mid=Math.ceil(words.length/2);
-    ctx.fillText(words.slice(0,mid).join(' '),W/2,H*.66);
-    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2,H*.66+W*.088);
+    ctx.font='800 '+W*.068+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
+    ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=20;
+    // Text outline/shadow
+    ctx.fillStyle='rgba(0,0,0,0.5)';
+    ctx.fillText(words.slice(0,mid).join(' '),W/2+2,H*.685+2);
+    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2+2,H*.685+W*.08+2);
+    ctx.fillStyle=s.text;
+    ctx.fillText(words.slice(0,mid).join(' '),W/2,H*.685);
+    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2,H*.685+W*.08);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+    // ── Phase 5: Price (3s) ──
+    const prA=easeOut(clamp01((t-.50)/.22));
+    ctx.globalAlpha=prA;
+    // Price card
+    const cw2=W*.80,ch2=H*.082,cx3=(W-cw2)/2,cardY2=H*.755;
+    const gprc=ctx.createLinearGradient(cx3,0,cx3+cw2,0);
+    gprc.addColorStop(0,s.accent);gprc.addColorStop(0.5,s.accent2);gprc.addColorStop(1,s.accent);
+    ctx.beginPath();ctx.roundRect(cx3,cardY2,cw2,ch2,ch2/2);
+    // shimmer offset
+    const shimX=(f%120)/120;
+    const shim=ctx.createLinearGradient(cx3+shimX*cw2*1.5-cw2*.4,0,cx3+shimX*cw2*1.5+cw2*.2,0);
+    shim.addColorStop(0,s.accent);shim.addColorStop(0.4,'rgba(255,255,255,0.35)');shim.addColorStop(1,s.accent2);
+    ctx.fillStyle=shim;ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='900 '+W*.094+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
+    ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=8;
+    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,cardY2+ch2*.72);
+    ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+    // ── Phase 6: Headline (3.6s) ──
+    const hlA2=easeOut(clamp01((t-.60)/.15));
+    ctx.globalAlpha=hlA2;
+    ctx.font='600 '+W*.048+'px Inter,sans-serif';ctx.fillStyle=s.text;ctx.textAlign='center';
+    ctx.fillText(headline,W/2,H*.860);
     ctx.globalAlpha=1;
-    const s3=clamp01(Math.max(0,(t-.55)/.25));
-    ctx.globalAlpha=easeOut(s3);
-    const cw=W*.75,ch=W*.18,cx2=(W-cw)/2,cardY=H*.73;
-    const gp=ctx.createLinearGradient(cx2,0,cx2+cw,0);
-    gp.addColorStop(0,s.accent);gp.addColorStop(1,s.accent2);
-    ctx.beginPath();ctx.roundRect(cx2,cardY,cw,ch,16);ctx.fillStyle=gp;ctx.fill();
-    ctx.fillStyle='#fff';ctx.font='900 '+W*.11+'px Inter,sans-serif';
-    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,cardY+ch*.65);ctx.globalAlpha=1;
-    const hlA=easeOut(clamp01(Math.max(0,(t-.65)/.15)));
-    ctx.globalAlpha=hlA;ctx.fillStyle=s.accent;
-    ctx.font='700 '+W*.055+'px Inter,sans-serif';ctx.textAlign='center';
-    ctx.fillText(headline,W/2,H*.84);ctx.globalAlpha=1;
-    const s4=clamp01(Math.max(0,(t-.78)/.22));
-    ctx.globalAlpha=easeOut(s4);
-    const waw=W*.78,wah=W*.125,wax=(W-waw)/2,way=H*.875;
-    ctx.beginPath();ctx.roundRect(wax,way,waw,wah,wah/2);
+
+    // ── Phase 7: WhatsApp CTA (4.6s) ──
+    const s4=easeOut(clamp01((t-.72)/.20));
+    const waY=lerp(H*1.02,H*.895,s4);
+    ctx.globalAlpha=s4;
+    const waw2=W*.82,wah2=H*.052,wax2=(W-waw2)/2;
+    ctx.beginPath();ctx.roundRect(wax2,waY,waw2,wah2,wah2/2);
     ctx.fillStyle='#25D366';ctx.fill();
-    ctx.font='700 '+W*.042+'px Inter,sans-serif';ctx.fillStyle='#fff';
-    ctx.fillText('Order · wa.me/'+waNum,W/2,way+wah*.63);ctx.globalAlpha=1;
+    // WhatsApp icon dot
+    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.beginPath();ctx.arc(wax2+wah2/2,waY+wah2/2,wah2*.38,0,Math.PI*2);ctx.fill();
+    ctx.font='700 '+W*.036+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText('📲  Order on WhatsApp  ·  wa.me/'+waNum,W/2,waY+wah2*.67);
+    ctx.globalAlpha=1;
+
+    // ── Phase 8: Script lines (5s+) ──
+    if(script){
+      const sA2=easeOut(clamp01((t-.80)/.18));ctx.globalAlpha=sA2*.65;
+      ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='300 '+W*.026+'px Inter,sans-serif';
+      const mxW2=W*.86;const wdsS=script.split(' ');let ln='';const lns=[];
+      wdsS.forEach(w=>{const ts=ln+w+' ';if(ctx.measureText(ts).width>mxW2&&ln){lns.push(ln.trim());ln=w+' ';}else ln=ts;});
+      if(ln)lns.push(ln.trim());
+      lns.slice(0,2).forEach((l,i)=>ctx.fillText(l,W/2,H*.958+i*H*.032));
+      ctx.globalAlpha=1;
+    }
   }
 
   function tick(){
