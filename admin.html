@@ -553,13 +553,19 @@ textarea{resize:vertical;min-height:80px;}
       <h3>🤖 Wan2.1 AI Video — Real Video Generation</h3>
       <p class="sub">Wan2.1 is an open-source AI video model by Alibaba. It generates realistic 5-second videos from text. Runs via <strong style="color:#00c8ff;">Replicate</strong> cloud API (free tier available).</p>
       <div style="background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;">
-        <span class="wan2-step-badge">1</span> Sign up free at <a href="https://replicate.com" target="_blank" style="color:#00c8ff;">replicate.com</a>
+        <span class="wan2-step-badge">1</span> Sign up at <a href="https://replicate.com" target="_blank" style="color:#00c8ff;">replicate.com</a> and <strong style="color:#fbbf24;">add billing credits</strong> (required — ~$0.01/video)
         <span class="wan2-step-badge">2</span> Go to Account → API tokens → copy your key
-        <span class="wan2-step-badge">3</span> Paste below → fill the form above → Generate
+        <span class="wan2-step-badge">3</span> Paste below once → key is saved for future sessions
       </div>
-      <div class="wan2-key-wrap">
-        <input type="password" id="wan2ApiKey" placeholder="r8_xxxxxxxxxxxxxxxxxxxx (your Replicate API key)">
-        <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
+      <div id="wan2KeySetup">
+        <div class="wan2-key-wrap">
+          <input type="password" id="wan2ApiKey" placeholder="r8_xxxxxxxxxxxxxxxxxxxx (your Replicate API key)">
+          <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
+        </div>
+      </div>
+      <div id="wan2KeySaved" style="display:none;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#34C759;display:none;align-items:center;justify-content:space-between;">
+        <span>🔑 Replicate API key saved</span>
+        <button onclick="clearWan2Key()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline;">Change</button>
       </div>
       <div style="margin-bottom:14px;">
         <label style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px;">Auto-Generated Prompt (editable)</label>
@@ -1228,7 +1234,16 @@ function saveWan2Key(){
   const k=document.getElementById('wan2ApiKey').value.trim();
   if(!k){toast('Paste your Replicate API key first.');return;}
   localStorage.setItem('breo_replicate_key',k);
-  toast('Replicate API key saved!');
+  document.getElementById('wan2KeySetup').style.display='none';
+  const saved=document.getElementById('wan2KeySaved');saved.style.display='flex';
+  toast('🔑 API key saved — you won\'t need to enter it again!');
+}
+function clearWan2Key(){
+  localStorage.removeItem('breo_replicate_key');
+  document.getElementById('wan2ApiKey').value='';
+  document.getElementById('wan2KeySetup').style.display='block';
+  document.getElementById('wan2KeySaved').style.display='none';
+  toast('API key cleared. Enter a new key.');
 }
 function updateWan2Prompt(){
   const model=document.getElementById('vgModel').value||'iPhone 16 Pro Max';
@@ -1469,7 +1484,11 @@ function init(){
   renderDcPanel();
   // Restore wan2 key
   const w2k=localStorage.getItem('breo_replicate_key');
-  if(w2k){const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;}
+  if(w2k){
+    const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
+    const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
+    if(setup&&saved){setup.style.display='none';saved.style.display='flex';}
+  }
   const cv=document.getElementById('vgCanvas');
   if(cv){
     const cx=cv.getContext('2d');
