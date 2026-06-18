@@ -550,16 +550,16 @@ textarea{resize:vertical;min-height:80px;}
 
     <!-- WAN2.1 SETTINGS CARD (shown below videogen when wan2 style selected) -->
     <div class="wan2-card" id="wan2Card">
-      <h3>🤖 Free AI Video Generator (HuggingFace)</h3>
-      <p class="sub">100% free — no credit card needed. Uses HuggingFace's open-source text-to-video model. Just create a free account and get a token.</p>
+      <h3>🤖 AI Video Generator (fal.ai — Wan2.1)</h3>
+      <p class="sub">Get <strong style="color:#34C759;">$10 free credits</strong> on sign-up — no credit card required. That's ~500 promo videos free. Powered by Wan2.1 (Alibaba's best video AI).</p>
       <div style="background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;">
-        <span class="wan2-step-badge">1</span> Sign up FREE at <a href="https://huggingface.co/join" target="_blank" style="color:#00c8ff;">huggingface.co/join</a> — no credit card required
-        <span class="wan2-step-badge">2</span> Go to Settings → Access Tokens → New token (read access)
+        <span class="wan2-step-badge">1</span> Sign up FREE at <a href="https://fal.ai" target="_blank" style="color:#00c8ff;">fal.ai</a> — <strong style="color:#34C759;">$10 free credits, no card needed</strong>
+        <span class="wan2-step-badge">2</span> Dashboard → API Keys → create key → copy it
         <span class="wan2-step-badge">3</span> Paste below once → saved forever
       </div>
       <div id="wan2KeySetup">
         <div class="wan2-key-wrap">
-          <input type="password" id="wan2ApiKey" placeholder="hf_xxxxxxxxxxxxxxxxxxxx (your HuggingFace token)">
+          <input type="password" id="wan2ApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (your fal.ai API key)">
           <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
         </div>
       </div>
@@ -1233,13 +1233,13 @@ let wan2VideoUrl=null;
 function saveWan2Key(){
   const k=document.getElementById('wan2ApiKey').value.trim();
   if(!k){toast('Paste your Replicate API key first.');return;}
-  localStorage.setItem('breo_hf_key',k);
+  localStorage.setItem('breo_fal_key',k);
   document.getElementById('wan2KeySetup').style.display='none';
   const saved=document.getElementById('wan2KeySaved');saved.style.display='flex';
   toast('🔑 API key saved — you won\'t need to enter it again!');
 }
 function clearWan2Key(){
-  localStorage.removeItem('breo_hf_key');
+  localStorage.removeItem('breo_fal_key');
   document.getElementById('wan2ApiKey').value='';
   document.getElementById('wan2KeySetup').style.display='block';
   document.getElementById('wan2KeySaved').style.display='none';
@@ -1255,8 +1255,8 @@ function updateWan2Prompt(){
   document.getElementById('wan2Prompt').value=prompt;
 }
 async function generateWithWan2(){
-  const hfToken=localStorage.getItem('breo_hf_key')||document.getElementById('wan2ApiKey').value.trim();
-  if(!hfToken){toast('Enter your HuggingFace token first.');document.getElementById('wan2ApiKey').focus();return;}
+  const falKey=localStorage.getItem('breo_fal_key')||document.getElementById('wan2ApiKey').value.trim();
+  if(!falKey){toast('Enter your fal.ai API key first.');document.getElementById('wan2ApiKey').focus();return;}
   const prompt=document.getElementById('wan2Prompt').value.trim();
   if(!prompt){updateWan2Prompt();return;}
   const btn=document.getElementById('wan2GenBtn');
@@ -1264,46 +1264,48 @@ async function generateWithWan2(){
   const video=document.getElementById('wan2ResultVideo');
   const dlWrap=document.getElementById('wan2DlWrap');
   btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
-  status.innerHTML='<span style="color:#00c8ff;">⏳ Connecting to HuggingFace AI...</span>';
+  status.innerHTML='<span style="color:#00c8ff;">⏳ Submitting to fal.ai Wan2.1...</span>';
   try{
-    // Call HuggingFace directly from browser (they support CORS — no proxy needed)
-    // Try primary model first, fallback to secondary
-    const MODELS=['cerspense/zeroscope_v2_576w','damo-vilab/text-to-video-ms-1.7b'];
-    let blob=null,lastErr='';
-    for(const model of MODELS){
-      status.innerHTML='<span style="color:#00c8ff;">🎬 Generating with '+model.split('/')[1]+'... (~60–120s)</span>';
-      let attempts=0;
-      while(attempts<8){
-        attempts++;
-        const resp=await fetch('https://api-inference.huggingface.co/models/'+model,{
-          method:'POST',
-          headers:{'Authorization':'Bearer '+hfToken,'Content-Type':'application/json','x-wait-for-model':'true'},
-          body:JSON.stringify({inputs:prompt})
-        });
-        if(resp.status===503){
-          const j=await resp.json().catch(()=>({}));
-          const wait=Math.min((j.estimated_time||20),30)*1000;
-          status.innerHTML='<span style="color:#00c8ff;">⏳ Model warming up (~'+Math.round(wait/1000)+'s)... attempt '+attempts+'/8</span>';
-          await new Promise(r=>setTimeout(r,wait));
-          continue;
-        }
-        if(!resp.ok){
-          const j=await resp.json().catch(()=>({}));
-          lastErr=j.error||'Error '+resp.status+' on '+model;
-          break;
-        }
-        blob=await resp.blob();
-        break;
-      }
-      if(blob)break;
+    // Step 1: Create job via Vercel proxy (fast, < 2s)
+    const createResp=await fetch('/api/fal-create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt,falKey})
+    });
+    if(!createResp.ok){
+      const err=await createResp.json().catch(()=>({}));
+      throw new Error(err.error||'fal.ai error '+createResp.status+'. Check your API key.');
     }
-    if(!blob)throw new Error(lastErr||'Both models failed. Check your HuggingFace token.');
-    const objUrl=URL.createObjectURL(blob);
-    wan2VideoUrl=objUrl;
-    video.src=objUrl;video.style.display='block';
-    dlWrap.style.display='block';
-    status.innerHTML='<span style="color:#34C759;">✅ AI video ready! Download or post to Instagram.</span>';
-    toast('🤖 Free AI video generated!');
+    const created=await createResp.json();
+    const requestId=created.request_id;
+    if(!requestId)throw new Error('No request ID returned. Check your fal.ai key.');
+    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating Wan2.1 video... (~60–120s)</span>';
+    // Step 2: Poll status every 3s via Vercel proxy (each call < 1s, no timeout)
+    let attempts=0;const maxAttempts=60;
+    while(attempts<maxAttempts){
+      await new Promise(r=>setTimeout(r,3000));
+      attempts++;
+      const pollResp=await fetch('/api/fal-poll',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({requestId,falKey})
+      });
+      const pollData=await pollResp.json();
+      if(pollData.status==='COMPLETED'){
+        if(!pollData.videoUrl)throw new Error('Video URL missing from result.');
+        wan2VideoUrl=pollData.videoUrl;
+        video.src=pollData.videoUrl;video.style.display='block';
+        dlWrap.style.display='block';
+        status.innerHTML='<span style="color:#34C759;">✅ AI video ready! Download or post to Instagram.</span>';
+        toast('🤖 Wan2.1 AI video generated!');
+        break;
+      } else if(pollData.status==='ERROR'||pollData.error){
+        throw new Error(pollData.error||'Generation failed on fal.ai');
+      } else {
+        const pct=Math.min(95,Math.round((attempts/maxAttempts)*100));
+        const phase=pollData.status==='QUEUED'?'Queued...':'Processing...';
+        status.innerHTML='<span style="color:#00c8ff;">'+pct+'% — '+phase+'</span>';
+      }
+    }
+    if(!wan2VideoUrl)throw new Error('Timed out. Try again — the model may be busy.');
   }catch(e){
     status.innerHTML='<span style="color:var(--red);">❌ '+e.message+'</span>';
     toast('Error: '+e.message.slice(0,60));
@@ -1521,7 +1523,7 @@ function init(){
   if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
   renderDcPanel();
   // Restore wan2 key
-  const w2k=localStorage.getItem('breo_hf_key');
+  const w2k=localStorage.getItem('breo_fal_key');
   if(w2k){
     const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
     const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
