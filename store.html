@@ -1103,22 +1103,38 @@ const PRODUCTS = [
 let currentFilter = 'All';
 function getDisplaySettings(){
   try{ const s=localStorage.getItem('breo_display'); if(s) return JSON.parse(s); } catch(e){}
-  // Default: only iPhones on
   const def={};
-  PRODUCTS.forEach((p,i)=>{ def[p.id]={on:p.cat==='iPhone',price:p.price}; });
+  PRODUCTS.forEach(p=>{ def[p.id]={on:p.cat==='iPhone',price:p.price}; });
   return def;
+}
+// Load custom products added in admin Display Control
+function getCustomStoreProducts(){
+  try{ const s=localStorage.getItem('breo_custom_products'); return s?JSON.parse(s):[]; } catch(e){ return []; }
+}
+function getAllStoreProducts(){
+  const custom=getCustomStoreProducts();
+  const mapped=custom.map(p=>({
+    id:p.id, cat:p.cat, emoji:p.emoji||'📦', name:p.name,
+    spec:p.spec||'', price:p.defaultPrice||0, old:0,
+    emi:Math.round((p.defaultPrice||0)/12),
+    colors:['#1C2128'], badge:p.badge||'', badgeType:p.badge?'new':'', custom:true
+  }));
+  return [...PRODUCTS,...mapped];
 }
 function renderProducts(filter){
   const grid = document.getElementById('productGrid');
   const settings = getDisplaySettings();
-  // Apply admin prices and filter to visible products only
-  const visibleProducts = PRODUCTS.map(p => {
+  const allProds = getAllStoreProducts();
+  const visibleProducts = allProds.map(p => {
     const cfg = settings[p.id];
-    if(!cfg) return null;
-    if(!cfg.on) return null;
+    if(!cfg || !cfg.on) return null;
     return {...p, price: cfg.price || p.price};
   }).filter(Boolean);
   const filtered = filter === 'All' ? visibleProducts : visibleProducts.filter(p => p.cat === filter);
+  if(filtered.length===0){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#86868B;font-size:16px;">No products in this category yet.</div>';
+    return;
+  }
   grid.innerHTML = filtered.map(p => `
     <div class="prod-card reveal" data-cat="${p.cat}">
       ${p.badge ? `<div class="prod-badge ${p.badgeType}">${p.badge}</div>` : ''}
@@ -1135,11 +1151,10 @@ function renderProducts(filter){
           <span class="prod-price">AED ${p.price.toLocaleString()}</span>
           ${p.old ? `<span class="prod-old">AED ${p.old.toLocaleString()}</span>` : ''}
         </div>
-        <div class="prod-emi">Or <span>AED ${p.emi}/mo</span> with Tabby · 0% interest</div>
+        <div class="prod-emi">Or <span>AED ${Math.round(p.price/12).toLocaleString()}/mo</span> with Tabby · 0% interest</div>
         <button class="prod-buy" onclick="addToCart('${p.name}','${p.spec}','${p.price}')">Buy Now</button>
       </div>
     </div>`).join('');
-  // Re-run reveal observer on new cards
   document.querySelectorAll('.prod-card.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
 }
 

@@ -259,6 +259,22 @@ textarea{resize:vertical;min-height:80px;}
 /* ─── IG SHARE ─── */
 .ig-share-btn{width:100%;max-width:280px;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:none;transition:opacity .2s,transform .15s;margin-top:8px;}
 .ig-share-btn:hover{opacity:.9;transform:translateY(-1px);}
+/* ─── WAN2.1 ─── */
+.wan2-card{background:linear-gradient(145deg,#060d1f,#0a1530);border:1px solid rgba(0,200,255,0.25);border-radius:22px;padding:24px;margin-top:24px;display:none;}
+.wan2-card.show{display:block;animation:tabIn .25s ease;}
+.wan2-card h3{font-size:16px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#00c8ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.wan2-card .sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
+.wan2-key-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.wan2-key-wrap input{flex:1;min-width:200px;background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.25);color:var(--text);padding:10px 14px;border-radius:11px;font-size:13px;font-family:inherit;outline:none;font-family:monospace;}
+.wan2-key-wrap input:focus{border-color:rgba(0,200,255,.5);}
+.wan2-save-key{background:rgba(0,200,255,.12);border:1px solid rgba(0,200,255,.3);color:#00c8ff;padding:10px 18px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.wan2-prompt-box{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px;font-family:monospace;white-space:pre-wrap;word-break:break-word;}
+.wan2-gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#0066cc,#00c8ff);color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .2s,transform .15s;position:relative;overflow:hidden;}
+.wan2-gen-btn:hover{opacity:.9;transform:translateY(-1px);}
+.wan2-gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.wan2-result-video{width:100%;border-radius:16px;margin-top:14px;display:none;border:1px solid rgba(0,200,255,.3);}
+.wan2-status{font-size:13px;color:var(--muted);margin-top:10px;text-align:center;min-height:20px;}
+.wan2-step-badge{display:inline-block;background:rgba(0,200,255,.12);border:1px solid rgba(0,200,255,.25);color:#00c8ff;padding:2px 10px;border-radius:8px;font-size:11px;font-weight:700;margin:0 4px;}
 /* ─── RESPONSIVE ─── */
 @media(max-width:600px){
   .admin-body{padding:70px 16px 40px;}
@@ -499,9 +515,10 @@ textarea{resize:vertical;min-height:80px;}
               <button class="vg-style-btn" data-style="neon" onclick="setVgStyle(this)">🌈 Neon</button>
               <button class="vg-style-btn" data-style="gold" onclick="setVgStyle(this)">👑 Gold</button>
               <button class="vg-style-btn" data-style="dark" onclick="setVgStyle(this)">🌑 Dark</button>
+              <button class="vg-style-btn" data-style="wan2" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(0,200,255,.10);border-color:rgba(0,200,255,.35);color:#00c8ff;font-size:12px;padding:10px;">🤖 Wan2.1 Real AI Video (via Replicate)</button>
             </div>
           </div>
-          <button class="vg-generate-btn" id="vgGenerateBtn" onclick="generateVideo()">
+          <button class="vg-generate-btn" id="vgGenerateBtn" onclick="handleGenerate()">
             <span class="shimmer"></span>
             🎬 Generate Video
           </button>
@@ -528,6 +545,36 @@ textarea{resize:vertical;min-height:80px;}
             4. On mobile, Share opens Instagram directly
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- WAN2.1 SETTINGS CARD (shown below videogen when wan2 style selected) -->
+    <div class="wan2-card" id="wan2Card">
+      <h3>🤖 Wan2.1 AI Video — Real Video Generation</h3>
+      <p class="sub">Wan2.1 is an open-source AI video model by Alibaba. It generates realistic 5-second videos from text. Runs via <strong style="color:#00c8ff;">Replicate</strong> cloud API (free tier available).</p>
+      <div style="background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;">
+        <span class="wan2-step-badge">1</span> Sign up free at <a href="https://replicate.com" target="_blank" style="color:#00c8ff;">replicate.com</a>
+        <span class="wan2-step-badge">2</span> Go to Account → API tokens → copy your key
+        <span class="wan2-step-badge">3</span> Paste below → fill the form above → Generate
+      </div>
+      <div class="wan2-key-wrap">
+        <input type="password" id="wan2ApiKey" placeholder="r8_xxxxxxxxxxxxxxxxxxxx (your Replicate API key)">
+        <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px;">Auto-Generated Prompt (editable)</label>
+        <textarea id="wan2Prompt" rows="4" style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(0,200,255,.2);color:rgba(255,255,255,.8);padding:12px;border-radius:12px;font-size:13px;font-family:monospace;outline:none;resize:vertical;line-height:1.7;" placeholder="Click 'Update Prompt' after filling the form above..."></textarea>
+        <button onclick="updateWan2Prompt()" style="margin-top:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:7px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">↺ Update Prompt from Form</button>
+      </div>
+      <button class="wan2-gen-btn" id="wan2GenBtn" onclick="generateWithWan2()">
+        <span class="shimmer"></span>
+        🤖 Generate Real AI Video (~60–120s)
+      </button>
+      <div class="wan2-status" id="wan2Status"></div>
+      <video id="wan2ResultVideo" class="wan2-result-video" controls playsinline></video>
+      <div id="wan2DlWrap" style="display:none;margin-top:10px;">
+        <button onclick="downloadWan2Video()" style="width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;">⬇ Download AI Video</button>
+        <button onclick="shareWan2ToInstagram()" style="width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px;">📲 Share to Instagram</button>
       </div>
     </div>
 
@@ -774,6 +821,9 @@ let vgStyle='luxury';let vgVideoBlob=null;
 function setVgStyle(btn){
   document.querySelectorAll('.vg-style-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');vgStyle=btn.dataset.style;
+  const w2=document.getElementById('wan2Card');
+  if(w2){w2.classList.toggle('show',vgStyle==='wan2');}
+  if(vgStyle==='wan2')updateWan2Prompt();
 }
 const VG_STYLES={
   presenter:{bg1:'#030a1c',bg2:'#06122e',accent:'#FFB347',accent2:'#FF8C00',text:'#ffffff',badge:'#e8471e'},
@@ -1165,6 +1215,106 @@ async function shareToInstagram(){
   },'image/png');
 }
 
+
+// ─── HANDLE GENERATE (routes to canvas or wan2) ───
+function handleGenerate(){
+  if(vgStyle==='wan2'){generateWithWan2();}
+  else{generateVideo();}
+}
+
+// ─── WAN2.1 / REPLICATE ───
+let wan2VideoUrl=null;
+function saveWan2Key(){
+  const k=document.getElementById('wan2ApiKey').value.trim();
+  if(!k){toast('Paste your Replicate API key first.');return;}
+  localStorage.setItem('breo_replicate_key',k);
+  toast('Replicate API key saved!');
+}
+function updateWan2Prompt(){
+  const model=document.getElementById('vgModel').value||'iPhone 16 Pro Max';
+  const price=document.getElementById('vgPrice').value||'3999';
+  const headline=document.getElementById('vgHeadline').value||'Special Offer';
+  const location=document.getElementById('vgLocation').value||'Burj Khalifa';
+  const script=document.getElementById('vgScript').value||'';
+  const prompt=`A beautiful Indian woman in a colorful saree standing at ${location} in Dubai at night, smiling confidently, holding and showing a ${model} smartphone. Luxury Dubai skyline with Burj Khalifa lit up behind her. She says: "${script||headline+' Only AED '+Number(price).toLocaleString()+'. Order now!'}". Cinematic advertisement video, 4K quality, smooth motion, professional lighting, vibrant colors.`;
+  document.getElementById('wan2Prompt').value=prompt;
+}
+async function generateWithWan2(){
+  const apiKey=localStorage.getItem('breo_replicate_key')||document.getElementById('wan2ApiKey').value.trim();
+  if(!apiKey){toast('Enter your Replicate API key first.');document.getElementById('wan2ApiKey').focus();return;}
+  const prompt=document.getElementById('wan2Prompt').value.trim();
+  if(!prompt){updateWan2Prompt();return;}
+  const btn=document.getElementById('wan2GenBtn');
+  const status=document.getElementById('wan2Status');
+  const video=document.getElementById('wan2ResultVideo');
+  const dlWrap=document.getElementById('wan2DlWrap');
+  btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
+  status.innerHTML='<span style="color:#00c8ff;">⏳ Sending to Replicate...</span>';
+  try{
+    // Create prediction using Wan2.1 480p model
+    const createResp=await fetch('https://api.replicate.com/v1/models/wavespeedai/wan-2.1-t2v-480p/predictions',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json'},
+      body:JSON.stringify({input:{prompt,num_frames:81,sample_steps:30,sample_guide_scale:6,negative_prompt:'blur, low quality, distorted, ugly, watermark'}})
+    });
+    if(!createResp.ok){
+      const err=await createResp.json().catch(()=>({}));
+      throw new Error(err.detail||'API error '+createResp.status+'. Check your API key.');
+    }
+    const pred=await createResp.json();
+    const predId=pred.id;
+    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating video (ID: '+predId.slice(0,8)+'...) This takes ~60–90s</span>';
+    // Poll for completion
+    let attempts=0;const maxAttempts=90;
+    while(attempts<maxAttempts){
+      await new Promise(r=>setTimeout(r,2000));
+      attempts++;
+      const pollResp=await fetch('https://api.replicate.com/v1/predictions/'+predId,{headers:{'Authorization':'Bearer '+apiKey}});
+      const data=await pollResp.json();
+      const pct=Math.min(95,Math.round((attempts/maxAttempts)*100));
+      if(data.status==='succeeded'){
+        const outUrl=Array.isArray(data.output)?data.output[0]:data.output;
+        if(!outUrl)throw new Error('No output URL returned.');
+        wan2VideoUrl=outUrl;
+        video.src=outUrl;video.style.display='block';
+        dlWrap.style.display='block';
+        status.innerHTML='<span style="color:#34C759;">✅ Video ready! Download or Share to Instagram.</span>';
+        toast('🤖 Wan2.1 video generated!');
+        break;
+      } else if(data.status==='failed'){
+        throw new Error('Generation failed: '+(data.error||'unknown error'));
+      } else {
+        const phase=data.status==='starting'?'Starting model...':data.logs?data.logs.split('\n').filter(Boolean).pop()||'Processing...':'Processing...';
+        status.innerHTML='<span style="color:#00c8ff;">'+pct+'% — '+phase.slice(0,80)+'</span>';
+      }
+    }
+    if(!wan2VideoUrl)throw new Error('Timed out after 3 minutes. Try again.');
+  }catch(e){
+    status.innerHTML='<span style="color:var(--red);">❌ '+e.message+'</span>';
+    toast('Error: '+e.message.slice(0,60));
+  }finally{btn.disabled=false;}
+}
+function downloadWan2Video(){
+  if(!wan2VideoUrl)return;
+  const a=document.createElement('a');a.href=wan2VideoUrl;
+  a.download='breo-wan2-'+Date.now()+'.mp4';a.target='_blank';a.click();
+}
+async function shareWan2ToInstagram(){
+  if(!wan2VideoUrl){toast('Generate a video first.');return;}
+  try{
+    const resp=await fetch(wan2VideoUrl);const blob=await resp.blob();
+    const file=new File([blob],'breo-offer.mp4',{type:'video/mp4'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      const caption=document.getElementById('captionOutput')?.textContent||'Amazing iPhone deal!';
+      await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});return;
+    }
+  }catch(e){}
+  window.open(wan2VideoUrl,'_blank');
+  const ig=localStorage.getItem('breo_ig');
+  setTimeout(()=>window.open(ig?'https://www.instagram.com/'+ig+'/':'https://www.instagram.com/','_blank'),800);
+  toast('Video opened — save & upload to Instagram!');
+}
+
 // ─── CUSTOM PRODUCTS ───
 function getCustomProducts(){try{const s=localStorage.getItem('breo_custom_products');return s?JSON.parse(s):[];}catch(e){return [];}}
 function openAddProdForm(){
@@ -1316,6 +1466,9 @@ function init(){
   const vid=localStorage.getItem('breo_promo_video');
   if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
   renderDcPanel();
+  // Restore wan2 key
+  const w2k=localStorage.getItem('breo_replicate_key');
+  if(w2k){const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;}
   const cv=document.getElementById('vgCanvas');
   if(cv){
     const cx=cv.getContext('2d');
