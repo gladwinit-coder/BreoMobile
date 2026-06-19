@@ -2,1416 +2,849 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Breo Mobile — Premium Apple Products UAE</title>
-<meta name="description" content="Shop genuine Apple products in UAE. iPhone, MacBook, iPad, Apple Watch, AirPods. Same-day delivery Dubai.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="BreoMobile — Premium Apple devices at unbeatable prices. iPhone, MacBook, iPad, Apple Watch. WhatsApp us to order.">
+<title>BreoMobile — Premium Apple Devices</title>
 <style>
-/* ═══════════════════════════════════════════
-   RESET & TOKENS
-═══════════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --black:#000000;--white:#FFFFFF;
-  --gray-50:#F5F5F7;--gray-200:#D2D2D7;--gray-800:#1D1D1F;--gray-600:#6E6E73;
-  --blue:#0071E3;--blue-hover:#0077ED;
-  --font:'SF Pro Display','SF Pro Text',Inter,'Helvetica Neue',Arial,sans-serif;
-  --nav-h:44px;--ann-h:40px;
-  --max:1200px;--ease:cubic-bezier(.4,0,.2,1);
+  --bg:#f0f0f5;--white:#ffffff;--surface:#f8f8fc;
+  --text:#1a1a2e;--muted:#6b6b80;--muted2:#a0a0b0;
+  --border:#e8e8f0;--border2:#d0d0e0;
+  --green:#34C759;--wa:#25D366;--wa-dark:#128C7E;
+  --blue:#0A84FF;--red:#FF3B30;--orange:#FF9500;
+  --nav-h:64px;--cat-h:50px;
+  --radius:14px;--shadow:0 2px 16px rgba(0,0,0,.08);--shadow-lg:0 8px 40px rgba(0,0,0,.14);
 }
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
-body{font-family:var(--font);background:var(--white);color:var(--gray-800);overflow-x:hidden;}
-img{display:block;max-width:100%;}
-a{color:inherit;text-decoration:none;}
-button{font-family:var(--font);cursor:pointer;}
-ul{list-style:none;}
 
-/* ═══════════════════════════════════════════
-   ANNOUNCEMENT BAR
-═══════════════════════════════════════════ */
-.ann-bar{
-  background:var(--black);color:var(--white);
-  height:var(--ann-h);display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:400;letter-spacing:.01em;
-  overflow:hidden;position:relative;
-}
-.ann-track{display:flex;gap:80px;white-space:nowrap;animation:annScroll 22s linear infinite;}
-.ann-track span{flex-shrink:0;}
-.ann-track span::before{content:'·';margin-right:10px;opacity:.5;}
-@keyframes annScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;}
+img,video{display:block;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;}
 
-/* ═══════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════ */
-.nav-wrap{
-  position:sticky;top:0;z-index:1000;
-  background:rgba(255,255,255,0.85);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid rgba(0,0,0,0.08);
-  transition:background .3s var(--ease),box-shadow .3s var(--ease);
+/* ── HEADER ────────────────────────────────── */
+.site-header{
+  position:sticky;top:0;z-index:300;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
 }
-.nav-wrap.scrolled{background:rgba(255,255,255,0.9);box-shadow:0 1px 0 rgba(0,0,0,0.08);}
-nav{
-  max-width:var(--max);margin:0 auto;
-  display:grid;grid-template-columns:140px 1fr 140px;
-  align-items:center;height:var(--nav-h);
-  padding:0 24px;
+.topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:0 20px;height:var(--nav-h);max-width:1280px;margin:0 auto;
 }
-.nav-logo{font-size:22px;font-weight:800;letter-spacing:-.5px;}
-.nav-logo .dot{color:var(--blue);}
-.nav-menu{display:flex;align-items:center;justify-content:center;gap:28px;}
-.nav-menu a{font-size:12px;font-weight:400;color:var(--gray-800);opacity:.8;transition:opacity .2s;white-space:nowrap;}
-.nav-menu a:hover{opacity:1;}
-.nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:16px;}
-.nav-icon{width:16px;height:16px;opacity:.8;transition:opacity .2s;cursor:pointer;}
-.nav-icon:hover{opacity:1;}
-.cart-btn{
-  position:relative;background:none;border:none;padding:0;
+.logo{
+  font-size:20px;font-weight:800;color:var(--text);white-space:nowrap;
+  flex-shrink:0;
+}
+.logo span{color:var(--green);}
+
+.search-wrap{
+  flex:1;max-width:540px;position:relative;
+}
+.search-wrap input{
+  width:100%;background:var(--bg);border:1.5px solid var(--border2);
+  border-radius:24px;padding:10px 18px 10px 42px;
+  font-size:14px;color:var(--text);outline:none;transition:border-color .2s;
+}
+.search-wrap input:focus{border-color:var(--green);background:#fff;}
+.search-wrap input::placeholder{color:var(--muted2);}
+.search-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:16px;pointer-events:none;
+}
+
+.header-wa{
+  display:flex;align-items:center;gap:8px;
+  background:var(--wa);color:#fff;
+  border:none;border-radius:24px;padding:10px 18px;
+  font-size:13px;font-weight:700;white-space:nowrap;
+  transition:background .15s;flex-shrink:0;
+}
+.header-wa:hover{background:var(--wa-dark);}
+.header-wa svg{width:18px;height:18px;fill:#fff;flex-shrink:0;}
+
+/* category bar */
+.cat-bar{
+  border-top:1px solid var(--border);overflow-x:auto;scrollbar-width:none;
+  background:rgba(255,255,255,.95);
+}
+.cat-bar::-webkit-scrollbar{display:none;}
+.cat-bar-inner{
+  display:flex;gap:6px;padding:8px 20px;
+  max-width:1280px;margin:0 auto;
+}
+.cat-pill{
+  flex-shrink:0;background:none;border:1.5px solid var(--border2);
+  border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;
+  color:var(--muted);transition:all .18s;
+}
+.cat-pill.active,.cat-pill:hover{
+  background:var(--green);border-color:var(--green);color:#fff;
+}
+
+/* ── HERO ───────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,#0a0a14 0%,#151520 50%,#0d1a2a 100%);
+  padding:0;overflow:hidden;position:relative;
+}
+.hero-slides{display:flex;transition:transform .5s ease;height:320px;}
+@media(min-width:700px){.hero-slides{height:420px;}}
+.hero-slide{
+  flex-shrink:0;width:100%;position:relative;
   display:flex;align-items:center;
 }
-.cart-count{
-  position:absolute;top:-6px;right:-6px;width:14px;height:14px;
-  background:var(--blue);border-radius:50%;
-  font-size:9px;font-weight:700;color:#fff;
-  display:flex;align-items:center;justify-content:center;
+.hero-video{width:100%;height:100%;object-fit:cover;opacity:.7;}
+.hero-static{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 24px;
 }
-/* Mobile nav */
-.nav-hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;padding:4px;cursor:pointer;}
-.nav-hamburger span{display:block;width:18px;height:1.5px;background:var(--gray-800);transition:all .3s;}
-.mobile-menu{
-  display:none;position:fixed;inset:0;z-index:999;
-  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
-  padding:80px 32px 32px;flex-direction:column;gap:28px;
-  opacity:0;transform:translateY(-12px);transition:all .35s var(--ease);
+.hero-static h1{
+  font-size:clamp(24px,5vw,48px);font-weight:800;color:#fff;line-height:1.15;
+  margin-bottom:12px;
 }
-.mobile-menu.open{display:flex;opacity:1;transform:translateY(0);}
-.mobile-menu a{font-size:22px;font-weight:600;color:var(--gray-800);}
-.mobile-menu-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;}
+.hero-static h1 span{color:var(--green);}
+.hero-static p{color:rgba(255,255,255,.65);font-size:clamp(14px,2.5vw,18px);max-width:500px;margin-bottom:24px;}
+.hero-cta{
+  background:var(--wa);color:#fff;border:none;border-radius:28px;
+  padding:14px 28px;font-size:15px;font-weight:700;display:inline-flex;
+  align-items:center;gap:8px;transition:opacity .15s;
+}
+.hero-cta:hover{opacity:.88;}
+.hero-overlay{
+  position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.7) 0%,rgba(0,0,0,.2) 60%,transparent 100%);
+  display:flex;align-items:center;padding:0 48px;
+}
+.hero-overlay-text h2{font-size:clamp(20px,4vw,36px);font-weight:800;color:#fff;margin-bottom:8px;line-height:1.2;}
+.hero-overlay-text p{color:rgba(255,255,255,.7);font-size:14px;margin-bottom:16px;}
+.hero-overlay-price{font-size:clamp(18px,3vw,28px);font-weight:800;color:var(--green);margin-bottom:16px;}
 
-/* ═══════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════ */
-#hero{
-  min-height:calc(100vh - var(--nav-h) - var(--ann-h));
-  display:grid;grid-template-columns:1fr 1fr;align-items:center;
-  max-width:var(--max);margin:0 auto;padding:80px 48px;gap:40px;
+.hero-dots{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:2;
 }
-.hero-content{animation:heroIn .8s var(--ease) both;}
-.hero-eyebrow{
-  display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--blue);margin-bottom:16px;
-}
-.hero-title{
-  font-size:clamp(40px,5.5vw,72px);font-weight:700;
-  letter-spacing:-.03em;line-height:1.05;margin-bottom:16px;
-  color:var(--black);
-}
-.hero-title em{font-style:normal;color:var(--gray-600);}
-.hero-sub{font-size:17px;font-weight:300;color:var(--gray-600);line-height:1.6;max-width:400px;margin-bottom:36px;}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
-.btn-primary{
-  background:var(--blue);color:#fff;padding:12px 26px;
-  border-radius:980px;font-size:14px;font-weight:500;border:none;
-  transition:background .25s var(--ease),transform .2s var(--ease),box-shadow .25s;
-}
-.btn-primary:hover{background:var(--blue-hover);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,113,227,.3);}
-.btn-secondary{
-  background:transparent;color:var(--blue);padding:12px 26px;
-  border-radius:980px;font-size:14px;font-weight:500;
-  border:1.5px solid rgba(0,113,227,.3);
-  transition:border-color .25s,background .25s,transform .2s var(--ease);
-}
-.btn-secondary:hover{border-color:var(--blue);background:rgba(0,113,227,.04);transform:translateY(-1px);}
-.trust-badges{display:flex;flex-wrap:wrap;gap:16px;}
-.trust-badge{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--gray-600);font-weight:400;
-}
-.trust-badge .check{
-  width:16px;height:16px;border-radius:50%;background:var(--blue);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.trust-badge .check svg{width:8px;height:8px;fill:#fff;}
+.hero-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.4);transition:all .3s;border:none;padding:0;}
+.hero-dot.active{width:20px;background:#fff;}
 
-.hero-visual{display:flex;align-items:center;justify-content:center;position:relative;animation:heroFloat 6s ease-in-out infinite;}
-@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-.hero-phone{
-  width:260px;filter:drop-shadow(0 40px 80px rgba(0,0,0,.18));
-  position:relative;z-index:2;
-}
-.hero-glow{
-  position:absolute;width:380px;height:380px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,113,227,.12) 0%,transparent 70%);
-  animation:glowPulse 4s ease-in-out infinite;
-}
-@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.1);opacity:1}}
-@keyframes heroIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+/* ── SECTION WRAPPER ───────────────────────── */
+.section{max-width:1280px;margin:0 auto;padding:32px 16px 8px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-size:20px;font-weight:800;color:var(--text);}
+.section-title span{color:var(--green);}
+.see-all{font-size:13px;font-weight:600;color:var(--blue);}
 
-/* ═══════════════════════════════════════════
-   SECTION WRAPPER
-═══════════════════════════════════════════ */
-.section{padding:80px 24px;}
-.section-inner{max-width:var(--max);margin:0 auto;}
-.section-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
-.section-title{font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-.025em;line-height:1.1;color:var(--black);margin-bottom:12px;}
-.section-sub{font-size:17px;font-weight:300;color:var(--gray-600);max-width:600px;margin:0 auto 56px;}
-.text-center{text-align:center;}
-
-/* ═══════════════════════════════════════════
-   SCROLL REVEAL
-═══════════════════════════════════════════ */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .65s var(--ease),transform .65s var(--ease);}
-.reveal.visible{opacity:1;transform:translateY(0);}
-.reveal-delay-1{transition-delay:.1s;}
-.reveal-delay-2{transition-delay:.2s;}
-.reveal-delay-3{transition-delay:.3s;}
-.reveal-delay-4{transition-delay:.4s;}
-
-/* ═══════════════════════════════════════════
-   CATEGORIES
-═══════════════════════════════════════════ */
-#categories{background:var(--gray-50);}
-.cat-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;
+/* ── OFFERS SCROLL ─────────────────────────── */
+.offers-scroll{
+  display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;
 }
-.cat-card{
-  background:var(--white);border-radius:18px;
-  padding:28px 20px 22px;text-align:center;cursor:pointer;
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
-  border:1px solid transparent;
-}
-.cat-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.1);border-color:rgba(0,113,227,.12);}
-.cat-emoji{font-size:44px;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,.1));}
-.cat-name{font-size:15px;font-weight:600;color:var(--gray-800);margin-bottom:4px;}
-.cat-sub{font-size:12px;color:var(--gray-600);}
-.cat-arrow{font-size:12px;color:var(--blue);margin-top:10px;display:block;}
+.offers-scroll::-webkit-scrollbar{display:none;}
 
-/* ═══════════════════════════════════════════
-   FEATURED PRODUCTS
-═══════════════════════════════════════════ */
-#products{background:var(--white);}
-.prod-filter{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;}
-.filter-btn{
-  padding:8px 18px;border-radius:980px;font-size:13px;font-weight:500;
-  border:1.5px solid var(--gray-200);background:transparent;color:var(--gray-600);
-  transition:all .2s var(--ease);
+.offer-card{
+  flex-shrink:0;width:200px;background:var(--white);border-radius:var(--radius);
+  border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);
+  transition:transform .2s,box-shadow .2s;cursor:pointer;
 }
-.filter-btn.active,.filter-btn:hover{background:var(--black);color:var(--white);border-color:var(--black);}
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;}
+.offer-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.offer-card-img{
+  height:140px;background:linear-gradient(135deg,#1a1a2e,#2d2d44);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:40px;
+}
+.offer-card-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
+.offer-badge{
+  position:absolute;top:8px;left:8px;
+  background:var(--red);color:#fff;font-size:10px;font-weight:800;
+  padding:3px 7px;border-radius:5px;z-index:1;
+}
+.offer-card-body{padding:12px;}
+.offer-card-name{font-size:13px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.offer-card-price{font-size:15px;font-weight:800;color:var(--green);}
+.offer-card-old{font-size:11px;color:var(--muted2);text-decoration:line-through;}
+
+/* ── PRODUCT GRID ──────────────────────────── */
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px;
+}
+@media(min-width:480px){.products-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));}}
+@media(min-width:900px){.products-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}}
+
 .prod-card{
-  background:var(--gray-50);border-radius:18px;overflow:hidden;
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease);cursor:pointer;
-  position:relative;
+  background:var(--white);border-radius:var(--radius);border:1px solid var(--border);
+  overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;
+  cursor:pointer;display:flex;flex-direction:column;
 }
-.prod-card:hover{transform:translateY(-8px);box-shadow:0 28px 72px rgba(0,0,0,.12);}
-.prod-badge{
-  position:absolute;top:16px;left:16px;z-index:2;
-  background:var(--blue);color:#fff;padding:3px 10px;border-radius:6px;
-  font-size:11px;font-weight:600;letter-spacing:.03em;
-}
-.prod-badge.new{background:var(--black);}
-.prod-badge.sale{background:#FF3B30;}
-.prod-img-wrap{
-  height:220px;display:flex;align-items:center;justify-content:center;
-  padding:28px;background:var(--gray-50);position:relative;overflow:hidden;
-}
-.prod-img-wrap::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 80%,rgba(0,0,0,.06) 0%,transparent 60%);
-}
-.prod-emoji-img{font-size:100px;filter:drop-shadow(0 12px 32px rgba(0,0,0,.15));transition:transform .4s var(--ease);}
-.prod-card:hover .prod-emoji-img{transform:scale(1.08) translateY(-4px);}
-.prod-info{padding:20px 20px 24px;}
-.prod-name{font-size:16px;font-weight:600;color:var(--black);margin-bottom:4px;}
-.prod-spec{font-size:13px;color:var(--gray-600);margin-bottom:12px;}
-.prod-colors{display:flex;gap:6px;margin-bottom:12px;}
-.color-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid rgba(0,0,0,.1);cursor:pointer;transition:transform .2s;}
-.color-dot:hover,.color-dot.active{transform:scale(1.3);border-color:var(--gray-600);}
-.prod-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
-.prod-price{font-size:20px;font-weight:700;color:var(--black);}
-.prod-old{font-size:14px;color:var(--gray-600);text-decoration:line-through;}
-.prod-emi{font-size:12px;color:var(--gray-600);margin-bottom:16px;}
-.prod-emi span{color:var(--blue);font-weight:500;}
-.prod-buy{
-  width:100%;padding:11px;border-radius:980px;
-  background:var(--blue);color:#fff;border:none;
-  font-size:14px;font-weight:500;
-  transition:background .2s,transform .15s;
-}
-.prod-buy:hover{background:var(--blue-hover);transform:scale(1.01);}
-.prod-card:hover .prod-buy{background:var(--blue-hover);}
+.prod-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
 
-/* ═══════════════════════════════════════════
-   WHY BUY
-═══════════════════════════════════════════ */
-#why{background:var(--gray-50);}
-.why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;}
-.why-card{
-  background:var(--white);border-radius:18px;padding:32px 24px;
-  text-align:center;border:1px solid rgba(0,0,0,.04);
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+.prod-img{
+  aspect-ratio:1;background:linear-gradient(135deg,#f0f0f8,#e8e8f4);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:52px;
 }
-.why-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.08);}
-.why-icon{
-  width:56px;height:56px;border-radius:16px;
-  background:var(--gray-50);margin:0 auto 16px;
-  display:flex;align-items:center;justify-content:center;font-size:28px;
-  transition:transform .3s;
+.prod-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.cat-badge{
+  position:absolute;top:8px;left:8px;
+  background:rgba(0,0,0,.55);color:#fff;
+  font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;
+  backdrop-filter:blur(4px);
 }
-.why-card:hover .why-icon{transform:scale(1.1) rotate(3deg);}
-.why-title{font-size:16px;font-weight:600;color:var(--black);margin-bottom:6px;}
-.why-sub{font-size:13px;color:var(--gray-600);line-height:1.6;}
-
-/* ═══════════════════════════════════════════
-   PROMO BANNER
-═══════════════════════════════════════════ */
-#promo{
-  background:var(--black);color:var(--white);
-  overflow:hidden;position:relative;
+.sale-badge{
+  position:absolute;top:8px;right:8px;
+  background:var(--red);color:#fff;
+  font-size:10px;font-weight:800;padding:3px 7px;border-radius:5px;
 }
-.promo-inner{
-  max-width:var(--max);margin:0 auto;padding:80px 48px;
-  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
-}
-.promo-title{font-size:clamp(32px,4.5vw,64px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-bottom:16px;}
-.promo-title span{
-  background:linear-gradient(135deg,#0071E3,#34AADC,#BF5AF2);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.promo-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.6;}
-.btn-white{
-  background:var(--white);color:var(--black);padding:14px 30px;
-  border-radius:980px;font-size:15px;font-weight:600;border:none;
-  transition:background .2s,transform .2s var(--ease),box-shadow .2s;
-}
-.btn-white:hover{background:var(--gray-50);transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,255,255,.2);}
-.promo-devices{
+.stock-out-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.5);
   display:flex;align-items:center;justify-content:center;
-  gap:-20px;position:relative;
-}
-.promo-device{
-  font-size:80px;filter:drop-shadow(0 16px 40px rgba(255,255,255,.08));
-  animation:deviceFloat 4s ease-in-out infinite;flex-shrink:0;
-}
-.promo-device:nth-child(2){animation-delay:.8s;font-size:64px;}
-.promo-device:nth-child(3){animation-delay:1.6s;font-size:56px;}
-@keyframes deviceFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.promo-glow{
-  position:absolute;width:500px;height:500px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,113,227,.2) 0%,transparent 70%);
-  pointer-events:none;
+  color:#fff;font-size:13px;font-weight:700;
 }
 
-/* ═══════════════════════════════════════════
-   BEST SELLERS
-═══════════════════════════════════════════ */
-#bestsellers{background:var(--white);}
-.bs-scroll{
-  display:flex;gap:20px;overflow-x:auto;padding-bottom:12px;
-  scroll-snap-type:x mandatory;
-  scrollbar-width:none;
-}
-.bs-scroll::-webkit-scrollbar{display:none;}
-.bs-card{
-  flex:0 0 260px;scroll-snap-align:start;
-  background:var(--gray-50);border-radius:18px;overflow:hidden;
-  transition:transform .3s var(--ease),box-shadow .3s;cursor:pointer;
-}
-.bs-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.1);}
-.bs-img{height:180px;display:flex;align-items:center;justify-content:center;font-size:80px;}
-.bs-body{padding:16px 20px 20px;}
-.bs-name{font-size:15px;font-weight:600;color:var(--black);margin-bottom:4px;}
-.bs-stars{color:#FF9500;font-size:12px;letter-spacing:.5px;display:flex;align-items:center;gap:4px;margin-bottom:4px;}
-.bs-stars span{color:var(--gray-600);font-size:11px;}
-.bs-availability{font-size:11px;color:#34C759;font-weight:500;margin-bottom:10px;}
-.bs-price{font-size:18px;font-weight:700;color:var(--black);}
-.scroll-arrows{display:flex;gap:8px;justify-content:center;margin-top:28px;}
-.scroll-arrow{
-  width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gray-200);
-  background:none;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .2s;font-size:16px;
-}
-.scroll-arrow:hover{background:var(--black);border-color:var(--black);color:#fff;}
+.prod-body{padding:12px;flex:1;display:flex;flex-direction:column;}
+.prod-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.prod-desc{font-size:11px;color:var(--muted);margin-bottom:8px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+.prod-pricing{margin-bottom:10px;}
+.prod-price{font-size:17px;font-weight:800;color:var(--text);}
+.prod-offer-price{font-size:17px;font-weight:800;color:var(--green);}
+.prod-old{font-size:11px;color:var(--muted2);text-decoration:line-through;margin-right:4px;}
+.prod-save{font-size:10px;font-weight:700;color:var(--red);background:rgba(255,59,48,.1);padding:2px 5px;border-radius:4px;}
 
-/* ═══════════════════════════════════════════
-   ECOSYSTEM
-═══════════════════════════════════════════ */
-#ecosystem{background:var(--gray-50);}
-.eco-grid{
-  display:flex;align-items:center;justify-content:center;
-  gap:0;flex-wrap:wrap;margin-top:56px;position:relative;
+.wa-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:var(--wa);color:#fff;border:none;border-radius:9px;
+  padding:10px;font-size:13px;font-weight:700;width:100%;
+  transition:background .15s;
 }
-.eco-item{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:24px 20px;background:var(--white);border-radius:20px;
-  font-size:13px;font-weight:500;color:var(--gray-600);min-width:110px;
-  box-shadow:0 2px 12px rgba(0,0,0,.06);
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease),color .3s;
-  cursor:pointer;
-}
-.eco-item:hover{transform:translateY(-8px) scale(1.04);box-shadow:0 16px 48px rgba(0,0,0,.12);color:var(--blue);}
-.eco-item span{font-size:40px;}
-.eco-connector{
-  width:48px;height:2px;background:linear-gradient(90deg,var(--gray-200),var(--blue));
-  position:relative;flex-shrink:0;margin:0;align-self:center;margin-bottom:20px;
-}
-.eco-connector::after{
-  content:'';position:absolute;top:50%;right:-4px;transform:translateY(-50%);
-  width:0;height:0;border-left:6px solid var(--blue);border-top:4px solid transparent;border-bottom:4px solid transparent;
-}
-.eco-pulse{
-  animation:ecoPulse 2s ease-in-out infinite;
-}
-@keyframes ecoPulse{0%,100%{opacity:.4}50%{opacity:1}}
+.wa-btn:hover{background:var(--wa-dark);}
+.wa-btn svg{width:15px;height:15px;fill:#fff;flex-shrink:0;}
+.wa-btn.disabled{background:var(--muted2);pointer-events:none;}
 
-/* ═══════════════════════════════════════════
-   REVIEWS
-═══════════════════════════════════════════ */
-#reviews{background:var(--white);}
-.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
-.rev-card{
-  background:var(--gray-50);border-radius:18px;padding:28px 24px;
-  transition:transform .3s var(--ease),box-shadow .3s;
+/* ── POSTS FEED ─────────────────────────────── */
+.posts-row{
+  display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;
 }
-.rev-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.08);}
-.rev-stars{color:#FF9500;font-size:14px;letter-spacing:.5px;margin-bottom:12px;}
-.rev-text{font-size:15px;line-height:1.65;color:var(--gray-800);margin-bottom:20px;font-style:italic;}
-.rev-author{display:flex;align-items:center;gap:12px;}
-.rev-avatar{
-  width:40px;height:40px;border-radius:50%;
-  background:linear-gradient(135deg,#0071E3,#BF5AF2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+.posts-row::-webkit-scrollbar{display:none;}
+.post-card{
+  flex-shrink:0;width:180px;background:var(--white);border-radius:var(--radius);
+  border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);
 }
-.rev-name{font-size:14px;font-weight:600;color:var(--black);}
-.rev-location{font-size:12px;color:var(--gray-600);}
-.rev-verified{font-size:11px;color:#34C759;margin-top:2px;font-weight:500;}
+.post-card video{width:100%;height:200px;object-fit:cover;display:block;}
+.post-card-body{padding:10px;}
+.post-card-caption{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.post-card-product{font-size:13px;font-weight:700;margin-bottom:2px;}
+.post-card-price{font-size:14px;font-weight:800;color:var(--green);}
 
-/* ═══════════════════════════════════════════
-   NEWSLETTER
-═══════════════════════════════════════════ */
-#newsletter{
-  background:var(--black);padding:72px 24px;
+/* ── EMPTY STATE ───────────────────────────── */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:60px 20px;
+  color:var(--muted);
 }
-.nl-inner{max-width:520px;margin:0 auto;text-align:center;}
-.nl-title{font-size:36px;font-weight:700;letter-spacing:-.02em;color:var(--white);margin-bottom:10px;}
-.nl-sub{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:32px;}
-.nl-form{display:flex;gap:8px;max-width:420px;margin:0 auto;}
-.nl-input{
-  flex:1;padding:13px 18px;border-radius:980px;
-  border:1.5px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.08);color:#fff;
-  font-size:14px;font-family:var(--font);
-  outline:none;transition:border-color .2s;
-}
-.nl-input::placeholder{color:rgba(255,255,255,.4);}
-.nl-input:focus{border-color:rgba(0,113,227,.8);}
-.nl-btn{
-  background:var(--blue);color:#fff;border:none;
-  padding:13px 22px;border-radius:980px;
-  font-size:14px;font-weight:500;font-family:var(--font);
-  white-space:nowrap;transition:background .2s,transform .15s;
-}
-.nl-btn:hover{background:var(--blue-hover);transform:scale(1.02);}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+.empty-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.empty-sub{font-size:14px;}
 
-/* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
-footer{background:var(--black);color:rgba(255,255,255,.5);border-top:1px solid rgba(255,255,255,.1);}
-.footer-inner{max-width:var(--max);margin:0 auto;padding:48px 24px;}
-.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:40px;margin-bottom:48px;}
-.footer-col h4{font-size:13px;font-weight:600;color:var(--white);margin-bottom:16px;letter-spacing:.02em;}
-.footer-col a{display:block;font-size:12px;line-height:2.2;color:rgba(255,255,255,.5);transition:color .2s;}
-.footer-col a:hover{color:var(--white);}
-.footer-bottom{
-  padding-top:24px;border-top:1px solid rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+/* ── PRODUCT MODAL ──────────────────────────── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;
+  display:none;align-items:flex-end;justify-content:center;
+  padding:0;
+  -webkit-overflow-scrolling:touch;
 }
-.footer-copy{font-size:12px;color:rgba(255,255,255,.35);}
-.footer-social{display:flex;gap:12px;}
-.social-btn{
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:background .2s,transform .2s;cursor:pointer;
-}
-.social-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.1);}
-.footer-logo{font-size:18px;font-weight:800;color:var(--white);}
+.modal-bg.open{display:flex;}
+@media(min-width:640px){.modal-bg{align-items:center;padding:20px;}}
 
-/* ═══════════════════════════════════════════
-   SLIDE-OUT CART
-═══════════════════════════════════════════ */
-.cart-overlay{
-  position:fixed;inset:0;z-index:2000;
-  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
-  opacity:0;pointer-events:none;transition:opacity .3s;
+.modal{
+  background:var(--white);border-radius:24px 24px 0 0;
+  width:100%;max-width:640px;max-height:92vh;
+  overflow-y:auto;animation:slideUp .3s ease;
 }
-.cart-overlay.open{opacity:1;pointer-events:all;}
-.cart-drawer{
-  position:fixed;top:0;right:0;bottom:0;width:100%;max-width:400px;z-index:2001;
-  background:var(--white);box-shadow:-20px 0 60px rgba(0,0,0,.15);
-  display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform .35s var(--ease);
-}
-.cart-overlay.open .cart-drawer{transform:translateX(0);}
-.cart-head{padding:24px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;}
-.cart-head h3{font-size:18px;font-weight:700;}
-.cart-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray-600);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-.cart-close:hover{background:var(--gray-50);}
-.cart-items{flex:1;overflow-y:auto;padding:16px 24px;}
-.cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--gray-200);}
-.cart-item-img{width:64px;height:64px;border-radius:12px;background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;}
-.cart-item-info{flex:1;}
-.cart-item-name{font-size:14px;font-weight:600;color:var(--black);margin-bottom:2px;}
-.cart-item-spec{font-size:12px;color:var(--gray-600);margin-bottom:8px;}
-.cart-item-row{display:flex;align-items:center;justify-content:space-between;}
-.cart-item-price{font-size:15px;font-weight:700;color:var(--black);}
-.qty-ctrl{display:flex;align-items:center;gap:8px;}
-.qty-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gray-200);background:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.qty-btn:hover{background:var(--black);border-color:var(--black);color:#fff;}
-.qty-num{font-size:14px;font-weight:600;min-width:20px;text-align:center;}
-.cart-remove{background:none;border:none;color:var(--gray-600);font-size:12px;cursor:pointer;transition:color .2s;}
-.cart-remove:hover{color:#FF3B30;}
-.cart-empty{text-align:center;padding:60px 24px;color:var(--gray-600);}
-.cart-empty .empty-icon{font-size:48px;margin-bottom:12px;}
-.cart-footer{padding:20px 24px;border-top:1px solid var(--gray-200);}
-.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.cart-total-label{font-size:14px;color:var(--gray-600);}
-.cart-total-val{font-size:22px;font-weight:700;color:var(--black);}
-.cart-checkout{
-  width:100%;padding:15px;border-radius:980px;
-  background:#25D366;color:#fff;
-  border:none;font-size:15px;font-weight:700;font-family:var(--font);
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  transition:background .2s,transform .15s,box-shadow .2s;
-  box-shadow:0 4px 20px rgba(37,211,102,.3);
-}
-.cart-checkout:hover{background:#1ebe5d;transform:scale(1.01);box-shadow:0 8px 28px rgba(37,211,102,.45);}
-.cart-checkout svg{width:20px;height:20px;fill:#fff;flex-shrink:0;}
-.cart-wa-note{
-  font-size:11px;color:var(--gray-600);text-align:center;
-  margin-top:10px;line-height:1.5;
-}
-.cart-wa-warn{
-  font-size:12px;color:#FF3B30;text-align:center;
-  margin-top:8px;display:none;font-weight:500;
-}
-.cart-wa-warn.show{display:block;}
+@media(min-width:640px){.modal{border-radius:20px;}}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
 
-/* ═══════════════════════════════════════════
-   MOBILE STICKY BUY BAR
-═══════════════════════════════════════════ */
-.sticky-buy{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
-  border-top:1px solid var(--gray-200);
-  padding:12px 20px 20px;
+.modal-img-wrap{
+  position:relative;background:linear-gradient(135deg,#f0f0f8,#e4e4f0);
+  height:260px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:80px;
 }
-.sticky-buy-inner{display:flex;gap:10px;}
-.sticky-buy .btn-primary{flex:1;text-align:center;}
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
-@media(max-width:900px){
-  #hero{grid-template-columns:1fr;text-align:center;padding:60px 24px;gap:40px;}
-  .hero-content{order:1;}
-  .hero-visual{order:0;}
-  .hero-sub,.trust-badges{max-width:100%;justify-content:center;}
-  .hero-btns{justify-content:center;}
-  .hero-phone{width:180px;}
-  .promo-inner{grid-template-columns:1fr;text-align:center;padding:60px 24px;}
-  .eco-connector{display:none;}
-  .eco-grid{gap:12px;}
+@media(min-width:640px){.modal-img-wrap{height:320px;}}
+.modal-img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16px;}
+.modal-img-wrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.modal-close-btn{
+  position:absolute;top:12px;right:12px;z-index:2;
+  background:rgba(0,0,0,.45);border:none;color:#fff;
+  width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;
+  backdrop-filter:blur(4px);transition:background .15s;
 }
-@media(max-width:640px){
-  .nav-menu{display:none;}
-  .nav-hamburger{display:flex;}
-  nav{grid-template-columns:1fr auto auto;}
-  .nav-actions .nav-icon:not(.cart-btn){display:none;}
-  .sticky-buy{display:block;}
-  body{padding-bottom:80px;}
-  .section{padding:56px 16px;}
-  .cat-grid{grid-template-columns:repeat(3,1fr);}
-  .prod-grid{grid-template-columns:1fr 1fr;}
-  .why-grid{grid-template-columns:1fr 1fr;}
-  .rev-grid{grid-template-columns:1fr;}
-  .footer-grid{grid-template-columns:repeat(2,1fr);gap:28px;}
-  .nl-form{flex-direction:column;}
-  .nl-btn{width:100%;}
+.modal-close-btn:hover{background:rgba(0,0,0,.7);}
+
+.modal-body{padding:20px 20px 32px;}
+.modal-badges{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.modal-cat{background:rgba(10,132,255,.1);color:var(--blue);font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;}
+.modal-stock{font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;}
+.modal-stock.in{background:rgba(52,199,89,.1);color:var(--green);}
+.modal-stock.limited{background:rgba(255,149,0,.1);color:var(--orange);}
+.modal-stock.out{background:rgba(255,59,48,.1);color:var(--red);}
+.modal-name{font-size:20px;font-weight:800;line-height:1.3;margin-bottom:6px;}
+.modal-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+
+.modal-price-box{
+  background:var(--bg);border-radius:12px;padding:14px 16px;
+  margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
 }
-@media(max-width:420px){
-  .cat-grid{grid-template-columns:repeat(2,1fr);}
-  .prod-grid{grid-template-columns:1fr;}
-  .why-grid{grid-template-columns:1fr;}
+.modal-price-main{font-size:26px;font-weight:800;color:var(--green);}
+.modal-price-was{display:flex;flex-direction:column;align-items:flex-end;}
+.modal-price-old{font-size:14px;color:var(--muted2);text-decoration:line-through;}
+.modal-price-save{font-size:13px;font-weight:700;color:var(--red);}
+
+.modal-wa-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--wa);color:#fff;border:none;border-radius:14px;
+  padding:16px;font-size:16px;font-weight:700;transition:background .15s;
 }
+.modal-wa-btn:hover{background:var(--wa-dark);}
+.modal-wa-btn svg{width:22px;height:22px;fill:#fff;}
 
-/* ── Posts Feed ── */
-#posts-feed{padding:60px 0 20px;background:var(--bg);}
-.posts-feed-inner{max-width:1200px;margin:0 auto;padding:0 24px;}
-.posts-feed-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px;}
-.posts-feed-heading{font-size:28px;font-weight:800;color:var(--fg);margin-bottom:20px;}
-.posts-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
-.posts-scroll::-webkit-scrollbar{display:none;}
-.post-item{flex:0 0 180px;background:#1c1c1e;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
-.post-item:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.5);}
-.post-item-video-wrap{position:relative;aspect-ratio:9/16;background:#000;overflow:hidden;}
-.post-item-video-wrap video{width:100%;height:100%;object-fit:cover;}
-.post-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);pointer-events:none;}
-.post-item-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:18px;transition:.2s;}
-.post-item:hover .post-item-play{background:rgba(255,255,255,.25);}
-.post-item-meta{position:absolute;bottom:0;left:0;right:0;padding:12px;}
-.post-item-product{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.post-item-price{font-size:15px;font-weight:900;color:#FFD60A;margin-top:2px;}
-.post-item-wa{display:block;width:calc(100% - 20px);margin:0 10px 10px;padding:8px 0;background:#25D366;border:none;border-radius:10px;color:#fff;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;}
+/* ── FOOTER ─────────────────────────────────── */
+.footer{
+  background:#1a1a2e;color:rgba(255,255,255,.6);
+  text-align:center;padding:32px 20px;margin-top:48px;
+}
+.footer-logo{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px;}
+.footer-logo span{color:var(--green);}
+.footer-tagline{font-size:13px;margin-bottom:16px;}
+.footer-wa{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--wa);color:#fff;border:none;border-radius:24px;
+  padding:12px 24px;font-size:14px;font-weight:700;transition:background .15s;margin-bottom:20px;
+}
+.footer-wa:hover{background:var(--wa-dark);}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
 
-/* Post modal */
-.post-modal{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:20px;}
-.post-modal-inner{background:#1c1c1e;border-radius:22px;overflow:hidden;max-width:400px;width:100%;max-height:90vh;display:flex;flex-direction:column;}
-.post-modal-video{width:100%;max-height:60vh;object-fit:contain;background:#000;}
-.post-modal-body{padding:18px;overflow-y:auto;}
-.post-modal-product{font-size:16px;font-weight:800;color:#fff;}
-.post-modal-price{font-size:22px;font-weight:900;color:#FFD60A;margin:4px 0 10px;}
-.post-modal-caption{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:12px;}
-.post-modal-hashtags{font-size:12px;color:#0A84FF;line-height:1.8;}
-.post-modal-wa{display:block;width:100%;margin-top:14px;padding:13px;background:#25D366;border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
-.post-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+/* ── MISC ───────────────────────────────────── */
+.no-results{
+  grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted);
+}
+.page-bottom-gap{height:32px;}
 
+@media(max-width:480px){
+  .header-wa .wa-label{display:none;}
+  .topbar{padding:0 12px;gap:8px;}
+}
 </style>
 </head>
 <body>
 
-<!-- ═══════ ANNOUNCEMENT BAR ═══════ -->
-<div class="ann-bar" role="banner">
-  <div class="ann-track" aria-label="Store announcements">
-    <span>Free Delivery Across UAE</span>
-    <span>Genuine Apple Products</span>
-    <span>AppleCare Available</span>
-    <span>Same-Day Delivery in Dubai</span>
-    <span>Official Apple Warranty</span>
-    <span>Tabby &amp; Tamara Available</span>
-    <span>Free Delivery Across UAE</span>
-    <span>Genuine Apple Products</span>
-    <span>AppleCare Available</span>
-    <span>Same-Day Delivery in Dubai</span>
-    <span>Official Apple Warranty</span>
-    <span>Tabby &amp; Tamara Available</span>
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="topbar">
+    <div class="logo">🍎 <span>Breo</span>mobile</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search iPhone, MacBook, iPad..." oninput="applyFilters()">
+    </div>
+    <button class="header-wa" id="headerWaBtn" onclick="openWhatsApp(null)">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+      <span class="wa-label">WhatsApp</span>
+    </button>
+  </div>
+  <div class="cat-bar">
+    <div class="cat-bar-inner" id="catBar">
+      <button class="cat-pill active" onclick="setCat('',this)">All</button>
+      <button class="cat-pill" onclick="setCat('iPhone',this)">📱 iPhone</button>
+      <button class="cat-pill" onclick="setCat('MacBook',this)">💻 MacBook</button>
+      <button class="cat-pill" onclick="setCat('iPad',this)">🖥️ iPad</button>
+      <button class="cat-pill" onclick="setCat('Apple Watch',this)">⌚ Apple Watch</button>
+      <button class="cat-pill" onclick="setCat('AirPods',this)">🎧 AirPods</button>
+      <button class="cat-pill" onclick="setCat('Other',this)">📦 Other</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero" id="heroSection">
+  <div id="heroInner"></div>
+</section>
+
+<!-- ── OFFER POSTS FEED ── -->
+<div id="postsSection" style="display:none">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">🔥 Latest <span>Posts</span></div>
+    </div>
+    <div class="posts-row" id="postsRow"></div>
   </div>
 </div>
 
-<!-- ═══════ NAVIGATION ═══════ -->
-<div class="nav-wrap" id="navWrap">
-  <nav>
-    <a href="#" class="nav-logo">breo<span class="dot">.</span></a>
-    <ul class="nav-menu" role="list">
-      <li><a href="#">iPhone</a></li>
-      <li><a href="#">Mac</a></li>
-      <li><a href="#">iPad</a></li>
-      <li><a href="#">Watch</a></li>
-      <li><a href="#">AirPods</a></li>
-      <li><a href="#">Accessories</a></li>
-      <li><a href="#" style="color:var(--blue);font-weight:500;">Offers</a></li>
-    </ul>
-    <div class="nav-actions">
-      <!-- Search -->
-      <button class="nav-icon" aria-label="Search">
-        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M13 13L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <!-- Cart -->
-      <button class="cart-btn nav-icon" onclick="openCart()" aria-label="Cart">
-        <svg viewBox="0 0 18 18" fill="none"><path d="M1 1h2.5l1.8 9h9l1.7-7H4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="15.5" r="1" fill="currentColor"/><circle cx="13" cy="15.5" r="1" fill="currentColor"/></svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+<!-- ── HOT OFFERS ── -->
+<div id="offersSection" style="display:none">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">🎯 Hot <span>Offers</span></div>
     </div>
-  </nav>
+    <div class="offers-scroll" id="offersRow"></div>
+  </div>
 </div>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
-  <a href="#" onclick="toggleMobileMenu()">iPhone</a>
-  <a href="#" onclick="toggleMobileMenu()">Mac</a>
-  <a href="#" onclick="toggleMobileMenu()">iPad</a>
-  <a href="#" onclick="toggleMobileMenu()">Watch</a>
-  <a href="#" onclick="toggleMobileMenu()">AirPods</a>
-  <a href="#" onclick="toggleMobileMenu()">Accessories</a>
-  <a href="#" style="color:var(--blue);" onclick="toggleMobileMenu()">Offers</a>
+<!-- ── PRODUCTS ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-title" id="productsTitle">All <span>Products</span></div>
+    <span id="productCount" style="font-size:13px;color:var(--muted)"></span>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
 </div>
 
-<!-- ═══════ HERO ═══════ -->
-<section id="hero" role="main">
-  <div class="hero-content">
-    <span class="hero-eyebrow">New — Available Now</span>
-    <h1 class="hero-title">iPhone 16 Pro<br><em>Built for Apple<br>Intelligence.</em></h1>
-    <p class="hero-sub">Experience the most advanced iPhone ever created. Titanium design, A18 Pro chip, and next-level camera system.</p>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="addToCart('iPhone 16 Pro','256GB','5499')">Buy Now</button>
-      <a href="#products" class="btn-secondary">Explore All</a>
-    </div>
-    <div class="trust-badges">
-      <div class="trust-badge">
-        <span class="check"><svg viewBox="0 0 8 7"><path d="M1 3.5L3 5.5L7 1" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span>
-        Genuine Apple Products
-      </div>
-      <div class="trust-badge">
-        <span class="check"><svg viewBox="0 0 8 7"><path d="M1 3.5L3 5.5L7 1" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span>
-        Free UAE Delivery
-      </div>
-      <div class="trust-badge">
-        <span class="check"><svg viewBox="0 0 8 7"><path d="M1 3.5L3 5.5L7 1" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span>
-        Official Warranty
-      </div>
-      <div class="trust-badge">
-        <span class="check"><svg viewBox="0 0 8 7"><path d="M1 3.5L3 5.5L7 1" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span>
-        AppleCare Support
-      </div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="hero-glow"></div>
-    <div class="hero-phone">
-      <svg viewBox="0 0 260 520" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="phoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#2D2D2D"/>
-            <stop offset="50%" stop-color="#1A1A1A"/>
-            <stop offset="100%" stop-color="#0D0D0D"/>
-          </linearGradient>
-          <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1C1C1E"/>
-            <stop offset="100%" stop-color="#000000"/>
-          </linearGradient>
-          <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0071E3"/>
-            <stop offset="100%" stop-color="#34AADC"/>
-          </linearGradient>
-        </defs>
-        <!-- Body -->
-        <rect x="10" y="10" width="240" height="500" rx="44" fill="url(#phoneGrad)"/>
-        <!-- Side shine -->
-        <rect x="10" y="10" width="4" height="500" rx="2" fill="rgba(255,255,255,.06)"/>
-        <!-- Screen -->
-        <rect x="18" y="18" width="224" height="484" rx="38" fill="url(#screenGrad)"/>
-        <!-- Dynamic island -->
-        <rect x="96" y="30" width="68" height="24" rx="12" fill="#000"/>
-        <!-- Status icons -->
-        <text x="34" y="46" fill="white" font-size="11" font-family="SF Pro Text,Inter,sans-serif" opacity=".8">9:41</text>
-        <!-- Screen content - gradient wallpaper -->
-        <rect x="18" y="18" width="224" height="484" rx="38" fill="url(#blueGrad)" opacity=".15"/>
-        <!-- App icons grid -->
-        <g opacity=".9">
-          <rect x="36" y="120" width="44" height="44" rx="10" fill="#007AFF"/>
-          <rect x="92" y="120" width="44" height="44" rx="10" fill="#34C759"/>
-          <rect x="148" y="120" width="44" height="44" rx="10" fill="#FF3B30"/>
-          <rect x="36" y="176" width="44" height="44" rx="10" fill="#FF9500"/>
-          <rect x="92" y="176" width="44" height="44" rx="10" fill="#BF5AF2"/>
-          <rect x="148" y="176" width="44" height="44" rx="10" fill="#5AC8FA"/>
-          <rect x="36" y="232" width="44" height="44" rx="10" fill="#FECC02"/>
-          <rect x="92" y="232" width="44" height="44" rx="10" fill="#FF375F"/>
-          <rect x="148" y="232" width="44" height="44" rx="10" fill="#30D158"/>
-        </g>
-        <!-- Home indicator -->
-        <rect x="100" y="482" width="60" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
-        <!-- Camera bump -->
-        <rect x="160" y="22" width="58" height="58" rx="18" fill="#111"/>
-        <circle cx="175" cy="40" r="9" fill="#1A1A1A" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-        <circle cx="197" cy="40" r="9" fill="#1A1A1A" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-        <circle cx="175" cy="63" r="9" fill="#1A1A1A" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-        <circle cx="175" cy="40" r="5" fill="#0D0D0D"/>
-        <circle cx="197" cy="40" r="5" fill="#0D0D0D"/>
-        <circle cx="175" cy="63" r="5" fill="#0D0D0D"/>
-        <circle cx="171" cy="36" r="1.5" fill="rgba(255,255,255,.3)"/>
-        <circle cx="193" cy="36" r="1.5" fill="rgba(255,255,255,.3)"/>
-        <circle cx="171" cy="59" r="1.5" fill="rgba(255,255,255,.3)"/>
-        <!-- Breo logo on screen -->
-        <text x="130" y="310" fill="white" font-size="22" font-family="SF Pro Display,Inter,sans-serif" font-weight="700" text-anchor="middle" opacity=".5">breo.</text>
-      </svg>
-    </div>
-  </div>
-</section>
+<div class="page-bottom-gap"></div>
 
-<!-- ═══════ CATEGORIES ═══════ -->
-<section id="categories" class="section">
-  <div class="section-inner">
-    <div class="text-center">
-      <p class="section-label reveal">Shop By Category</p>
-      <h2 class="section-title reveal reveal-delay-1">Everything Apple.<br>All in one place.</h2>
-    </div>
-    <div class="cat-grid reveal reveal-delay-2">
-      <div class="cat-card" onclick="filterProducts('iPhone')">
-        <span class="cat-emoji">📱</span>
-        <div class="cat-name">iPhone</div>
-        <div class="cat-sub">Latest models</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-      <div class="cat-card" onclick="filterProducts('MacBook')">
-        <span class="cat-emoji">💻</span>
-        <div class="cat-name">MacBook</div>
-        <div class="cat-sub">Air &amp; Pro</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-      <div class="cat-card" onclick="filterProducts('iPad')">
-        <span class="cat-emoji">🖥</span>
-        <div class="cat-name">iPad</div>
-        <div class="cat-sub">Pro &amp; Air</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-      <div class="cat-card" onclick="filterProducts('Watch')">
-        <span class="cat-emoji">⌚</span>
-        <div class="cat-name">Apple Watch</div>
-        <div class="cat-sub">Series 10</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-      <div class="cat-card" onclick="filterProducts('AirPods')">
-        <span class="cat-emoji">🎧</span>
-        <div class="cat-name">AirPods</div>
-        <div class="cat-sub">Pro &amp; Max</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-      <div class="cat-card">
-        <span class="cat-emoji">🔌</span>
-        <div class="cat-name">Accessories</div>
-        <div class="cat-sub">Cases, cables</div>
-        <span class="cat-arrow">Shop →</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ POSTS FEED ═══════ -->
-<section id="posts-feed" style="display:none">
-  <div class="posts-feed-inner">
-    <p class="posts-feed-title">Latest from Breo</p>
-    <h2 class="posts-feed-heading">Our Offers</h2>
-    <div class="posts-scroll" id="postsFeedScroll"></div>
-  </div>
-</section>
-
-<!-- ═══════ FEATURED PRODUCTS ═══════ -->
-<section id="products" class="section">
-  <div class="section-inner">
-    <div class="text-center">
-      <p class="section-label reveal">Featured Products</p>
-      <h2 class="section-title reveal reveal-delay-1">Today's Best Deals</h2>
-      <p class="section-sub reveal reveal-delay-2">All products are 100% genuine Apple, sealed box with official UAE warranty.</p>
-    </div>
-    <div class="prod-filter reveal reveal-delay-2">
-      <button class="filter-btn active" onclick="filterProducts('All',this)">All</button>
-      <button class="filter-btn" onclick="filterProducts('iPhone',this)">iPhone</button>
-      <button class="filter-btn" onclick="filterProducts('MacBook',this)">Mac</button>
-      <button class="filter-btn" onclick="filterProducts('iPad',this)">iPad</button>
-      <button class="filter-btn" onclick="filterProducts('Watch',this)">Watch</button>
-      <button class="filter-btn" onclick="filterProducts('AirPods',this)">AirPods</button>
-    </div>
-    <div class="prod-grid" id="productGrid"></div>
-  </div>
-</section>
-
-<!-- ═══════ WHY BUY ═══════ -->
-<section id="why" class="section">
-  <div class="section-inner">
-    <div class="text-center">
-      <p class="section-label reveal">Why Choose Breo</p>
-      <h2 class="section-title reveal reveal-delay-1">Your Trusted Apple Partner</h2>
-    </div>
-    <div class="why-grid">
-      <div class="why-card reveal">
-        <div class="why-icon">✅</div>
-        <div class="why-title">Genuine Products</div>
-        <div class="why-sub">100% Original Apple products, sealed box with official warranty included.</div>
-      </div>
-      <div class="why-card reveal reveal-delay-1">
-        <div class="why-icon">🚀</div>
-        <div class="why-title">Fast Delivery</div>
-        <div class="why-sub">Same-day delivery available in Dubai. Next-day delivery across UAE.</div>
-      </div>
-      <div class="why-card reveal reveal-delay-2">
-        <div class="why-icon">🔄</div>
-        <div class="why-title">Easy Returns</div>
-        <div class="why-sub">14-day hassle-free return policy. No questions asked.</div>
-      </div>
-      <div class="why-card reveal reveal-delay-3">
-        <div class="why-icon">🔒</div>
-        <div class="why-title">Secure Payment</div>
-        <div class="why-sub">Apple Pay, Visa, Mastercard, Tabby &amp; Tamara installments.</div>
-      </div>
-      <div class="why-card reveal">
-        <div class="why-icon">💬</div>
-        <div class="why-title">WhatsApp Support</div>
-        <div class="why-sub">Chat with our Apple experts 24/7. Reply in under 5 minutes.</div>
-      </div>
-      <div class="why-card reveal reveal-delay-1">
-        <div class="why-icon">🛡</div>
-        <div class="why-title">AppleCare</div>
-        <div class="why-sub">Add AppleCare+ to any purchase for extended coverage and priority support.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ PROMO BANNER ═══════ -->
-<section id="promo">
-  <div class="promo-inner">
-    <div class="reveal">
-      <h2 class="promo-title">Upgrade Your<br><span>Apple Experience</span></h2>
-      <p class="promo-sub">The latest Apple devices. Unbeatable prices. Delivered to your door across the UAE.</p>
-      <a href="#products" class="btn-white">Shop Latest Collection</a>
-    </div>
-    <div class="promo-devices reveal reveal-delay-2">
-      <div class="promo-glow"></div>
-      <span class="promo-device">📱</span>
-      <span class="promo-device">💻</span>
-      <span class="promo-device">⌚</span>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ BEST SELLERS ═══════ -->
-<section id="bestsellers" class="section">
-  <div class="section-inner">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:36px;">
-      <div>
-        <p class="section-label">Best Sellers</p>
-        <h2 class="section-title" style="margin-bottom:0;">Customer Favourites</h2>
-      </div>
-      <a href="#products" class="btn-secondary" style="white-space:nowrap;">View All →</a>
-    </div>
-    <div class="bs-scroll" id="bsScroll">
-      <div class="bs-card" onclick="addToCart('iPhone 16 Pro Max','256GB','5999')">
-        <div class="bs-img">📱</div>
-        <div class="bs-body">
-          <div class="bs-name">iPhone 16 Pro Max</div>
-          <div class="bs-stars">★★★★★ <span>(284)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 5,999</div>
-        </div>
-      </div>
-      <div class="bs-card" onclick="addToCart('MacBook Air M3','8GB 256GB','4299')">
-        <div class="bs-img">💻</div>
-        <div class="bs-body">
-          <div class="bs-name">MacBook Air M3</div>
-          <div class="bs-stars">★★★★★ <span>(192)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 4,299</div>
-        </div>
-      </div>
-      <div class="bs-card" onclick="addToCart('AirPods Pro 2','USB-C','999')">
-        <div class="bs-img">🎧</div>
-        <div class="bs-body">
-          <div class="bs-name">AirPods Pro 2</div>
-          <div class="bs-stars">★★★★★ <span>(418)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 999</div>
-        </div>
-      </div>
-      <div class="bs-card" onclick="addToCart('Apple Watch S10','GPS','1599')">
-        <div class="bs-img">⌚</div>
-        <div class="bs-body">
-          <div class="bs-name">Apple Watch Series 10</div>
-          <div class="bs-stars">★★★★☆ <span>(167)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 1,599</div>
-        </div>
-      </div>
-      <div class="bs-card" onclick="addToCart('iPad Pro M4','256GB Wi-Fi','2899')">
-        <div class="bs-img">🖥</div>
-        <div class="bs-body">
-          <div class="bs-name">iPad Pro M4</div>
-          <div class="bs-stars">★★★★★ <span>(213)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 2,899</div>
-        </div>
-      </div>
-      <div class="bs-card" onclick="addToCart('iPhone 15','128GB','2999')">
-        <div class="bs-img">📱</div>
-        <div class="bs-body">
-          <div class="bs-name">iPhone 15</div>
-          <div class="bs-stars">★★★★★ <span>(341)</span></div>
-          <div class="bs-availability">● In Stock</div>
-          <div class="bs-price">AED 2,999</div>
-        </div>
-      </div>
-    </div>
-    <div class="scroll-arrows">
-      <button class="scroll-arrow" onclick="scrollBS(-1)" aria-label="Previous">←</button>
-      <button class="scroll-arrow" onclick="scrollBS(1)" aria-label="Next">→</button>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ ECOSYSTEM ═══════ -->
-<section id="ecosystem" class="section" style="background:var(--gray-50);">
-  <div class="section-inner text-center">
-    <p class="section-label reveal">Apple Ecosystem</p>
-    <h2 class="section-title reveal reveal-delay-1">Better Together.</h2>
-    <p class="section-sub reveal reveal-delay-2">Experience the power of seamless integration. When your Apple devices work together, everything is effortless.</p>
-    <div class="eco-grid">
-      <div class="eco-item reveal">
-        <span>📱</span>iPhone
-      </div>
-      <div class="eco-connector eco-pulse reveal reveal-delay-1"></div>
-      <div class="eco-item reveal reveal-delay-1">
-        <span>⌚</span>Watch
-      </div>
-      <div class="eco-connector eco-pulse reveal reveal-delay-2"></div>
-      <div class="eco-item reveal reveal-delay-2">
-        <span>🎧</span>AirPods
-      </div>
-      <div class="eco-connector eco-pulse reveal reveal-delay-3"></div>
-      <div class="eco-item reveal reveal-delay-3">
-        <span>💻</span>MacBook
-      </div>
-      <div class="eco-connector eco-pulse reveal reveal-delay-4"></div>
-      <div class="eco-item reveal reveal-delay-4">
-        <span>🖥</span>iPad
-      </div>
-    </div>
-    <div style="margin-top:48px;" class="reveal">
-      <a href="#products" class="btn-primary">Build Your Ecosystem</a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ REVIEWS ═══════ -->
-<section id="reviews" class="section">
-  <div class="section-inner">
-    <div class="text-center">
-      <p class="section-label reveal">Customer Reviews</p>
-      <h2 class="section-title reveal reveal-delay-1">Trusted by Thousands<br>Across UAE</h2>
-    </div>
-    <div class="rev-grid">
-      <div class="rev-card reveal">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"Amazing service and 100% genuine Apple products. My iPhone 16 Pro arrived same day in perfect condition. Best Apple reseller in Dubai!"</p>
-        <div class="rev-author">
-          <div class="rev-avatar">A</div>
-          <div>
-            <div class="rev-name">Ahmed Al Mansoori</div>
-            <div class="rev-location">Dubai, UAE</div>
-            <div class="rev-verified">✓ Verified Purchase</div>
-          </div>
-        </div>
-      </div>
-      <div class="rev-card reveal reveal-delay-1">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"Ordered a MacBook Air M3 and it was delivered within 3 hours. The price was the best I found in the UAE. Highly recommend Breo Mobile."</p>
-        <div class="rev-author">
-          <div class="rev-avatar" style="background:linear-gradient(135deg,#34C759,#30B0C7);">S</div>
-          <div>
-            <div class="rev-name">Sarah Johnson</div>
-            <div class="rev-location">Abu Dhabi, UAE</div>
-            <div class="rev-verified">✓ Verified Purchase</div>
-          </div>
-        </div>
-      </div>
-      <div class="rev-card reveal reveal-delay-2">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"Used Tabby to split my AirPods Pro payment. So easy and the product came with full Apple warranty. Will buy all my Apple products from here."</p>
-        <div class="rev-author">
-          <div class="rev-avatar" style="background:linear-gradient(135deg,#FF9500,#FF3B30);">R</div>
-          <div>
-            <div class="rev-name">Ravi Krishnan</div>
-            <div class="rev-location">Sharjah, UAE</div>
-            <div class="rev-verified">✓ Verified Purchase</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ NEWSLETTER ═══════ -->
-<section id="newsletter">
-  <div class="nl-inner reveal">
-    <h2 class="nl-title">Stay Updated</h2>
-    <p class="nl-sub">Get exclusive deals, new product alerts, and Apple news delivered to your inbox.</p>
-    <form class="nl-form" onsubmit="subscribeNewsletter(event)">
-      <input type="email" class="nl-input" placeholder="your@email.com" required>
-      <button type="submit" class="nl-btn">Subscribe</button>
-    </form>
-  </div>
-</section>
-
-<!-- ═══════ FOOTER ═══════ -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <div class="footer-logo">breo.</div>
-        <p style="font-size:12px;color:rgba(255,255,255,.35);margin-top:10px;line-height:1.7;">Premium Apple products for the UAE market. Genuine, warranted, delivered fast.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <a href="#">iPhone</a>
-        <a href="#">Mac</a>
-        <a href="#">iPad</a>
-        <a href="#">Apple Watch</a>
-        <a href="#">AirPods</a>
-        <a href="#">Accessories</a>
-      </div>
-      <div class="footer-col">
-        <h4>Support</h4>
-        <a href="#">Contact Us</a>
-        <a href="#">WhatsApp Us</a>
-        <a href="#">Returns</a>
-        <a href="#">Warranty</a>
-        <a href="#">FAQ</a>
-        <a href="#">AppleCare</a>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="#">About Us</a>
-        <a href="#">Careers</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Sitemap</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2025 Breo Mobile Trading LLC · UAE Trade License · All prices in AED</div>
-      <div class="footer-social">
-        <div class="social-btn" title="Instagram">📸</div>
-        <div class="social-btn" title="Facebook">📘</div>
-        <div class="social-btn" title="LinkedIn">💼</div>
-        <div class="social-btn" title="YouTube">▶️</div>
-      </div>
-    </div>
-  </div>
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-logo">🍎 <span>Breo</span>mobile</div>
+  <p class="footer-tagline">Premium Apple Devices · Best Prices in UAE</p>
+  <button class="footer-wa" id="footerWaBtn" onclick="openWhatsApp(null)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+    Chat on WhatsApp
+  </button>
+  <p class="footer-copy">© 2026 BreoMobile. All rights reserved.</p>
 </footer>
 
-<!-- ═══════ SLIDE-OUT CART ═══════ -->
-<div class="cart-overlay" id="cartOverlay" onclick="closeCart()">
-  <div class="cart-drawer" onclick="event.stopPropagation()">
-    <div class="cart-head">
-      <h3>Your Cart</h3>
-      <button class="cart-close" onclick="closeCart()">✕</button>
+<!-- ── PRODUCT MODAL ── -->
+<div id="modalBg" class="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="productModal">
+    <div class="modal-img-wrap" id="modalImgWrap">
+      <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      <span id="modalImgEmoji">📱</span>
     </div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty">
-        <div class="empty-icon">🛍</div>
-        <div style="font-size:15px;font-weight:600;color:var(--black);margin-bottom:6px;">Your cart is empty</div>
-        <div style="font-size:13px;">Add some Apple products to get started.</div>
+    <div class="modal-body">
+      <div class="modal-badges">
+        <span class="modal-cat" id="modalCat">iPhone</span>
+        <span class="modal-stock in" id="modalStock">In Stock</span>
       </div>
-    </div>
-    <div class="cart-footer">
-      <div class="cart-total-row">
-        <span class="cart-total-label">Total</span>
-        <span class="cart-total-val" id="cartTotal">AED 0</span>
+      <div class="modal-name" id="modalName">Product Name</div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-price-box">
+        <div class="modal-price-main" id="modalPrice">AED 0</div>
+        <div class="modal-price-was" id="modalPriceWas" style="display:none">
+          <span class="modal-price-old" id="modalPriceOld"></span>
+          <span class="modal-price-save" id="modalPriceSave"></span>
+        </div>
       </div>
-      <button class="cart-checkout" onclick="checkout()">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Order via WhatsApp
+      <button class="modal-wa-btn" id="modalWaBtn" onclick="openWhatsApp(currentProduct)">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+        Enquire on WhatsApp
       </button>
-      <p class="cart-wa-note">Your order details are sent directly to our WhatsApp. We confirm and arrange payment &amp; delivery.</p>
-      <p class="cart-wa-warn" id="cartWaWarn">⚠️ WhatsApp number not set. Ask admin to configure it.</p>
     </div>
-  </div>
-</div>
-
-<!-- Mobile Sticky Buy Bar -->
-<div class="sticky-buy" id="stickyBuy">
-  <div class="sticky-buy-inner">
-    <button class="btn-primary" onclick="addToCart('iPhone 16 Pro','256GB','5499')">Add to Cart — AED 5,499</button>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════
-   PRODUCTS DATA
-════════════════════════════════ */
-const PRODUCTS = [
-  {id:1,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro Max',spec:'256GB · Natural Titanium',price:5999,old:6499,emi:500,colors:['#1C1C1E','#E3D7C9','#2D4E52','#4A4A4A'],badge:'NEW',badgeType:'new'},
-  {id:2,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro',spec:'256GB · Desert Titanium',price:5199,old:5699,emi:433,colors:['#B5A48C','#1C1C1E','#2D4E52'],badge:'NEW',badgeType:'new'},
-  {id:3,cat:'iPhone',emoji:'📱',name:'iPhone 15 Pro Max',spec:'256GB · Black Titanium',price:4499,old:5199,emi:375,colors:['#403F3F','#F5F1EA','#4D4DB9'],badge:'SALE',badgeType:'sale'},
-  {id:4,cat:'iPhone',emoji:'📱',name:'iPhone 15',spec:'128GB · Pink',price:2799,old:3199,emi:233,colors:['#FFC0C5','#F5F1EA','#1C1C1E','#54536B'],badge:'-12%',badgeType:'sale'},
-  {id:5,cat:'MacBook',emoji:'💻',name:'MacBook Air M3',spec:'13" · 8GB · 256GB · Midnight',price:4299,old:4599,emi:358,colors:['#1C2128','#E0D9C8','#E8E3DA'],badge:'NEW',badgeType:'new'},
-  {id:6,cat:'MacBook',emoji:'💻',name:'MacBook Pro M3',spec:'14" · 16GB · 512GB · Space Black',price:7299,old:7999,emi:608,colors:['#1C2128','#E0D9C8'],badge:'PRO',badgeType:''},
-  {id:7,cat:'iPad',emoji:'🖥',name:'iPad Pro M4',spec:'11" · 256GB · Wi-Fi · Space Black',price:2899,old:3299,emi:242,colors:['#1C2128','#E0D9C8'],badge:'NEW',badgeType:'new'},
-  {id:8,cat:'iPad',emoji:'🖥',name:'iPad Air M2',spec:'11" · 128GB · Wi-Fi · Blue',price:1999,old:2199,emi:167,colors:['#5FA1D8','#F2C4D4','#B0B0B5'],badge:'HOT',badgeType:''},
-  {id:9,cat:'Watch',emoji:'⌚',name:'Apple Watch Series 10',spec:'46mm · GPS · Jet Black',price:1599,old:1799,emi:133,colors:['#1C1C1E','#E0D9C8','#B0B0B5'],badge:'NEW',badgeType:'new'},
-  {id:10,cat:'Watch',emoji:'⌚',name:'Apple Watch Ultra 2',spec:'49mm · GPS+Cellular · Titanium',price:3499,old:3799,emi:292,colors:['#E0D9C8','#1C1C1E'],badge:'ULTRA',badgeType:''},
-  {id:11,cat:'AirPods',emoji:'🎧',name:'AirPods Pro 2',spec:'USB-C · Active Noise Cancellation',price:999,old:1149,emi:83,colors:['#FFFFFF'],badge:'HOT',badgeType:''},
-  {id:12,cat:'AirPods',emoji:'🎧',name:'AirPods Max',spec:'USB-C · Midnight',price:2299,old:2499,emi:192,colors:['#1C2128','#E0D9C8','#D4B9C0','#B5C9C9'],badge:'',badgeType:''},
-];
+'use strict';
 
-let currentFilter = 'All';
-function getDisplaySettings(){
-  try{ const s=localStorage.getItem('breo_display'); if(s) return JSON.parse(s); } catch(e){}
-  const def={};
-  PRODUCTS.forEach(p=>{ def[p.id]={on:p.cat==='iPhone',price:p.price}; });
-  return def;
-}
-// Load custom products added in admin Display Control
-function getCustomStoreProducts(){
-  try{ const s=localStorage.getItem('breo_custom_products'); return s?JSON.parse(s):[]; } catch(e){ return []; }
-}
-function getAllStoreProducts(){
-  const custom=getCustomStoreProducts();
-  const mapped=custom.map(p=>({
-    id:p.id, cat:p.cat, emoji:p.emoji||'📦', name:p.name,
-    spec:p.spec||'', price:p.defaultPrice||0, old:0,
-    emi:Math.round((p.defaultPrice||0)/12),
-    colors:['#1C2128'], badge:p.badge||'', badgeType:p.badge?'new':'', custom:true
-  }));
-  return [...PRODUCTS,...mapped];
-}
-function renderProducts(filter){
-  const grid = document.getElementById('productGrid');
-  const settings = getDisplaySettings();
-  const allProds = getAllStoreProducts();
-  const visibleProducts = allProds.map(p => {
-    const cfg = settings[p.id];
-    if(!cfg || !cfg.on) return null;
-    return {...p, price: cfg.price || p.price};
-  }).filter(Boolean);
-  const filtered = filter === 'All' ? visibleProducts : visibleProducts.filter(p => p.cat === filter);
-  if(filtered.length===0){
-    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#86868B;font-size:16px;">No products in this category yet.</div>';
-    return;
-  }
-  grid.innerHTML = filtered.map(p => `
-    <div class="prod-card reveal" data-cat="${p.cat}">
-      ${p.badge ? `<div class="prod-badge ${p.badgeType}">${p.badge}</div>` : ''}
-      <div class="prod-img-wrap">
-        <div class="prod-emoji-img">${p.emoji}</div>
-      </div>
-      <div class="prod-info">
-        <div class="prod-name">${p.name}</div>
-        <div class="prod-spec">${p.spec}</div>
-        <div class="prod-colors">
-          ${p.colors.map((c,i) => `<div class="color-dot${i===0?' active':''}" style="background:${c}" title="Color option"></div>`).join('')}
-        </div>
-        <div class="prod-price-row">
-          <span class="prod-price">AED ${p.price.toLocaleString()}</span>
-          ${p.old ? `<span class="prod-old">AED ${p.old.toLocaleString()}</span>` : ''}
-        </div>
-        <div class="prod-emi">Or <span>AED ${Math.round(p.price/12).toLocaleString()}/mo</span> with Tabby · 0% interest</div>
-        <button class="prod-buy" onclick="addToCart('${p.name}','${p.spec}','${p.price}')">Buy Now</button>
-      </div>
-    </div>`).join('');
-  document.querySelectorAll('.prod-card.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+// ── DATA ──────────────────────────────────────────────────────────────────────
+function getProducts(){try{return JSON.parse(localStorage.getItem('breo_products')||'[]');}catch(e){return[];}}
+function getPosts(){try{return JSON.parse(localStorage.getItem('breo_posts')||'[]');}catch(e){return[];}}
+function getSettings(){try{return JSON.parse(localStorage.getItem('breo_settings')||'{}');}catch(e){return {};}}
+
+function getWaNumber(){
+  const s=getSettings();
+  const num=(s.waNumber||localStorage.getItem('breo_wa')||'').replace(/\D/g,'');
+  return num;
 }
 
-function filterProducts(cat, btn){
-  currentFilter = cat;
-  if(btn){
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  renderProducts(cat);
-}
-
-/* ════════════════════════════════
-   CART
-════════════════════════════════ */
-let cart = [];
-function addToCart(name, spec, price){
-  const existing = cart.find(i => i.name === name && i.spec === spec);
-  if(existing){ existing.qty++; }
-  else { cart.push({name, spec, price:parseInt(price), qty:1}); }
-  renderCart();
-  openCart();
-}
-function removeFromCart(idx){
-  cart.splice(idx,1);
-  renderCart();
-}
-function changeQty(idx, delta){
-  cart[idx].qty += delta;
-  if(cart[idx].qty < 1){ removeFromCart(idx); return; }
-  renderCart();
-}
-function renderCart(){
-  const el = document.getElementById('cartItems');
-  const countEl = document.getElementById('cartCount');
-  const totalEl = document.getElementById('cartTotal');
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-  const count = cart.reduce((s,i) => s + i.qty, 0);
-  countEl.textContent = count;
-  totalEl.textContent = 'AED ' + total.toLocaleString();
-  if(!cart.length){
-    el.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛍</div><div style="font-size:15px;font-weight:600;color:var(--black);margin-bottom:6px;">Your cart is empty</div><div style="font-size:13px;">Add some Apple products to get started.</div></div>`;
-    return;
-  }
-  el.innerHTML = cart.map((item, idx) => `
-    <div class="cart-item">
-      <div class="cart-item-img">${getEmoji(item.name)}</div>
-      <div class="cart-item-info">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-spec">${item.spec}</div>
-        <div class="cart-item-row">
-          <span class="cart-item-price">AED ${(item.price * item.qty).toLocaleString()}</span>
-          <div class="qty-ctrl">
-            <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
-            <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
-          </div>
-        </div>
-        <button class="cart-remove" onclick="removeFromCart(${idx})">Remove</button>
-      </div>
-    </div>`).join('');
-}
-function getEmoji(name){
-  if(name.includes('iPhone')) return '📱';
-  if(name.includes('MacBook') || name.includes('Mac')) return '💻';
-  if(name.includes('iPad')) return '🖥';
-  if(name.includes('Watch')) return '⌚';
-  if(name.includes('AirPods')) return '🎧';
-  return '📦';
-}
-function openCart(){ document.getElementById('cartOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeCart(){ document.getElementById('cartOverlay').classList.remove('open'); document.body.style.overflow=''; }
-function checkout(){
-  if(!cart.length) return;
-  const num = localStorage.getItem('breo_wa');
-  const warn = document.getElementById('cartWaWarn');
-  if(!num){
-    warn.classList.add('show');
-    setTimeout(()=>warn.classList.remove('show'), 4000);
-    return;
-  }
-  warn.classList.remove('show');
-  const lines = cart.map(i =>
-    `• ${i.name} (${i.spec}) x${i.qty} = AED ${(i.price*i.qty).toLocaleString()}`
-  ).join('\n');
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-  const msg = encodeURIComponent(
-    `Hi Breo Mobile! 👋\n\nI'd like to order:\n\n${lines}\n\n💰 Total: AED ${total.toLocaleString()}\n\nPlease confirm availability and delivery details. Thank you!`
-  );
-  window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
-}
-
-/* ════════════════════════════════
-   SCROLL REVEAL
-════════════════════════════════ */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-/* ════════════════════════════════
-   NAV SCROLL
-════════════════════════════════ */
-window.addEventListener('scroll', () => {
-  document.getElementById('navWrap').classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
-
-/* ════════════════════════════════
-   MOBILE MENU
-════════════════════════════════ */
-function toggleMobileMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open');
-}
-
-/* ════════════════════════════════
-   BEST SELLERS SCROLL
-════════════════════════════════ */
-function scrollBS(dir){
-  const el = document.getElementById('bsScroll');
-  el.scrollBy({ left: dir * 280, behavior: 'smooth' });
-}
-
-/* ════════════════════════════════
-   NEWSLETTER
-════════════════════════════════ */
-function subscribeNewsletter(e){
-  e.preventDefault();
-  const btn = e.target.querySelector('.n
-
-// ── POSTS FEED (reads from same IndexedDB as admin) ──────────
-const StoreDB={
+// ── INDEXED DB ────────────────────────────────────────────────────────────────
+const DB={
   _db:null,
   open(){
     if(this._db)return Promise.resolve(this._db);
     return new Promise((res,rej)=>{
-      const req=indexedDB.open('breo-media',1);
-      req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');};
+      const req=indexedDB.open('breo-media',2);
+      req.onupgradeneeded=e=>{
+        const db=e.target.result;
+        if(!db.objectStoreNames.contains('media'))db.createObjectStore('media');
+        if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');
+      };
       req.onsuccess=e=>{this._db=e.target.result;res(this._db);};
-      req.onerror=rej;
+      req.onerror=()=>res(null);
     });
   },
-  async get(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readonly');const r=tx.objectStore('videos').get(id);r.onsuccess=e=>res(e.target.result);r.onerror=rej;});}
+  async get(id){
+    try{
+      const db=await this.open();
+      if(!db)return null;
+      return new Promise((res)=>{
+        const tx=db.transaction('media','readonly');
+        const r=tx.objectStore('media').get(id);
+        r.onsuccess=e=>res(e.target.result||null);
+        r.onerror=()=>res(null);
+      });
+    }catch(e){return null;}
+  }
 };
 
-async function loadPostsFeed(){
-  const posts=JSON.parse(localStorage.getItem('breo_posts')||'[]');
-  const section=document.getElementById('posts-feed');
-  const scroll=document.getElementById('postsFeedScroll');
-  if(!section||!scroll||!posts.length)return;
-  section.style.display='block';
-  scroll.innerHTML='';
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentCat='';
+let currentSearch='';
+let currentProduct=null;
+let heroTimer=null;
+let heroIndex=0;
+
+function getCatEmoji(cat){
+  return{iPhone:'📱',MacBook:'💻',iPad:'🖥️','Apple Watch':'⌚',AirPods:'🎧'}[cat]||'📦';
+}
+
+function calcSavings(price,offerPrice){
+  if(!offerPrice||offerPrice>=price)return 0;
+  return Math.round((1-offerPrice/price)*100);
+}
+
+// ── WHATSAPP ──────────────────────────────────────────────────────────────────
+function openWhatsApp(product){
+  const num=getWaNumber();
+  if(!num){alert('WhatsApp not configured yet. Please contact the store.');return;}
+  let msg;
+  if(product){
+    const price=Number(product.offerPrice||product.price||0).toLocaleString();
+    msg=`Hi BreoMobile! I'm interested in the *${product.name}* — AED ${price}. Can you help me with availability and delivery?`;
+  }else{
+    msg='Hi BreoMobile! I want to browse your products. Can you help me?';
+  }
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+// ── HERO ──────────────────────────────────────────────────────────────────────
+async function buildHero(){
+  const posts=getPosts().slice(0,5);
+  const offers=getProducts().filter(p=>p.published&&p.isOffer).slice(0,5);
+  const heroInner=document.getElementById('heroInner');
+
+  // Build slides from posts with videos, fallback to offer products, fallback to static
+  const slides=[];
+
   for(const post of posts){
-    const blob=await StoreDB.get(post.id).catch(()=>null);
-    if(!blob)continue;
-    const vurl=URL.createObjectURL(blob);
-    const item=document.createElement('div');item.className='post-item';
-    const waNum=localStorage.getItem('breo_wa')||'971500000000';
-    const waMsg=encodeURIComponent('Hi Breo! I saw your offer'+(post.product?' for '+post.product:'')+'. Can I order please?');
-    item.innerHTML=`
-      <div class="post-item-video-wrap" onclick="openPostModal('${post.id}','${vurl}')">
-        <video src="${vurl}" playsinline muted loop></video>
-        <div class="post-item-overlay"></div>
-        <div class="post-item-play">▶</div>
-        <div class="post-item-meta">
-          ${post.product?`<div class="post-item-product">${post.product}</div>`:''}
-          ${post.price?`<div class="post-item-price">AED ${Number(post.price).toLocaleString()}</div>`:''}
+    if(!post.id)continue;
+    const blob=await DB.get(post.id);
+    if(blob){
+      slides.push({type:'video',blob,caption:post.caption||'',product:post.product||'',price:post.price||''});
+    }
+  }
+
+  if(!slides.length&&offers.length){
+    for(const o of offers.slice(0,3)){
+      slides.push({type:'product',product:o});
+    }
+  }
+
+  if(!slides.length){
+    heroInner.innerHTML=`
+      <div class="hero-static">
+        <h1>Premium Apple Devices<br><span>at Unbeatable Prices</span></h1>
+        <p>iPhone · MacBook · iPad · Apple Watch · AirPods</p>
+        <button class="hero-cta" onclick="openWhatsApp(null)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+          Chat on WhatsApp
+        </button>
+      </div>`;
+    return;
+  }
+
+  // Build carousel
+  const slidesHTML=slides.map((s,i)=>{
+    if(s.type==='video'){
+      const url=URL.createObjectURL(s.blob);
+      return`<div class="hero-slide">
+        <video class="hero-video" src="${url}" autoplay muted loop playsinline></video>
+        <div class="hero-overlay">
+          <div class="hero-overlay-text">
+            ${s.product?`<h2>${s.product}</h2>`:'<h2>New Offer</h2>'}
+            ${s.price?`<div class="hero-overlay-price">AED ${Number(s.price).toLocaleString()}</div>`:''}
+            ${s.caption?`<p>${s.caption.slice(0,80)}</p>`:''}
+            <button class="hero-cta" onclick="openWhatsApp(null)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+              Enquire Now
+            </button>
+          </div>
         </div>
-      </div>
-      <a href="https://wa.me/${waNum}?text=${waMsg}" target="_blank" class="post-item-wa">📲 Order on WhatsApp</a>
-    `;
-    scroll.appendChild(item);
-    const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{const v=item.querySelector('video');if(v){if(e.isIntersecting)v.play().catch(()=>{});else v.pause();}});},{threshold:0.5});
-    observer.observe(item);
+      </div>`;
+    }else{
+      const o=s.product;
+      return`<div class="hero-slide">
+        <div class="hero-static" style="gap:0">
+          <div style="font-size:72px;margin-bottom:12px">${getCatEmoji(o.category)}</div>
+          <h1 style="font-size:clamp(18px,4vw,32px)">${o.name}</h1>
+          <div class="hero-overlay-price">AED ${Number(o.offerPrice||o.price||0).toLocaleString()}
+            ${o.offerPrice?`<span style="font-size:14px;color:rgba(255,255,255,.5);text-decoration:line-through;margin-left:8px">AED ${Number(o.price).toLocaleString()}</span>`:''}
+          </div>
+          <button class="hero-cta" onclick="openProductModal('${o.id}')">View Offer</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+
+  const dotsHTML=slides.length>1?`<div class="hero-dots">${slides.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="goToSlide(${i})"></button>`).join('')}</div>`:'';
+
+  heroInner.innerHTML=`<div class="hero-slides" id="heroSlides">${slidesHTML}</div>${dotsHTML}`;
+
+  if(slides.length>1){
+    heroTimer=setInterval(()=>goToSlide((heroIndex+1)%slides.length),5000);
   }
 }
 
-function openPostModal(id,vurl){
-  const posts=JSON.parse(localStorage.getItem('breo_posts')||'[]');
-  const post=posts.find(p=>p.id===id)||{};
-  let modal=document.getElementById('postModal');
-  if(!modal){
-    modal=document.createElement('div');modal.id='postModal';modal.className='post-modal';
-    modal.innerHTML=`<div class="post-modal-inner" style="position:relative">
-      <button class="post-modal-close" onclick="closePostModal()">✕</button>
-      <video id="postModalVideo" class="post-modal-video" controls playsinline></video>
-      <div class="post-modal-body">
-        <div id="postModalProduct" class="post-modal-product"></div>
-        <div id="postModalPrice" class="post-modal-price"></div>
-        <div id="postModalCaption" class="post-modal-caption"></div>
-        <div id="postModalHashtags" class="post-modal-hashtags"></div>
-        <a id="postModalWa" href="#" target="_blank" class="post-modal-wa">📲 Order on WhatsApp</a>
+function goToSlide(idx){
+  heroIndex=idx;
+  const track=document.getElementById('heroSlides');
+  if(track)track.style.transform=`translateX(-${idx*100}%)`;
+  document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+
+// ── OFFERS ROW ────────────────────────────────────────────────────────────────
+async function buildOffers(){
+  const offers=getProducts().filter(p=>p.published&&p.isOffer);
+  const section=document.getElementById('offersSection');
+  if(!offers.length){section.style.display='none';return;}
+  section.style.display='block';
+  const row=document.getElementById('offersRow');
+  row.innerHTML=offers.map(o=>{
+    const savings=calcSavings(o.price,o.offerPrice);
+    return`<div class="offer-card" onclick="openProductModal('${o.id}')">
+      <div class="offer-card-img" id="oimg-${o.id}">
+        <span style="z-index:1;position:relative">${getCatEmoji(o.category)}</span>
+        ${savings?`<span class="offer-badge">-${savings}%</span>`:''}
+      </div>
+      <div class="offer-card-body">
+        <div class="offer-card-name">${o.name}</div>
+        <div class="offer-card-price">AED ${Number(o.offerPrice||o.price||0).toLocaleString()}</div>
+        ${o.offerPrice?`<div class="offer-card-old">Was AED ${Number(o.price).toLocaleString()}</div>`:''}
       </div>
     </div>`;
-    modal.addEventListener('click',e=>{if(e.target===modal)closePostModal();});
-    document.body.appendChild(modal);
+  }).join('');
+  // load images async
+  for(const o of offers){
+    if(!o.imageId)continue;
+    const blob=await DB.get(o.imageId);
+    if(!blob)continue;
+    const el=document.getElementById('oimg-'+o.id);
+    if(!el)continue;
+    const url=URL.createObjectURL(blob);
+    el.style.backgroundImage=`url(${url})`;
+    el.style.backgroundSize='cover';
+    el.style.backgroundPosition='center';
+    el.querySelector('span').style.display='none';
   }
-  const waNum=localStorage.getItem('breo_wa')||'971500000000';
-  const waMsg=encodeURIComponent('Hi Breo! I saw your offer'+(post.product?' for '+post.product:'')+'. Can I order please?');
-  document.getElementById('postModalVideo').src=vurl;
-  document.getElementById('postModalProduct').textContent=post.product||'';
-  document.getElementById('postModalPrice').textContent=post.price?'AED '+Number(post.price).toLocaleString():'';
-  document.getElementById('postModalCaption').textContent=post.caption||'';
-  document.getElementById('postModalHashtags').textContent=post.hashtags||'';
-  document.getElementById('postModalWa').href=`https://wa.me/${waNum}?text=${waMsg}`;
-  modal.style.display='flex';
-  document.getElementById('postModalVideo').play().catch(()=>{});
-}
-function closePostModal(){
-  const m=document.getElementById('postModal');
-  if(m){m.style.display='none';const v=document.getElementById('postModalVideo');if(v)v.pause();}
 }
 
-document.addEventListener('DOMContentLoaded',loadPostsFeed);
+// ── POSTS ROW ─────────────────────────────────────────────────────────────────
+async function buildPosts(){
+  const posts=getPosts();
+  const section=document.getElementById('postsSection');
+  if(!posts.length){section.style.display='none';return;}
+  section.style.display='block';
+  const row=document.getElementById('postsRow');
+  row.innerHTML='';
+  for(const post of posts){
+    const card=document.createElement('div');
+    card.className='post-card';
+    const blob=await DB.get(post.id);
+    if(blob){
+      const url=URL.createObjectURL(blob);
+      card.innerHTML=`<video src="${url}" muted loop playsinline
+        style="width:100%;height:200px;object-fit:cover;display:block;cursor:pointer"
+        onclick="this.paused?this.play():this.pause()"></video>`;
+    }else{
+      card.innerHTML=`<div style="height:120px;background:#f0f0f8;display:flex;align-items:center;justify-content:center;font-size:32px">📹</div>`;
+    }
+    const priceHTML=post.price?`<div class="post-card-price">AED ${Number(post.price).toLocaleString()}</div>`:'';
+    card.innerHTML+=`<div class="post-card-body">
+      ${post.product?`<div class="post-card-product">${post.product}</div>`:''}
+      ${priceHTML}
+      ${post.caption?`<div class="post-card-caption">${post.caption}</div>`:''}
+    </div>`;
+    row.appendChild(card);
+  }
+}
 
+// ── PRODUCTS GRID ─────────────────────────────────────────────────────────────
+let allRenderedProducts=[];
+
+function applyFilters(){
+  currentSearch=document.getElementById('searchInput').value.toLowerCase().trim();
+  renderProductGrid();
+}
+
+function setCat(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderProductGrid();
+}
+
+function renderProductGrid(){
+  const all=getProducts().filter(p=>p.published&&!p.isOffer);
+  let filtered=all;
+  if(currentCat)filtered=filtered.filter(p=>p.category===currentCat);
+  if(currentSearch)filtered=filtered.filter(p=>(p.name||'').toLowerCase().includes(currentSearch)||(p.description||'').toLowerCase().includes(currentSearch));
+
+  const grid=document.getElementById('productsGrid');
+  const count=document.getElementById('productCount');
+
+  count.textContent=filtered.length?filtered.length+' product'+(filtered.length!==1?'s':''):'';
+
+  if(!filtered.length){
+    grid.innerHTML=`<div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">${currentSearch||currentCat?'No results found':'No products yet'}</div>
+      <div class="empty-sub">${currentSearch||currentCat?'Try a different search or category':'Products added from admin will appear here'}</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML=filtered.map(p=>{
+    const savings=calcSavings(p.price,p.offerPrice);
+    const displayPrice=Number(p.offerPrice||p.price||0);
+    const stockOut=p.stock==='out_of_stock';
+    return`<div class="prod-card" onclick="openProductModal('${p.id}')">
+      <div class="prod-img" id="pimg-${p.id}">
+        <span>${getCatEmoji(p.category)}</span>
+        <span class="cat-badge">${p.category}</span>
+        ${savings?`<span class="sale-badge">-${savings}%</span>`:''}
+        ${stockOut?'<div class="stock-out-overlay">Out of Stock</div>':''}
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name||'Product'}</div>
+        ${p.description?`<div class="prod-desc">${p.description}</div>`:'<div class="prod-desc"></div>'}
+        <div class="prod-pricing">
+          ${p.offerPrice
+            ?`<span class="prod-old">AED ${Number(p.price).toLocaleString()}</span>
+              <span class="prod-save">Save ${savings}%</span><br>
+              <span class="prod-offer-price">AED ${displayPrice.toLocaleString()}</span>`
+            :`<span class="prod-price">AED ${displayPrice.toLocaleString()}</span>`}
+        </div>
+        <button class="wa-btn${stockOut?' disabled':''}" onclick="event.stopPropagation();openWhatsApp(${JSON.stringify({id:p.id,name:p.name,price:p.price,offerPrice:p.offerPrice}).replace(/"/g,'&quot;')})">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+          ${stockOut?'Notify Me':'WhatsApp Now'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  allRenderedProducts=filtered;
+  loadGridImages(filtered);
+}
+
+async function loadGridImages(prods){
+  for(const p of prods){
+    if(!p.imageId)continue;
+    const blob=await DB.get(p.imageId);
+    if(!blob)continue;
+    const el=document.getElementById('pimg-'+p.id);
+    if(!el)continue;
+    const url=URL.createObjectURL(blob);
+    el.innerHTML=`<img src="${url}" alt="${p.name}" loading="lazy">
+      <span class="cat-badge">${p.category}</span>
+      ${calcSavings(p.price,p.offerPrice)?`<span class="sale-badge">-${calcSavings(p.price,p.offerPrice)}%</span>`:''}
+      ${p.stock==='out_of_stock'?'<div class="stock-out-overlay">Out of Stock</div>':''}`;
+  }
+}
+
+// ── PRODUCT MODAL ─────────────────────────────────────────────────────────────
+async function openProductModal(id){
+  const p=getProducts().find(x=>x.id===id);
+  if(!p)return;
+  currentProduct=p;
+
+  const wrap=document.getElementById('modalImgWrap');
+  const emoji=document.getElementById('modalImgEmoji');
+
+  // Reset image area
+  wrap.querySelectorAll('img,video').forEach(el=>el.remove());
+  if(emoji)emoji.style.display='block';
+  emoji.textContent=getCatEmoji(p.category);
+
+  // Load image
+  if(p.imageId){
+    const blob=await DB.get(p.imageId);
+    if(blob){
+      const img=document.createElement('img');
+      img.src=URL.createObjectURL(blob);
+      img.alt=p.name;
+      wrap.appendChild(img);
+      if(emoji)emoji.style.display='none';
+    }
+  }
+
+  // Load video (overlays image if exists)
+  if(p.videoId){
+    const vblob=await DB.get(p.videoId);
+    if(vblob){
+      const vid=document.createElement('video');
+      vid.src=URL.createObjectURL(vblob);
+      vid.controls=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+      vid.autoplay=true;
+      wrap.appendChild(vid);
+      if(emoji)emoji.style.display='none';
+    }
+  }
+
+  // Fill text
+  document.getElementById('modalName').textContent=p.name||'Product';
+  document.getElementById('modalDesc').textContent=p.description||'';
+  document.getElementById('modalDesc').style.display=p.description?'block':'none';
+  document.getElementById('modalCat').textContent=p.category||'';
+
+  const stockEl=document.getElementById('modalStock');
+  const stockMap={in_stock:'In Stock',limited:'Limited Stock',out_of_stock:'Out of Stock'};
+  const stockClass={in_stock:'in',limited:'limited',out_of_stock:'out'};
+  stockEl.textContent=stockMap[p.stock]||'In Stock';
+  stockEl.className='modal-stock '+(stockClass[p.stock]||'in');
+
+  // Pricing
+  const savings=calcSavings(p.price,p.offerPrice);
+  if(p.offerPrice&&savings>0){
+    document.getElementById('modalPrice').textContent='AED '+Number(p.offerPrice).toLocaleString();
+    document.getElementById('modalPriceWas').style.display='flex';
+    document.getElementById('modalPriceOld').textContent='Was AED '+Number(p.price).toLocaleString();
+    document.getElementById('modalPriceSave').textContent='You save '+savings+'% 🎉';
+  }else{
+    document.getElementById('modalPrice').textContent='AED '+Number(p.price||0).toLocaleString();
+    document.getElementById('modalPriceWas').style.display='none';
+  }
+
+  const waBtn=document.getElementById('modalWaBtn');
+  if(p.stock==='out_of_stock'){
+    waBtn.textContent='Currently Out of Stock';
+    waBtn.style.background='#999';
+    waBtn.style.pointerEvents='none';
+  }else{
+    waBtn.innerHTML=`<svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg> Enquire on WhatsApp`;
+    waBtn.style.background='';waBtn.style.pointerEvents='';
+  }
+
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow='';
+  currentProduct=null;
+  // pause any playing videos
+  document.querySelectorAll('#productModal video').forEach(v=>{v.pause();v.src='';});
+}
+
+// close on escape
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function init(){
+  buildHero();
+  buildOffers();
+  buildPosts();
+  renderProductGrid();
+}
+
+window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
