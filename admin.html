@@ -666,10 +666,9 @@ function updateStats(){
   const vid=localStorage.getItem('breo_promo_video')||'';
   document.getElementById('statVideo').textContent=vid?'Active':'None';
   document.getElementById('statVideo').style.color=vid?'var(--blue)':'var(--muted)';
+}
 
-  </div>
-</div>
-
+</script>
 <div id="igOverlayEl" class="ig-overlay" style="display:none">
   <div class="ig-overlay-card">
     <div style="font-size:36px;margin-bottom:10px;">📲</div>
@@ -688,6 +687,7 @@ function updateStats(){
 </div>
 
 <div class="toast" id="toast"></div>
+
 <script>
 function switchTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1118,7 +1118,6 @@ function saveDisplaySettings(){
   localStorage.setItem('breo_display',JSON.stringify(settings));
   const count=Object.values(settings).filter(v=>v.on).length;
   toast(count+' products now live on your store!');
-}
 }
 
 // ─── TOAST ───
