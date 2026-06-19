@@ -538,6 +538,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <label>Target City / Market</label>
           <input type="text" id="aiCity" class="cf-input" placeholder="Dubai, UAE" style="background:var(--surface2);border-color:var(--border2);color:var(--text);" value="Dubai, UAE">
         </div>
+        <div class="field-group span2">
+          <label>Product Image</label>
+          <div class="ai-img-upload-area" id="aiImgArea" onclick="document.getElementById('aiImageFile').click()"
+            ondragover="event.preventDefault()" ondrop="handleAiImageDrop(event)">
+            <input type="file" id="aiImageFile" accept="image/*" style="display:none" onchange="handleAiImage(this.files[0])">
+            <div id="aiImgPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none">
+              <span style="font-size:28px">🖼️</span>
+              <span style="font-size:13px;color:var(--muted)">Tap to upload product image</span>
+              <span style="font-size:11px;color:var(--muted2)">JPG · PNG · WEBP</span>
+            </div>
+            <img id="aiImgPreview" style="display:none;max-height:180px;max-width:100%;border-radius:10px;object-fit:contain;pointer-events:none">
+          </div>
+          <div id="aiImgActions" style="display:none;margin-top:8px;display:none;gap:8px;">
+            <button class="ai-action-btn" onclick="clearAiImage(event)" style="font-size:12px;padding:6px 12px;">✕ Remove Image</button>
+          </div>
+        </div>
       </div>
 
       <button class="ai-generate-btn" id="aiGenBtn" onclick="generateAIContent()">
@@ -627,7 +643,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
           <div class="ai-output-body">
             <textarea class="ai-output-text" id="aiBanner" rows="3"></textarea>
-            <div class="ai-banner-preview" id="aiBannerPreview"></div>
+            <div class="ai-banner-preview" id="aiBannerPreview">
+              <div id="aiBannerImgWrap" style="display:none;margin-bottom:10px;">
+                <img id="aiBannerImg" style="max-height:120px;max-width:200px;border-radius:10px;object-fit:contain;border:1px solid rgba(255,255,255,.1);">
+              </div>
+              <div id="aiBannerText"></div>
+            </div>
           </div>
           <div class="ai-action-strip">
             <button class="ai-action-btn green" onclick="pushBannerToHero()">🚀 Push to Store Hero</button>
@@ -1216,6 +1237,44 @@ function toast(msg){
 
 
 
+
+// ── AI IMAGE UPLOAD ───────────────────────────────────────────────────────────
+let aiImageBlob = null;
+let aiImageURL  = null;
+
+function handleAiImage(file){
+  if(!file||!file.type.startsWith('image/'))return;
+  aiImageBlob = file;
+  if(aiImageURL) URL.revokeObjectURL(aiImageURL);
+  aiImageURL  = URL.createObjectURL(file);
+  document.getElementById('aiImgPreview').src   = aiImageURL;
+  document.getElementById('aiImgPreview').style.display = 'block';
+  document.getElementById('aiImgPlaceholder').style.display = 'none';
+  document.getElementById('aiImgActions').style.display = 'flex';
+  // Update banner preview if already generated
+  const bw = document.getElementById('aiBannerImgWrap');
+  const bi = document.getElementById('aiBannerImg');
+  if(bw&&bi){bi.src=aiImageURL;bw.style.display='block';}
+}
+
+function handleAiImageDrop(e){
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/'))handleAiImage(file);
+}
+
+function clearAiImage(e){
+  if(e)e.stopPropagation();
+  aiImageBlob = null;
+  if(aiImageURL){URL.revokeObjectURL(aiImageURL);aiImageURL=null;}
+  document.getElementById('aiImgPreview').style.display = 'none';
+  document.getElementById('aiImgPlaceholder').style.display = 'flex';
+  document.getElementById('aiImgActions').style.display = 'none';
+  document.getElementById('aiImageFile').value = '';
+  const bw = document.getElementById('aiBannerImgWrap');
+  if(bw) bw.style.display='none';
+}
+
 // ── AI CONTENT GENERATOR ──────────────────────────────────────────────────────
 let aiCaptionEN='', aiCaptionAR='';
 
@@ -1411,7 +1470,10 @@ ${waLink}?text=${encodeURIComponent('Hi BreoMobile! I saw the '+fullName+' for A
   document.getElementById('aiHashtags').value    = hashtags;
   document.getElementById('aiWaCta').value       = waCta;
   document.getElementById('aiBanner').value      = banner;
-  document.getElementById('aiBannerPreview').textContent = banner;
+  document.getElementById('aiBannerText').textContent = banner;
+  const bw=document.getElementById('aiBannerImgWrap');
+  const bi=document.getElementById('aiBannerImg');
+  if(aiImageURL&&bw&&bi){bi.src=aiImageURL;bw.style.display='block';}else if(bw){bw.style.display='none';}
 
   document.getElementById('capEnBtn').classList.add('active');
   document.getElementById('capArBtn').classList.remove('active');
@@ -1508,9 +1570,21 @@ function createProductFromAI(){
     createdAt:new Date().toISOString()
   };
   const products=getProducts();
+  if(aiImageBlob){
+    const imgId='img_'+prod.id;
+    DB.save(imgId,aiImageBlob).then(()=>{
+      prod.imageId=imgId;
+      // update in array
+      const idx=products.findIndex(p=>p.id===prod.id);
+      if(idx!==-1)products[idx]=prod;
+      saveProducts(products);
+    });
+    prod.imageId='img_'+prod.id;
+  }
   products.unshift(prod);
   saveProducts(products);
   updateDashboard();
+  renderProducts();
   toast('📦 Product created and published to store!');
 }
 
