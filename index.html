@@ -549,6 +549,38 @@ footer{background:var(--black);color:rgba(255,255,255,.5);border-top:1px solid r
   .prod-grid{grid-template-columns:1fr;}
   .why-grid{grid-template-columns:1fr;}
 }
+
+/* ── Posts Feed ── */
+#posts-feed{padding:60px 0 20px;background:var(--bg);}
+.posts-feed-inner{max-width:1200px;margin:0 auto;padding:0 24px;}
+.posts-feed-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px;}
+.posts-feed-heading{font-size:28px;font-weight:800;color:var(--fg);margin-bottom:20px;}
+.posts-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
+.posts-scroll::-webkit-scrollbar{display:none;}
+.post-item{flex:0 0 180px;background:#1c1c1e;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
+.post-item:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.post-item-video-wrap{position:relative;aspect-ratio:9/16;background:#000;overflow:hidden;}
+.post-item-video-wrap video{width:100%;height:100%;object-fit:cover;}
+.post-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);pointer-events:none;}
+.post-item-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:18px;transition:.2s;}
+.post-item:hover .post-item-play{background:rgba(255,255,255,.25);}
+.post-item-meta{position:absolute;bottom:0;left:0;right:0;padding:12px;}
+.post-item-product{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.post-item-price{font-size:15px;font-weight:900;color:#FFD60A;margin-top:2px;}
+.post-item-wa{display:block;width:calc(100% - 20px);margin:0 10px 10px;padding:8px 0;background:#25D366;border:none;border-radius:10px;color:#fff;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;}
+
+/* Post modal */
+.post-modal{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:20px;}
+.post-modal-inner{background:#1c1c1e;border-radius:22px;overflow:hidden;max-width:400px;width:100%;max-height:90vh;display:flex;flex-direction:column;}
+.post-modal-video{width:100%;max-height:60vh;object-fit:contain;background:#000;}
+.post-modal-body{padding:18px;overflow-y:auto;}
+.post-modal-product{font-size:16px;font-weight:800;color:#fff;}
+.post-modal-price{font-size:22px;font-weight:900;color:#FFD60A;margin:4px 0 10px;}
+.post-modal-caption{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:12px;}
+.post-modal-hashtags{font-size:12px;color:#0A84FF;line-height:1.8;}
+.post-modal-wa{display:block;width:100%;margin-top:14px;padding:13px;background:#25D366;border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
+.post-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
 </style>
 </head>
 <body>
@@ -750,6 +782,15 @@ footer{background:var(--black);color:rgba(255,255,255,.5);border-top:1px solid r
         <span class="cat-arrow">Shop →</span>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════ POSTS FEED ═══════ -->
+<section id="posts-feed" style="display:none">
+  <div class="posts-feed-inner">
+    <p class="posts-feed-title">Latest from Breo</p>
+    <h2 class="posts-feed-heading">Our Offers</h2>
+    <div class="posts-scroll" id="postsFeedScroll"></div>
   </div>
 </section>
 
@@ -1285,3 +1326,92 @@ function scrollBS(dir){
 function subscribeNewsletter(e){
   e.preventDefault();
   const btn = e.target.querySelector('.n
+
+// ── POSTS FEED (reads from same IndexedDB as admin) ──────────
+const StoreDB={
+  _db:null,
+  open(){
+    if(this._db)return Promise.resolve(this._db);
+    return new Promise((res,rej)=>{
+      const req=indexedDB.open('breo-media',1);
+      req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');};
+      req.onsuccess=e=>{this._db=e.target.result;res(this._db);};
+      req.onerror=rej;
+    });
+  },
+  async get(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readonly');const r=tx.objectStore('videos').get(id);r.onsuccess=e=>res(e.target.result);r.onerror=rej;});}
+};
+
+async function loadPostsFeed(){
+  const posts=JSON.parse(localStorage.getItem('breo_posts')||'[]');
+  const section=document.getElementById('posts-feed');
+  const scroll=document.getElementById('postsFeedScroll');
+  if(!section||!scroll||!posts.length)return;
+  section.style.display='block';
+  scroll.innerHTML='';
+  for(const post of posts){
+    const blob=await StoreDB.get(post.id).catch(()=>null);
+    if(!blob)continue;
+    const vurl=URL.createObjectURL(blob);
+    const item=document.createElement('div');item.className='post-item';
+    const waNum=localStorage.getItem('breo_wa')||'971500000000';
+    const waMsg=encodeURIComponent('Hi Breo! I saw your offer'+(post.product?' for '+post.product:'')+'. Can I order please?');
+    item.innerHTML=`
+      <div class="post-item-video-wrap" onclick="openPostModal('${post.id}','${vurl}')">
+        <video src="${vurl}" playsinline muted loop></video>
+        <div class="post-item-overlay"></div>
+        <div class="post-item-play">▶</div>
+        <div class="post-item-meta">
+          ${post.product?`<div class="post-item-product">${post.product}</div>`:''}
+          ${post.price?`<div class="post-item-price">AED ${Number(post.price).toLocaleString()}</div>`:''}
+        </div>
+      </div>
+      <a href="https://wa.me/${waNum}?text=${waMsg}" target="_blank" class="post-item-wa">📲 Order on WhatsApp</a>
+    `;
+    scroll.appendChild(item);
+    const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{const v=item.querySelector('video');if(v){if(e.isIntersecting)v.play().catch(()=>{});else v.pause();}});},{threshold:0.5});
+    observer.observe(item);
+  }
+}
+
+function openPostModal(id,vurl){
+  const posts=JSON.parse(localStorage.getItem('breo_posts')||'[]');
+  const post=posts.find(p=>p.id===id)||{};
+  let modal=document.getElementById('postModal');
+  if(!modal){
+    modal=document.createElement('div');modal.id='postModal';modal.className='post-modal';
+    modal.innerHTML=`<div class="post-modal-inner" style="position:relative">
+      <button class="post-modal-close" onclick="closePostModal()">✕</button>
+      <video id="postModalVideo" class="post-modal-video" controls playsinline></video>
+      <div class="post-modal-body">
+        <div id="postModalProduct" class="post-modal-product"></div>
+        <div id="postModalPrice" class="post-modal-price"></div>
+        <div id="postModalCaption" class="post-modal-caption"></div>
+        <div id="postModalHashtags" class="post-modal-hashtags"></div>
+        <a id="postModalWa" href="#" target="_blank" class="post-modal-wa">📲 Order on WhatsApp</a>
+      </div>
+    </div>`;
+    modal.addEventListener('click',e=>{if(e.target===modal)closePostModal();});
+    document.body.appendChild(modal);
+  }
+  const waNum=localStorage.getItem('breo_wa')||'971500000000';
+  const waMsg=encodeURIComponent('Hi Breo! I saw your offer'+(post.product?' for '+post.product:'')+'. Can I order please?');
+  document.getElementById('postModalVideo').src=vurl;
+  document.getElementById('postModalProduct').textContent=post.product||'';
+  document.getElementById('postModalPrice').textContent=post.price?'AED '+Number(post.price).toLocaleString():'';
+  document.getElementById('postModalCaption').textContent=post.caption||'';
+  document.getElementById('postModalHashtags').textContent=post.hashtags||'';
+  document.getElementById('postModalWa').href=`https://wa.me/${waNum}?text=${waMsg}`;
+  modal.style.display='flex';
+  document.getElementById('postModalVideo').play().catch(()=>{});
+}
+function closePostModal(){
+  const m=document.getElementById('postModal');
+  if(m){m.style.display='none';const v=document.getElementById('postModalVideo');if(v)v.pause();}
+}
+
+document.addEventListener('DOMContentLoaded',loadPostsFeed);
+
+</script>
+</body>
+</html>

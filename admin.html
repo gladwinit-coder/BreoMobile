@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Breo Admin — Control Panel</title>
 <style>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -286,6 +287,54 @@ textarea{resize:vertical;min-height:80px;}
 </style>
 </head>
 <body>
+
+/* ── Post Creator ── */
+.upload-zone{border:2px dashed rgba(0,200,255,.3);border-radius:20px;padding:40px 20px;text-align:center;cursor:pointer;transition:.2s;background:rgba(0,200,255,.04);}
+.upload-zone:hover{border-color:rgba(0,200,255,.7);background:rgba(0,200,255,.08);}
+.upload-zone .upload-icon{font-size:48px;margin-bottom:12px;}
+.upload-zone h3{color:#fff;font-size:18px;margin-bottom:6px;}
+.upload-zone p{color:var(--muted);font-size:13px;margin:0;}
+.upload-zone .upload-sub{font-size:12px;margin-top:4px;opacity:.6;}
+.upload-choose-btn{margin-top:16px;background:rgba(0,200,255,.15);border:1px solid rgba(0,200,255,.3);color:#00c8ff;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.post-video-preview{width:100%;border-radius:16px;background:#000;max-height:320px;object-fit:contain;margin-bottom:16px;display:block;}
+.change-video-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);padding:7px 16px;border-radius:9px;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:20px;}
+.post-form-card{background:var(--surface2);border-radius:18px;padding:20px;margin-bottom:16px;}
+.post-form-card label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(0,200,255,.75);display:block;margin-bottom:6px;}
+.post-form-card input,.post-form-card textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s;}
+.post-form-card input:focus,.post-form-card textarea:focus{border-color:rgba(0,200,255,.5);}
+.post-form-card textarea{resize:vertical;line-height:1.6;}
+.post-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.post-fg{margin-bottom:14px;}
+.post-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;}
+.post-publish-btn{padding:14px;border-radius:14px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
+.post-ig-btn{padding:14px;border-radius:14px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
+/* Posts Grid */
+.posts-section-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;padding-top:4px;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;}
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.post-card{background:var(--surface2);border-radius:16px;overflow:hidden;position:relative;}
+.post-card-video-wrap{position:relative;aspect-ratio:9/16;background:#000;overflow:hidden;cursor:pointer;}
+.post-card-video-wrap video{width:100%;height:100%;object-fit:cover;}
+.post-card-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(0,0,0,.3);transition:.2s;pointer-events:none;}
+.post-card:hover .post-card-play{background:rgba(0,0,0,.1);}
+.post-card-meta{padding:10px 12px;}
+.post-card-product{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.post-card-price{font-size:13px;color:#FFD60A;font-weight:800;margin-top:2px;}
+.post-card-actions{display:flex;gap:6px;padding:0 10px 10px;}
+.post-card-ig{flex:1;padding:7px 0;border-radius:8px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;}
+.post-card-del{padding:7px 10px;border-radius:8px;background:rgba(255,59,48,.15);border:1px solid rgba(255,59,48,.3);color:#ff3b30;font-size:11px;cursor:pointer;font-family:inherit;}
+/* Instagram overlay */
+.ig-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.ig-overlay-card{background:#0a1530;border:1px solid rgba(0,200,255,.3);border-radius:20px;padding:28px;max-width:360px;width:100%;text-align:center;}
+.ig-overlay-card h3{color:#fff;font-size:17px;margin-bottom:8px;}
+.ig-overlay-card p{color:rgba(255,255,255,.55);font-size:13px;margin-bottom:20px;line-height:1.6;}
+.ig-steps-list{text-align:left;background:rgba(255,255,255,.04);border-radius:12px;padding:14px;margin-bottom:18px;font-size:13px;color:rgba(255,255,255,.75);line-height:2.2;}
+.ig-overlay-dl{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;}
+.ig-overlay-open{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;}
+.ig-overlay-cancel{background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer;font-family:inherit;}
+
+</style>
+</head>
+<body>
 <div class="toast" id="toast"></div>
 
 <!-- ─── LOGIN ─── -->
@@ -311,30 +360,22 @@ textarea{resize:vertical;min-height:80px;}
 <!-- ─── ADMIN PANEL ─── -->
 <div id="adminPanel">
   <nav class="admin-nav">
-    <div class="admin-logo"><span>Breo</span>mobile <em>Admin</em></div>
-    <div class="admin-nav-right">
-      <a href="index.html" class="view-site-btn" target="_blank">👁 View Site</a>
-      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
-    </div>
-  </nav>
-  <div class="admin-body">
+
+
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-val" id="statDeals">4</div><div class="stat-note">Shown on homepage</div></div>
+      <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-val" id="statDeals">0</div><div class="stat-note">Shown on homepage</div></div>
       <div class="stat-card"><div class="stat-label">WhatsApp</div><div class="stat-val" id="statWa" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your business number</div></div>
       <div class="stat-card"><div class="stat-label">Instagram</div><div class="stat-val" id="statIg" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your handle</div></div>
-      <div class="stat-card"><div class="stat-label">Promo Video</div><div class="stat-val" id="statVideo" style="font-size:16px;margin-top:4px;">None</div><div class="stat-note">Dubai offer video</div></div>
+      <div class="stat-card"><div class="stat-label">Posts</div><div class="stat-val" id="statVideo" style="font-size:16px;margin-top:4px;">None</div><div class="stat-note">On store front page</div></div>
     </div>
-
     <div class="tabs">
       <button class="tab active" onclick="switchTab('deals',this)">📦 Deals</button>
-      <button class="tab" onclick="switchTab('video',this)">🎬 Promo Video</button>
+      <button class="tab" onclick="switchTab('posts',this)">📸 Posts</button>
       <button class="tab" onclick="switchTab('whatsapp',this)">💬 WhatsApp</button>
       <button class="tab" onclick="switchTab('instagram',this)">📸 Instagram</button>
-      <button class="tab" onclick="switchTab('videogen',this)">🎥 Video Generator</button>
-      <button class="tab" onclick="switchTab('display',this)">📱 Display Control</button>
+      <button class="tab" onclick="switchTab('display',this)">📱 Display</button>
     </div>
 
-    <!-- DEALS TAB -->
     <div class="tab-content active" id="tab-deals">
       <div class="sec-title">Manage Deals</div>
       <p class="sec-sub">These cards appear as offer tiles on your public site. Add, edit or remove deals here.</p>
@@ -370,40 +411,60 @@ textarea{resize:vertical;min-height:80px;}
     </div>
 
     <!-- PROMO VIDEO TAB -->
-    <div class="tab-content" id="tab-video">
-      <div class="sec-title">Dubai Promo Video</div>
-      <p class="sec-sub">Add a YouTube video of your person announcing offers in front of Dubai landmarks. It shows at the top of your homepage.</p>
-      <div class="settings-card">
-        <h3>🎬 YouTube Video URL</h3>
-        <p class="card-sub">Record a short video in front of Burj Khalifa, Dubai Mall, JBR, or any Dubai location. Upload to YouTube (can be Unlisted), then paste the link here.</p>
-        <div class="form-group" style="max-width:600px;">
-          <label>YouTube URL</label>
-          <input type="url" id="promoVideoUrl" placeholder="https://www.youtube.com/watch?v=...">
-        </div>
-        <button class="save-btn" style="margin-top:14px;" onclick="savePromoVideo()">Save & Publish Video</button>
-        <button class="cancel-btn" onclick="clearPromoVideo()">Remove Video</button>
-        <div class="video-preview-wrap" id="videoPreviewWrap">
-          <div class="video-placeholder" id="videoPlaceholder">
-            <span class="big-icon">🏙️</span>
-            <span>Paste a YouTube URL above to preview your video</span>
+    <!-- POSTS TAB -->
+    <div class="tab-content" id="tab-posts">
+      <div class="sec-title">📸 Create Post</div>
+      <p class="sec-sub">Upload your video, add content, then publish it to your store and share to Instagram.</p>
+
+      <!-- Upload Zone -->
+      <div class="upload-zone" id="uploadZone" ondragover="event.preventDefault()" ondrop="handleDrop(event)" onclick="document.getElementById('postVideoFile').click()">
+        <div class="upload-icon">📹</div>
+        <h3>Upload Your Video</h3>
+        <p>Tap to select, or drag &amp; drop</p>
+        <p class="upload-sub">MP4, MOV, WebM · any size</p>
+        <button class="upload-choose-btn" onclick="event.stopPropagation();document.getElementById('postVideoFile').click()">Choose Video</button>
+      </div>
+      <input type="file" id="postVideoFile" accept="video/*" style="display:none" onchange="handleVideoUpload(this)">
+
+      <!-- Creator (shown after upload) -->
+      <div id="postCreatorWrap" style="display:none">
+        <video id="postVideoPreview" class="post-video-preview" controls playsinline></video>
+        <button class="change-video-btn" onclick="document.getElementById('postVideoFile').click()">🔄 Change Video</button>
+
+        <div class="post-form-card">
+          <div class="post-fg">
+            <label>Caption</label>
+            <textarea id="postCaption" rows="3" placeholder="🔥 iPhone 16 Pro Max — Today Only! Brand new, sealed box, official UAE warranty. Order now on WhatsApp!"></textarea>
+          </div>
+          <div class="post-form-row">
+            <div class="post-fg" style="margin:0">
+              <label>Product</label>
+              <input id="postProduct" type="text" placeholder="iPhone 16 Pro Max">
+            </div>
+            <div class="post-fg" style="margin:0">
+              <label>Price (AED)</label>
+              <input id="postPrice" type="number" placeholder="3999">
+            </div>
+          </div>
+          <div class="post-fg" style="margin:0">
+            <label>Hashtags</label>
+            <input id="postHashtags" type="text" placeholder="#iPhone #Apple #Dubai #BreoMobile #UAEDeals">
           </div>
         </div>
-      </div>
-      <div class="settings-card">
-        <h3>💡 Video Tips for Dubai</h3>
-        <p class="card-sub" style="margin-bottom:0;">Film a 30–60 second clip. Hold your phone, say the offer clearly, and show the Dubai landmark behind you. Keep it energetic and personal — customers trust faces more than text.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px;">
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🗼<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Burj Khalifa</div></div>
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🛍️<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Dubai Mall</div></div>
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🏖️<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">JBR Beach</div></div>
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">⛵<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Dubai Marina</div></div>
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🏰<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Palm Jumeirah</div></div>
-          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;font-size:24px;">🌅<div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">Downtown Dubai</div></div>
+
+        <div class="post-actions">
+          <button class="post-publish-btn" onclick="publishPost()">✅ Publish to Store</button>
+          <button class="post-ig-btn" onclick="shareCurrentPostToInstagram()">📲 Instagram</button>
         </div>
+      </div>
+
+      <!-- Published Posts -->
+      <div id="publishedPostsSection" style="display:none">
+        <div class="posts-section-title">📋 Published Posts</div>
+        <div class="posts-grid" id="postsGrid"></div>
       </div>
     </div>
 
-    <!-- WHATSAPP TAB -->
     <div class="tab-content" id="tab-whatsapp">
       <div class="sec-title">WhatsApp Setup</div>
       <p class="sec-sub">Set your UAE number and copy your auto-reply messages for WhatsApp Business.</p>
@@ -437,6 +498,7 @@ textarea{resize:vertical;min-height:80px;}
     </div>
 
     <!-- INSTAGRAM TAB -->
+
     <div class="tab-content" id="tab-instagram">
       <div class="sec-title">Instagram Setup</div>
       <p class="sec-sub">Link your Instagram and follow the daily post guide to drive orders.</p>
@@ -468,123 +530,7 @@ textarea{resize:vertical;min-height:80px;}
     </div>
 
     <!-- VIDEO GENERATOR TAB -->
-    <div class="tab-content" id="tab-videogen">
-      <div class="sec-title">🎥 AI Video Generator</div>
-      <p class="sec-sub">Create professional offer videos for your iPhone deals. Post directly to Instagram, WhatsApp Status, and TikTok.</p>
-      <div class="vg-wrap">
-        <!-- Form -->
-        <div class="vg-form-card">
-          <h3>✦ Generate Offer Video</h3>
-          <p class="sub">Fill in the offer details. Your video generates in ~15 seconds.</p>
-          <div class="vg-field">
-            <label>📱 iPhone Model</label>
-            <select id="vgModel">
-              <option>iPhone 16 Pro Max</option><option>iPhone 16 Pro</option><option>iPhone 16</option>
-              <option>iPhone 15 Pro Max</option><option>iPhone 15 Pro</option><option>iPhone 15</option>
-              <option>iPhone 14 Pro Max</option><option>iPhone 14</option><option>iPhone SE</option>
-            </select>
-          </div>
-          <div class="vg-field">
-            <label>💰 Sale Price (AED)</label>
-            <input type="number" id="vgPrice" placeholder="e.g. 3999">
-          </div>
-          <div class="vg-field">
-            <label>🔥 Offer Headline</label>
-            <input type="text" id="vgHeadline" placeholder="e.g. Flash Sale Today Only!">
-          </div>
-          <div class="vg-field">
-            <label>📝 Script / Comment</label>
-            <textarea id="vgScript" placeholder="e.g. Hey Dubai! Today only we have the iPhone 16 Pro Max at AED 3,999. Brand new, sealed box, official warranty. Order on WhatsApp now before it's gone!"></textarea>
-          </div>
-          <div class="vg-field">
-            <label>📍 Dubai Location</label>
-            <select id="vgLocation">
-              <option>Burj Khalifa</option><option>Dubai Mall</option>
-              <option>JBR Beach</option><option>Dubai Marina</option>
-              <option>Palm Jumeirah</option><option>Downtown Dubai</option>
-              <option>Dubai Frame</option><option>Global Village</option>
-            </select>
-          </div>
-          <div class="vg-field">
-            <label>🎨 Video Style</label>
-            <div class="vg-style-grid" id="vgStyleGrid">
-              <button class="vg-style-btn" data-style="presenter" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(255,140,0,.12);border-color:rgba(255,140,0,.35);color:#FFAA44;font-size:12px;padding:10px;">🇮🇳 Dubai Presenter (Recommended)</button>
-              <button class="vg-style-btn active" data-style="luxury" onclick="setVgStyle(this)">✨ Luxury</button>
-              <button class="vg-style-btn" data-style="bold" onclick="setVgStyle(this)">⚡ Bold</button>
-              <button class="vg-style-btn" data-style="minimal" onclick="setVgStyle(this)">◻ Minimal</button>
-              <button class="vg-style-btn" data-style="neon" onclick="setVgStyle(this)">🌈 Neon</button>
-              <button class="vg-style-btn" data-style="gold" onclick="setVgStyle(this)">👑 Gold</button>
-              <button class="vg-style-btn" data-style="dark" onclick="setVgStyle(this)">🌑 Dark</button>
-              <button class="vg-style-btn" data-style="wan2" onclick="setVgStyle(this)" style="grid-column:1/-1;background:rgba(0,200,255,.10);border-color:rgba(0,200,255,.35);color:#00c8ff;font-size:12px;padding:10px;">🤖 Free AI (HuggingFace) (via Replicate)</button>
-            </div>
-          </div>
-          <button class="vg-generate-btn" id="vgGenerateBtn" onclick="handleGenerate()">
-            <span class="shimmer"></span>
-            🎬 Generate Video
-          </button>
-        </div>
-        <!-- Preview -->
-        <div class="vg-preview-card">
-          <h3>Preview</h3>
-          <div class="vg-canvas-wrap">
-            <canvas id="vgCanvas" width="540" height="960"></canvas>
-          </div>
-          <div class="vg-progress-wrap" id="vgProgressWrap">
-            <div class="vg-progress-bar"><div class="vg-progress-fill" id="vgProgressFill"></div></div>
-            <div class="vg-progress-label" id="vgProgressLabel">Preparing...</div>
-          </div>
-          <button class="vg-download-btn" id="vgDownloadBtn" onclick="downloadVideo()">⬇ Download Video (.webm)</button>
-          <button class="ig-share-btn" id="igShareBtn" onclick="shareToInstagram()">📲 Share to Instagram</button>
-          <div class="vg-tips">
-            <strong>🇮🇳 Dubai Presenter Style</strong>
-            Indian woman presenter against animated Dubai night skyline — Burj Khalifa, city lights, stars. Perfect for Instagram Reels & WhatsApp Status.<br><br>
-            <strong>📋 How to use</strong>
-            1. Select 🇮🇳 Dubai Presenter above<br>
-            2. Fill the form → Generate Video (~15s)<br>
-            3. Download or tap Share to Instagram<br>
-            4. On mobile, Share opens Instagram directly
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- WAN2.1 SETTINGS CARD (shown below videogen when wan2 style selected) -->
-    <div class="wan2-card" id="wan2Card">
-      <h3>🤖 AI Video Generator (fal.ai — Wan2.1)</h3>
-      <p class="sub">Get <strong style="color:#34C759;">$10 free credits</strong> on sign-up — no credit card required. That's ~500 promo videos free. Powered by Wan2.1 (Alibaba's best video AI).</p>
-      <div style="background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:14px;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.8;">
-        <span class="wan2-step-badge">1</span> Sign up FREE at <a href="https://fal.ai" target="_blank" style="color:#00c8ff;">fal.ai</a> — <strong style="color:#34C759;">$10 free credits, no card needed</strong>
-        <span class="wan2-step-badge">2</span> Dashboard → API Keys → create key → copy it
-        <span class="wan2-step-badge">3</span> Paste below once → saved forever
-      </div>
-      <div id="wan2KeySetup">
-        <div class="wan2-key-wrap">
-          <input type="password" id="wan2ApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (your fal.ai API key)">
-          <button class="wan2-save-key" onclick="saveWan2Key()">Save Key</button>
-        </div>
-      </div>
-      <div id="wan2KeySaved" style="display:none;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#34C759;display:none;align-items:center;justify-content:space-between;">
-        <span>🔑 Replicate API key saved</span>
-        <button onclick="clearWan2Key()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline;">Change</button>
-      </div>
-      <div style="margin-bottom:14px;">
-        <label style="font-size:11px;font-weight:700;color:rgba(0,200,255,.7);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px;">Auto-Generated Prompt (editable)</label>
-        <textarea id="wan2Prompt" rows="4" style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(0,200,255,.2);color:rgba(255,255,255,.8);padding:12px;border-radius:12px;font-size:13px;font-family:monospace;outline:none;resize:vertical;line-height:1.7;" placeholder="Click 'Update Prompt' after filling the form above..."></textarea>
-        <button onclick="updateWan2Prompt()" style="margin-top:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:7px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">↺ Update Prompt from Form</button>
-      </div>
-      <button class="wan2-gen-btn" id="wan2GenBtn" onclick="generateWithWan2()">
-        <span class="shimmer"></span>
-        🤖 Generate Free AI Video (~60–120s)
-      </button>
-      <div class="wan2-status" id="wan2Status"></div>
-      <video id="wan2ResultVideo" class="wan2-result-video" controls playsinline></video>
-      <div id="wan2DlWrap" style="display:none;margin-top:10px;">
-        <button onclick="downloadWan2Video()" style="width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;">⬇ Download AI Video</button>
-        <button onclick="shareWan2ToInstagram()" style="width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px;">📲 Share to Instagram</button>
-      </div>
-    </div>
-
-    <!-- DISPLAY CONTROL TAB -->
     <div class="tab-content" id="tab-display">
       <div class="dc-header">
         <div>
@@ -725,9 +671,29 @@ function updateStats(){
   const vid=localStorage.getItem('breo_promo_video')||'';
   document.getElementById('statVideo').textContent=vid?'Active':'None';
   document.getElementById('statVideo').style.color=vid?'var(--blue)':'var(--muted)';
-}
 
-// ─── TABS ───
+  </div>
+</div>
+
+<div id="igOverlayEl" class="ig-overlay" style="display:none">
+  <div class="ig-overlay-card">
+    <div style="font-size:36px;margin-bottom:10px;">📲</div>
+    <h3>Post to Instagram</h3>
+    <p>Follow these steps to post your video on Instagram:</p>
+    <div class="ig-steps-list">
+      <div>① Click <strong style="color:#34C759;">Download Video</strong> below</div>
+      <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap + → Reel</div>
+      <div>③ Select the downloaded video from gallery</div>
+      <div>④ Add caption &amp; post 🚀</div>
+    </div>
+    <button class="ig-overlay-dl" id="igOverlayDlBtn">⬇ Download Video</button>
+    <button class="ig-overlay-open" onclick="window.open('https://www.instagram.com/','_blank');this.closest('.ig-overlay').style.display='none'">Open Instagram.com</button>
+    <button class="ig-overlay-cancel" onclick="this.closest('.ig-overlay').style.display='none'">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
 function switchTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
@@ -831,867 +797,198 @@ function setVgStyle(btn){
   if(w2){w2.classList.toggle('show',vgStyle==='wan2');}
   if(vgStyle==='wan2')updateWan2Prompt();
 }
-const VG_STYLES={
-  presenter:{bg1:'#030a1c',bg2:'#06122e',accent:'#FFB347',accent2:'#FF8C00',text:'#ffffff',badge:'#e8471e'},
-  luxury:{bg1:'#0a0512',bg2:'#1a0530',accent:'#a78bfa',accent2:'#818cf8',text:'#f0e6ff',badge:'#7c3aed'},
-  bold:{bg1:'#0a0000',bg2:'#1a0505',accent:'#ef4444',accent2:'#f97316',text:'#fff7f7',badge:'#dc2626'},
-  minimal:{bg1:'#050508',bg2:'#0f0f18',accent:'#e2e8f0',accent2:'#94a3b8',text:'#f8fafc',badge:'#334155'},
-  neon:{bg1:'#000510',bg2:'#00050a',accent:'#00f5ff',accent2:'#bf00ff',text:'#e0ffff',badge:'#0891b2'},
-  gold:{bg1:'#0a0800',bg2:'#1a1200',accent:'#fbbf24',accent2:'#f59e0b',text:'#fffbeb',badge:'#92400e'},
-  dark:{bg1:'#000000',bg2:'#111111',accent:'#ffffff',accent2:'#cccccc',text:'#ffffff',badge:'#333333'},
+
+// ─── INDEXED DB ───────────────────────────────────────────────
+const BreoDB={
+  _db:null,
+  open(){
+    if(this._db)return Promise.resolve(this._db);
+    return new Promise((res,rej)=>{
+      const req=indexedDB.open('breo-media',1);
+      req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');};
+      req.onsuccess=e=>{this._db=e.target.result;res(this._db);};
+      req.onerror=rej;
+    });
+  },
+  async save(id,blob){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').put(blob,id);tx.oncomplete=res;tx.onerror=rej;});},
+  async get(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readonly');const r=tx.objectStore('videos').get(id);r.onsuccess=e=>res(e.target.result);r.onerror=rej;});},
+  async del(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').delete(id);tx.oncomplete=res;tx.onerror=rej;});}
 };
-const DUBAI_EMOJIS={'Burj Khalifa':'🗼','Dubai Mall':'🛍️','JBR Beach':'🏖️','Dubai Marina':'⛵','Palm Jumeirah':'🌴','Downtown Dubai':'🌆','Dubai Frame':'🖼️','Global Village':'🎡'};
-function hexToRgb(hex){return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;}
-function easeOut(t){return 1-Math.pow(1-t,3);}
-function lerp(a,b,t){return a+(b-a)*Math.min(1,Math.max(0,t));}
-function clamp01(v){return Math.min(1,Math.max(0,v));}
 
-// Dubai night skyline
-function drawDubaiSkyline(ctx,W,H,f){
-  const hY=H*0.60;
-  const bldCol='#06102a';
-  const wA=0.55+0.15*Math.sin(f/90);
-  function bld(x,y,w,h,taper){
-    ctx.fillStyle=bldCol;ctx.strokeStyle='rgba(60,110,220,0.18)';ctx.lineWidth=0.7;
-    ctx.beginPath();
-    if(taper){ctx.moveTo(x,y+h);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w-(w*(1-taper))/2,y);ctx.lineTo(x+(w*(1-taper))/2,y);}
-    else{ctx.rect(x,y,w,h);}
-    ctx.closePath();ctx.fill();ctx.stroke();
-    const cols=Math.max(1,Math.floor(w/14));const rows=Math.max(1,Math.floor(h/18));
-    for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){
-      if((c*7+r*13)%4<2){
-        ctx.globalAlpha=wA*0.5;
-        ctx.fillStyle=(c*3+r)%5===0?'rgba(160,200,255,0.8)':'rgba(255,220,130,0.75)';
-        const wx=x+3+c*14,wy=y+4+r*18;
-        if(wx+8<x+w&&wy+11<y+h){ctx.fillRect(wx,wy,7,10);}
-        ctx.globalAlpha=1;
-      }
-    }
-  }
-  ctx.globalAlpha=0.6;
-  bld(0,hY-H*.09,W*.09,H*.09);bld(W*.06,hY-H*.14,W*.07,H*.14,0.8);
-  bld(W*.48,hY-H*.11,W*.11,H*.11);bld(W*.74,hY-H*.12,W*.10,H*.12,0.75);
-  bld(W*.87,hY-H*.10,W*.13,H*.10);
-  ctx.globalAlpha=1;
-  bld(W*.01,hY-H*.20,W*.11,H*.20,0.85);bld(W*.13,hY-H*.16,W*.09,H*.16);
-  bld(W*.23,hY-H*.24,W*.08,H*.24,0.7);bld(W*.57,hY-H*.18,W*.09,H*.18);
-  bld(W*.67,hY-H*.22,W*.09,H*.22,0.8);bld(W*.77,hY-H*.19,W*.12,H*.19);
-  bld(W*.90,hY-H*.17,W*.10,H*.17);
-  // Burj Khalifa
-  const bkX=W*.65,bkH=H*.48;
-  ctx.fillStyle='#050f25';ctx.strokeStyle='rgba(80,140,255,0.4)';ctx.lineWidth=0.8;
-  [[28,0,20,.25],[20,.25,12,.50],[12,.50,6,.75],[3,.75,1,.99]].forEach(([w1,y1,w2,y2])=>{
-    ctx.beginPath();ctx.moveTo(bkX-w1,hY);ctx.lineTo(bkX+w1,hY);
-    ctx.lineTo(bkX+w2,hY-bkH*y2);ctx.lineTo(bkX-w2,hY-bkH*y2);
-    ctx.closePath();ctx.fill();ctx.stroke();
-  });
-  for(let i=0;i<9;i++){
-    const wy=hY-bkH*(0.04+i*.07);const ww=16-i*1.3;
-    ctx.globalAlpha=0.5+0.2*Math.sin(f/60+i);
-    ctx.fillStyle='rgba(255,215,140,0.6)';ctx.fillRect(bkX-ww/2,wy,ww,2);
-    ctx.globalAlpha=1;
-  }
-  ctx.globalAlpha=0.5+0.5*Math.abs(Math.sin(f/16));
-  ctx.fillStyle='#ff4444';ctx.beginPath();ctx.arc(bkX,hY-bkH*.99,2.5,0,Math.PI*2);ctx.fill();
-  ctx.globalAlpha=1;
-  const gnd=ctx.createLinearGradient(0,hY,0,hY+H*.06);
-  gnd.addColorStop(0,'rgba(255,160,60,0.22)');gnd.addColorStop(1,'rgba(255,160,60,0.03)');
-  ctx.fillStyle=gnd;ctx.fillRect(0,hY,W,H*.06);
+// ─── POST METADATA ────────────────────────────────────────────
+function getPosts(){try{return JSON.parse(localStorage.getItem('breo_posts')||'[]');}catch(e){return[];}}
+function savePosts(p){localStorage.setItem('breo_posts',JSON.stringify(p));}
+
+// ─── UPLOAD ───────────────────────────────────────────────────
+let currentPostBlob=null;
+function handleDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('video/'))loadVideo(f);}
+function handleVideoUpload(input){const f=input.files[0];if(f)loadVideo(f);}
+function loadVideo(file){
+  currentPostBlob=file;
+  const url=URL.createObjectURL(file);
+  document.getElementById('postVideoPreview').src=url;
+  document.getElementById('uploadZone').style.display='none';
+  document.getElementById('postCreatorWrap').style.display='block';
+  if(!document.getElementById('postHashtags').value)
+    document.getElementById('postHashtags').value='#iPhone #Apple #Dubai #BreoMobile #UAEDeals';
 }
 
-// Indian woman presenter (illustrated silhouette)
-function drawPresenter(ctx,W,H,f){
-  const bob=Math.sin(f/30)*3;
-  const px=W*.30,py=H*.985;
-  const sc=H/960;
-  // shadow
-  ctx.fillStyle='rgba(0,0,0,0.30)';
-  ctx.beginPath();ctx.ellipse(px,py,W*.17,H*.012,0,0,Math.PI*2);ctx.fill();
-  // spotlight glow
-  const spot=ctx.createRadialGradient(px,py-H*.3+bob,0,px,py-H*.3+bob,H*.32);
-  spot.addColorStop(0,'rgba(255,200,120,0.09)');spot.addColorStop(1,'transparent');
-  ctx.fillStyle=spot;ctx.fillRect(0,0,W,H);
-  // Saree lower
-  ctx.fillStyle='#b71c50';
-  ctx.beginPath();
-  ctx.moveTo(px-28*sc,py-H*.28+bob);ctx.lineTo(px+28*sc,py-H*.28+bob);
-  ctx.bezierCurveTo(px+38*sc,py-H*.12,px+44*sc,py-H*.04,px+38*sc,py);
-  ctx.lineTo(px-42*sc,py);
-  ctx.bezierCurveTo(px-46*sc,py-H*.04,px-40*sc,py-H*.12,px-28*sc,py-H*.28+bob);
-  ctx.closePath();ctx.fill();
-  // Gold border
-  ctx.strokeStyle='rgba(255,215,0,0.65)';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(px-28*sc,py-H*.28+bob);
-  ctx.bezierCurveTo(px-42*sc,py-H*.12,px-46*sc,py-H*.04,px-42*sc,py);ctx.stroke();
-  // Blouse
-  ctx.fillStyle='#b71c50';
-  ctx.beginPath();ctx.roundRect(px-24*sc,py-H*.38+bob,48*sc,H*.10,5*sc);ctx.fill();
-  // Dupatta
-  ctx.fillStyle='rgba(220,60,100,0.70)';
-  ctx.beginPath();
-  ctx.moveTo(px-24*sc,py-H*.35+bob);
-  ctx.bezierCurveTo(px-48*sc,py-H*.32+bob,px-65*sc,py-H*.24+bob+Math.sin(f/22)*6*sc,px-68*sc,py-H*.12+bob);
-  ctx.bezierCurveTo(px-60*sc,py-H*.06,px-45*sc,py-H*.05,px-32*sc,py-H*.10);
-  ctx.bezierCurveTo(px-22*sc,py-H*.18,px-22*sc,py-H*.28,px-24*sc,py-H*.35+bob);
-  ctx.closePath();ctx.fill();
-  // Torso
-  ctx.fillStyle='#0d1830';
-  ctx.beginPath();
-  ctx.moveTo(px-26*sc,py-H*.38+bob);
-  ctx.bezierCurveTo(px-28*sc,py-H*.46+bob,px-24*sc,py-H*.50+bob,px-16*sc,py-H*.50+bob);
-  ctx.lineTo(px+18*sc,py-H*.50+bob);
-  ctx.bezierCurveTo(px+26*sc,py-H*.50+bob,px+30*sc,py-H*.46+bob,px+28*sc,py-H*.38+bob);
-  ctx.closePath();ctx.fill();
-  // Neck
-  ctx.fillStyle='#c0713a';
-  ctx.beginPath();ctx.roundRect(px-8*sc,py-H*.56+bob,16*sc,H*.06,4*sc);ctx.fill();
-  // Head
-  ctx.fillStyle='#c0713a';
-  ctx.beginPath();ctx.ellipse(px,py-H*.60+bob,27*sc,31*sc,0,0,Math.PI*2);ctx.fill();
-  // Hair top
-  ctx.fillStyle='#160800';
-  ctx.beginPath();ctx.ellipse(px,py-H*.63+bob,27*sc,14*sc,0,Math.PI,0);ctx.fill();
-  // Hair side
-  ctx.beginPath();
-  ctx.moveTo(px-22*sc,py-H*.62+bob);
-  ctx.bezierCurveTo(px-38*sc,py-H*.54+bob,px-44*sc,py-H*.46+bob,px-38*sc,py-H*.42+bob);
-  ctx.bezierCurveTo(px-30*sc,py-H*.40+bob,px-22*sc,py-H*.44+bob,px-18*sc,py-H*.50+bob);
-  ctx.closePath();ctx.fill();
-  // Hair bun
-  ctx.beginPath();ctx.ellipse(px+10*sc,py-H*.65+bob,14*sc,11*sc,0.35,0,Math.PI*2);ctx.fill();
-  // Eyes
-  ctx.fillStyle='#1a0800';
-  ctx.beginPath();ctx.ellipse(px-11*sc,py-H*.595+bob,11*sc,7*sc,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(px+11*sc,py-H*.595+bob,11*sc,7*sc,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#fff';
-  ctx.beginPath();ctx.ellipse(px-10*sc,py-H*.594+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(px+12*sc,py-H*.594+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
-  // Eyebrows
-  ctx.strokeStyle='#1a0800';ctx.lineWidth=2.5;
-  ctx.beginPath();ctx.arc(px-11*sc,py-H*.578+bob,14*sc,Math.PI*1.15,Math.PI*1.85);ctx.stroke();
-  ctx.beginPath();ctx.arc(px+11*sc,py-H*.578+bob,14*sc,Math.PI*1.15,Math.PI*1.85);ctx.stroke();
-  // Nose
-  ctx.fillStyle='#a85f2a';ctx.beginPath();ctx.ellipse(px,py-H*.582+bob,5*sc,4*sc,0,0,Math.PI*2);ctx.fill();
-  // Smile
-  ctx.strokeStyle='#c05530';ctx.lineWidth=2;
-  ctx.beginPath();ctx.arc(px,py-H*.568+bob,16*sc,0,Math.PI);ctx.stroke();
-  // Bindi
-  ctx.fillStyle='#ff1744';ctx.beginPath();ctx.arc(px,py-H*.622+bob,7*sc,0,Math.PI*2);ctx.fill();
-  // Earrings
-  ctx.fillStyle='#FFD700';
-  ctx.beginPath();ctx.arc(px-24*sc,py-H*.59+bob,6*sc,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.arc(px+24*sc,py-H*.59+bob,6*sc,0,Math.PI*2);ctx.fill();
-  // Right arm raised
-  ctx.fillStyle='#c0713a';
-  ctx.save();ctx.translate(px+28*sc,py-H*.47+bob);ctx.rotate(-0.55+Math.sin(f/40)*0.10);
-  ctx.beginPath();ctx.ellipse(0,H*.06,11*sc,H*.065,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(0,H*.125,13*sc,11*sc,0.2,0,Math.PI*2);ctx.fill();
-  ctx.restore();
-  // Left arm with phone
-  ctx.fillStyle='#c0713a';
-  ctx.save();ctx.translate(px-28*sc,py-H*.47+bob);ctx.rotate(0.30+Math.sin(f/35+1)*0.06);
-  ctx.beginPath();ctx.ellipse(0,H*.055,11*sc,H*.06,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(0,H*.115,12*sc,10*sc,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#111';ctx.beginPath();ctx.roundRect(-10*sc,H*.11,20*sc,H*.046,3*sc);ctx.fill();
-  ctx.fillStyle='#1a6fff';ctx.beginPath();ctx.roundRect(-7*sc,H*.113,14*sc,H*.038,2*sc);ctx.fill();
-  ctx.restore();
-}
-
-function generateVideo(){
-  const model=document.getElementById('vgModel').value;
-  const price=document.getElementById('vgPrice').value||'3999';
-  const headline=document.getElementById('vgHeadline').value||'Special Offer!';
-  const script=document.getElementById('vgScript').value||'';
-  const location=document.getElementById('vgLocation').value;
-  const waNum=localStorage.getItem('breo_wa')||'971500000000';
-  const s=VG_STYLES[vgStyle]||VG_STYLES.luxury;
-  const locEmoji=DUBAI_EMOJIS[location]||'🏙️';
-  const canvas=document.getElementById('vgCanvas');
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height;
-  const btn=document.getElementById('vgGenerateBtn');
-  const dl=document.getElementById('vgDownloadBtn');
-  const igBtn=document.getElementById('igShareBtn');
-  const pw=document.getElementById('vgProgressWrap');
-  const pf=document.getElementById('vgProgressFill');
-  const pl=document.getElementById('vgProgressLabel');
-  btn.disabled=true;dl.style.display='none';if(igBtn)igBtn.style.display='none';
-  pw.style.display='block';vgVideoBlob=null;
-  const FPS=24,DURATION=6,TOTAL=FPS*DURATION;
-  let frame=0;const chunks=[];let recorder=null;
+// ─── PUBLISH ──────────────────────────────────────────────────
+async function publishPost(){
+  if(!currentPostBlob){toast('Upload a video first.');return;}
+  const caption=document.getElementById('postCaption').value.trim();
+  const product=document.getElementById('postProduct').value.trim();
+  const price=document.getElementById('postPrice').value.trim();
+  const hashtags=document.getElementById('postHashtags').value.trim();
+  if(!product&&!caption){toast('Add a caption or product name.');return;}
+  const id='post_'+Date.now();
   try{
-    const stream=canvas.captureStream(FPS);
-    const mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
-    const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
-    recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
-    recorder.onstop=()=>{
-      vgVideoBlob=new Blob(chunks,{type:'video/webm'});
-      btn.disabled=false;dl.style.display='block';
-      if(igBtn)igBtn.style.display='block';
-      pl.textContent='Video ready! Download or Share to Instagram.';
-      toast('Video generated!');
-    };
-    recorder.start(100);
-  }catch(e){btn.disabled=false;pw.style.display='none';toast('Recording not supported in this browser.');}
-
-  function drawPresenterFrame(f){
-    const t=f/TOTAL;
-    const sky=ctx.createLinearGradient(0,0,0,H);
-    sky.addColorStop(0,'#020618');sky.addColorStop(0.5,'#08102e');sky.addColorStop(0.75,'#111838');sky.addColorStop(1,'#0c1020');
-    ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
-    const stars=[[.12,.05],[.28,.08],[.45,.03],[.62,.07],[.78,.04],[.88,.09],[.05,.13],[.35,.11],[.55,.15],[.72,.10],[.92,.13],[.18,.19],[.42,.16],[.65,.20],[.82,.15],[.08,.23],[.52,.22],[.76,.25],[.20,.07],[.58,.12]];
-    stars.forEach(([sx,sy],i)=>{
-      ctx.globalAlpha=0.4+0.5*Math.abs(Math.sin(f/25+i*.8));
-      ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(sx*W,sy*H*0.58,1.3,0,Math.PI*2);ctx.fill();
-    });
-    ctx.globalAlpha=1;
-    ctx.fillStyle='rgba(255,248,225,.92)';ctx.beginPath();ctx.arc(W*.84,H*.06,17,0,Math.PI*2);ctx.fill();
-    const moonGl=ctx.createRadialGradient(W*.84,H*.06,0,W*.84,H*.06,50);
-    moonGl.addColorStop(0,'rgba(255,245,200,.12)');moonGl.addColorStop(1,'transparent');
-    ctx.fillStyle=moonGl;ctx.beginPath();ctx.arc(W*.84,H*.06,50,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-    drawDubaiSkyline(ctx,W,H,f);
-    drawPresenter(ctx,W,H,f);
-    // Top gradient
-    const topGrd=ctx.createLinearGradient(0,0,0,H*.14);
-    topGrd.addColorStop(0,'rgba(0,0,0,0.88)');topGrd.addColorStop(1,'rgba(0,0,0,0.0)');
-    ctx.fillStyle=topGrd;ctx.fillRect(0,0,W,H*.14);
-    // Logo
-    const la=easeOut(clamp01(t/0.2));
-    ctx.globalAlpha=la;
-    ctx.font='900 '+W*.10+'px Inter,sans-serif';ctx.textAlign='center';ctx.fillStyle='#ffffff';
-    ctx.fillText('breo.',W/2,H*.075);
-    ctx.font='500 '+W*.028+'px Inter,sans-serif';ctx.fillStyle='rgba(255,179,71,.9)';
-    ctx.fillText('Premium Apple Store · UAE',W/2,H*.100);
-    ctx.globalAlpha=1;
-    // Location badge
-    const locA=easeOut(clamp01((t-.04)/.18));
-    ctx.globalAlpha=locA;
-    const lbW=W*.50,lbH=H*.032,lbX=W*.025,lbY=H*.008;
-    ctx.fillStyle='rgba(232,71,30,.88)';ctx.beginPath();ctx.roundRect(lbX,lbY,lbW,lbH,lbH/2);ctx.fill();
-    ctx.font='700 '+W*.026+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='left';
-    ctx.fillText('📍 '+location,lbX+lbW*.06,lbY+lbH*.73);ctx.textAlign='center';ctx.globalAlpha=1;
-    // Speech bubble
-    const sbA=easeOut(clamp01((t-.22)/.20));
-    ctx.globalAlpha=sbA;
-    const sbX=W*.70,sbY=H*.40,sbW=W*.52,sbH=H*.20;
-    ctx.fillStyle='rgba(255,255,255,.95)';
-    ctx.beginPath();ctx.roundRect(sbX-sbW/2,sbY-sbH/2,sbW,sbH,14);ctx.fill();
-    ctx.beginPath();ctx.moveTo(sbX-sbW/2,sbY+sbH*.08);ctx.lineTo(sbX-sbW/2-W*.06,sbY+sbH*.22);ctx.lineTo(sbX-sbW/2+W*.01,sbY+sbH*.28);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#111';
-    const wds=model.split(' ');const mid2=Math.ceil(wds.length/2);
-    ctx.font='800 '+W*.048+'px Inter,sans-serif';
-    ctx.fillText(wds.slice(0,mid2).join(' '),sbX,sbY-sbH*.06);
-    if(wds.length>mid2)ctx.fillText(wds.slice(mid2).join(' '),sbX,sbY+sbH*.10);
-    ctx.globalAlpha=1;
-    // Bottom panel
-    const btmA=easeOut(clamp01((t-.50)/.22));
-    ctx.globalAlpha=btmA;
-    const btmY=H*.72;
-    const btm=ctx.createLinearGradient(0,btmY,0,H);
-    btm.addColorStop(0,'rgba(0,0,0,0)');btm.addColorStop(0.25,'rgba(0,0,0,0.88)');btm.addColorStop(1,'rgba(0,0,0,0.96)');
-    ctx.fillStyle=btm;ctx.fillRect(0,btmY,W,H-btmY);
-    ctx.fillStyle='#FFD60A';ctx.font='900 '+W*.13+'px Inter,sans-serif';ctx.textAlign='center';
-    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,H*.835);
-    ctx.fillStyle='#fff';ctx.font='700 '+W*.044+'px Inter,sans-serif';
-    ctx.fillText(headline,W/2,H*.870);
-    const wA2=easeOut(clamp01((t-.70)/.22));
-    ctx.globalAlpha=btmA*wA2;
-    const wbW=W*.84,wbH=H*.055,wbX=(W-wbW)/2,wbY=H*.900;
-    ctx.fillStyle='#25D366';ctx.beginPath();ctx.roundRect(wbX,wbY,wbW,wbH,wbH/2);ctx.fill();
-    ctx.fillStyle='#fff';ctx.font='700 '+W*.034+'px Inter,sans-serif';
-    ctx.fillText('Order on WhatsApp · wa.me/'+waNum,W/2,wbY+wbH*.67);
-    ctx.globalAlpha=1;
-    if(script){
-      const sA=easeOut(clamp01((t-.75)/.2));
-      ctx.globalAlpha=sA*.7;
-      ctx.fillStyle='#fff';ctx.font='300 '+W*.028+'px Inter,sans-serif';
-      const mxW=W*.86;const wdsS=script.split(' ');let ln='';const lns=[];
-      wdsS.forEach(w=>{const ts=ln+w+' ';if(ctx.measureText(ts).width>mxW&&ln){lns.push(ln.trim());ln=w+' ';}else ln=ts;});
-      if(ln)lns.push(ln.trim());
-      lns.slice(0,2).forEach((l,i)=>ctx.fillText(l,W/2,H*.958+i*H*.034));
-      ctx.globalAlpha=1;
-    }
-  }
-
-  // ── Draw iPhone Pro with product content on screen ──
-  function drawIphone(cx,cy,sc,glowColor){
-    const iW=200*sc,iH=430*sc,iR=40*sc;
-    const ix=cx-iW/2,iy=cy-iH/2;
-    const sx=ix+6*sc,sy=iy+6*sc,sw=iW-12*sc,sh=iH-12*sc,sr=iR-6*sc;
-    // Drop shadow
-    ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=35*sc;
-    ctx.fillStyle='#1C1C1E';ctx.beginPath();ctx.roundRect(ix,iy,iW,iH,iR);ctx.fill();
-    ctx.shadowBlur=0;
-    // Screen black base
-    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(sx,sy,sw,sh,sr);ctx.fill();
-    // ── Screen content ──
-    ctx.save();ctx.beginPath();ctx.roundRect(sx,sy,sw,sh,sr);ctx.clip();
-    // Screen background gradient (deep blue/purple like iOS wallpaper)
-    const scBg=ctx.createLinearGradient(sx,sy,sx,sy+sh);
-    scBg.addColorStop(0,'#0a0a1e');scBg.addColorStop(0.4,'#12082a');scBg.addColorStop(1,'#050510');
-    ctx.fillStyle=scBg;ctx.fillRect(sx,sy,sw,sh);
-    // Subtle radial glow on screen
-    const scGl=ctx.createRadialGradient(cx,sy+sh*.4,0,cx,sy+sh*.4,sw*.7);
-    scGl.addColorStop(0,'rgba('+hexToRgb(glowColor||s.accent)+',0.30)');
-    scGl.addColorStop(1,'transparent');
-    ctx.fillStyle=scGl;ctx.fillRect(sx,sy,sw,sh);
-    // Status bar
-    ctx.fillStyle='rgba(255,255,255,0.7)';
-    ctx.font='bold '+10*sc+'px -apple-system,Inter,sans-serif';ctx.textAlign='left';
-    ctx.fillText('9:41',sx+12*sc,sy+18*sc);
-    ctx.textAlign='right';ctx.font='10px -apple-system,Inter,sans-serif';
-    ctx.fillText('●●●● 🔋',sx+sw-10*sc,sy+18*sc);
-    ctx.textAlign='center';
-    // Product emoji — large, centered
-    const emojiFontSz=Math.round(55*sc);
-    ctx.font=emojiFontSz+'px serif';ctx.textBaseline='middle';
-    const emojiY=sy+sh*.30;
-    ctx.fillText(locEmoji,cx,emojiY);
-    ctx.textBaseline='alphabetic';
-    // Model name on screen
-    const modelWords=model.split(' ');
-    const mFontSz=Math.max(9,Math.round(13*sc));
-    ctx.fillStyle='#fff';ctx.font='700 '+mFontSz+'px -apple-system,Inter,sans-serif';
-    if(modelWords.length<=3){
-      ctx.fillText(model,cx,sy+sh*.46);
-    } else {
-      const mid=Math.ceil(modelWords.length/2);
-      ctx.fillText(modelWords.slice(0,mid).join(' '),cx,sy+sh*.44);
-      ctx.fillText(modelWords.slice(mid).join(' '),cx,sy+sh*.44+mFontSz*1.4);
-    }
-    // Price on screen — gold
-    ctx.fillStyle='#FFD60A';
-    ctx.font='900 '+Math.round(18*sc)+'px -apple-system,Inter,sans-serif';
-    ctx.fillText('AED '+Number(price).toLocaleString(),cx,sy+sh*.60);
-    // Divider
-    ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(sx+sw*.1,sy+sh*.65);ctx.lineTo(sx+sw*.9,sy+sh*.65);ctx.stroke();
-    // WhatsApp mini CTA
-    const btnW=sw*.78,btnH=20*sc,btnX=cx-btnW/2,btnY=sy+sh*.675;
-    ctx.fillStyle='#25D366';ctx.beginPath();ctx.roundRect(btnX,btnY,btnW,btnH,btnH/2);ctx.fill();
-    ctx.fillStyle='#fff';ctx.font='700 '+Math.round(9*sc)+'px -apple-system,Inter,sans-serif';
-    ctx.fillText('Order on WhatsApp',cx,btnY+btnH*.68);
-    // Breo watermark
-    ctx.fillStyle='rgba(255,255,255,0.35)';
-    ctx.font='600 '+Math.round(9*sc)+'px -apple-system,Inter,sans-serif';
-    ctx.fillText('breo. · Premium Apple Store UAE',cx,sy+sh*.93);
-    ctx.restore();
-    // Dynamic Island
-    ctx.fillStyle='#000';ctx.beginPath();ctx.roundRect(cx-28*sc,iy+18*sc,56*sc,22*sc,11*sc);ctx.fill();
-    // Camera module
-    const cmX=ix+iW*.1,cmY=iy-28*sc,cmW=iW*.58,cmH=82*sc,cmR=20*sc;
-    ctx.fillStyle='#2C2C2E';ctx.beginPath();ctx.roundRect(cmX,cmY,cmW,cmH,cmR);ctx.fill();
-    [[cmX+cmW*.22,cmY+cmH*.32],[cmX+cmW*.65,cmY+cmH*.32],[cmX+cmW*.44,cmY+cmH*.72]].forEach(([lx,ly])=>{
-      ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(lx,ly,16*sc,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2;ctx.stroke();
-      ctx.fillStyle='rgba(30,60,160,0.7)';ctx.beginPath();ctx.arc(lx,ly,10*sc,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(lx-3*sc,ly-3*sc,3*sc,0,Math.PI*2);ctx.fill();
-    });
-    // Side buttons
-    ctx.fillStyle='#2a2a2a';ctx.beginPath();ctx.roundRect(ix-4*sc,iy+iH*.22,4*sc,iH*.12,2);ctx.fill();
-    ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.18,4*sc,iH*.08,2);ctx.fill();
-    ctx.beginPath();ctx.roundRect(ix+iW,iy+iH*.28,4*sc,iH*.14,2);ctx.fill();
-    // Screen edge gloss
-    ctx.globalAlpha=0.12+0.06*Math.sin(f/20);
-    const gloss=ctx.createLinearGradient(sx,sy,sx+sw*.6,sy);
-    gloss.addColorStop(0,'rgba(255,255,255,0)');gloss.addColorStop(0.3,'rgba(255,255,255,0.8)');gloss.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle=gloss;ctx.beginPath();ctx.roundRect(sx,sy,sw*.6,sh*.4,sr);ctx.fill();
-    ctx.globalAlpha=1;
-  }
-
-  function drawParticles(f){
-    const pts=[[.08,.12],[.22,.05],[.34,.19],[.48,.08],[.62,.14],[.76,.06],[.90,.17],[.14,.35],[.28,.28],[.44,.38],[.58,.25],[.72,.32],[.86,.40],[.06,.52],[.18,.60],[.32,.50],[.46,.58],[.60,.46],[.74,.55],[.88,.62],[.12,.72],[.26,.80],[.40,.70],[.54,.76],[.68,.68],[.82,.75],[.94,.82],[.04,.88],[.16,.92],[.30,.85]];
-    pts.forEach(([px2,py2],i)=>{
-      const pulse=0.3+0.5*Math.abs(Math.sin(f/22+i*0.7));
-      const sz=1.5+Math.sin(f/15+i*1.3)*0.8;
-      ctx.globalAlpha=pulse*0.7;
-      ctx.fillStyle=i%3===0?s.accent:i%3===1?s.accent2:'#ffffff';
-      ctx.beginPath();ctx.arc(px2*W,py2*H,sz,0,Math.PI*2);ctx.fill();
-    });
-    ctx.globalAlpha=1;
-  }
-
-  function drawAbstractFrame(f){
-    const t=f/TOTAL;
-    // Background
-    const grad=ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0,s.bg1);grad.addColorStop(0.6,s.bg2);grad.addColorStop(1,s.bg1);
-    ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-    // Radial glow center
-    const glowX=W/2+Math.sin(f/50)*40,glowY=H*.42+Math.cos(f/65)*30;
-    const rgl=ctx.createRadialGradient(glowX,glowY,0,glowX,glowY,W*.75);
-    rgl.addColorStop(0,'rgba('+hexToRgb(s.accent)+',0.22)');rgl.addColorStop(0.5,'rgba('+hexToRgb(s.accent)+',0.05)');rgl.addColorStop(1,'transparent');
-    ctx.fillStyle=rgl;ctx.fillRect(0,0,W,H);
-    drawParticles(f);
-    // Vignette
-    const vig=ctx.createRadialGradient(W/2,H/2,H*.28,W/2,H/2,H*.72);
-    vig.addColorStop(0,'transparent');vig.addColorStop(1,'rgba(0,0,0,0.55)');
-    ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
-
-    // ── Phase 1: Logo (0-2.5s) ──
-    const s1=clamp01(t/.20);
-    const logoAlpha=easeOut(s1);
-    ctx.globalAlpha=logoAlpha;
-    // Logo glow
-    ctx.shadowColor=s.accent;ctx.shadowBlur=40;
-    ctx.font='900 '+W*.115+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
-    const lgr=ctx.createLinearGradient(W*.2,0,W*.8,0);
-    lgr.addColorStop(0,s.accent);lgr.addColorStop(0.5,'#ffffff');lgr.addColorStop(1,s.accent2);
-    ctx.fillStyle=lgr;ctx.fillText('breo.',W/2,H*.115);
-    ctx.shadowBlur=0;
-    ctx.font='400 '+W*.032+'px Inter,sans-serif';
-    ctx.fillStyle='rgba(255,255,255,0.60)';
-    ctx.fillText('PREMIUM APPLE STORE  ·  UAE',W/2,H*.148);
-    ctx.globalAlpha=1;
-
-    // ── Phase 2: Location badge (0.4s) ──
-    const bA=easeOut(clamp01((t-.06)/.18));
-    ctx.globalAlpha=bA;
-    const bw2=W*.58,bh2=W*.092,bx2=(W-bw2)/2,by2=H*.178;
-    const bg2=ctx.createLinearGradient(bx2,0,bx2+bw2,0);
-    bg2.addColorStop(0,s.badge);bg2.addColorStop(1,s.accent2);
-    ctx.beginPath();ctx.roundRect(bx2,by2,bw2,bh2,bh2/2);ctx.fillStyle=bg2;ctx.fill();
-    ctx.font='700 '+W*.038+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
-    ctx.fillText(locEmoji+' '+location,W/2,by2+bh2*.68);
-    ctx.globalAlpha=1;
-
-    // ── Phase 3: iPhone slides in (1.2s-4.5s) ──
-    const s2=easeOut(clamp01((t-.16)/.32));
-    const iphoneY=lerp(H*1.1,H*.435,s2)+Math.sin(f/28)*6;
-    const iphoneSc=lerp(0.6,1.0,s2)*W/540;
-    ctx.globalAlpha=s2;
-    drawIphone(W/2,iphoneY,iphoneSc,s.accent);
-    ctx.globalAlpha=1;
-
-    // ── Phase 4: Model name (2s) ──
-    const nA=easeOut(clamp01((t-.32)/.18));
-    ctx.globalAlpha=nA;
-    const words=model.split(' ');const mid=Math.ceil(words.length/2);
-    ctx.font='800 '+W*.068+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
-    ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=20;
-    // Text outline/shadow
-    ctx.fillStyle='rgba(0,0,0,0.5)';
-    ctx.fillText(words.slice(0,mid).join(' '),W/2+2,H*.685+2);
-    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2+2,H*.685+W*.08+2);
-    ctx.fillStyle=s.text;
-    ctx.fillText(words.slice(0,mid).join(' '),W/2,H*.685);
-    if(words.length>mid)ctx.fillText(words.slice(mid).join(' '),W/2,H*.685+W*.08);
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
-
-    // ── Phase 5: Price (3s) ──
-    const prA=easeOut(clamp01((t-.50)/.22));
-    ctx.globalAlpha=prA;
-    // Price card
-    const cw2=W*.80,ch2=H*.082,cx3=(W-cw2)/2,cardY2=H*.755;
-    const gprc=ctx.createLinearGradient(cx3,0,cx3+cw2,0);
-    gprc.addColorStop(0,s.accent);gprc.addColorStop(0.5,s.accent2);gprc.addColorStop(1,s.accent);
-    ctx.beginPath();ctx.roundRect(cx3,cardY2,cw2,ch2,ch2/2);
-    // shimmer offset
-    const shimX=(f%120)/120;
-    const shim=ctx.createLinearGradient(cx3+shimX*cw2*1.5-cw2*.4,0,cx3+shimX*cw2*1.5+cw2*.2,0);
-    shim.addColorStop(0,s.accent);shim.addColorStop(0.4,'rgba(255,255,255,0.35)');shim.addColorStop(1,s.accent2);
-    ctx.fillStyle=shim;ctx.fill();
-    ctx.fillStyle='#fff';ctx.font='900 '+W*.094+'px Inter,system-ui,sans-serif';ctx.textAlign='center';
-    ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=8;
-    ctx.fillText('AED '+Number(price).toLocaleString(),W/2,cardY2+ch2*.72);
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
-
-    // ── Phase 6: Headline (3.6s) ──
-    const hlA2=easeOut(clamp01((t-.60)/.15));
-    ctx.globalAlpha=hlA2;
-    ctx.font='600 '+W*.048+'px Inter,sans-serif';ctx.fillStyle=s.text;ctx.textAlign='center';
-    ctx.fillText(headline,W/2,H*.860);
-    ctx.globalAlpha=1;
-
-    // ── Phase 7: WhatsApp CTA (4.6s) ──
-    const s4=easeOut(clamp01((t-.72)/.20));
-    const waY=lerp(H*1.02,H*.895,s4);
-    ctx.globalAlpha=s4;
-    const waw2=W*.82,wah2=H*.052,wax2=(W-waw2)/2;
-    ctx.beginPath();ctx.roundRect(wax2,waY,waw2,wah2,wah2/2);
-    ctx.fillStyle='#25D366';ctx.fill();
-    // WhatsApp icon dot
-    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.beginPath();ctx.arc(wax2+wah2/2,waY+wah2/2,wah2*.38,0,Math.PI*2);ctx.fill();
-    ctx.font='700 '+W*.036+'px Inter,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
-    ctx.fillText('📲  Order on WhatsApp  ·  wa.me/'+waNum,W/2,waY+wah2*.67);
-    ctx.globalAlpha=1;
-
-    // ── Phase 8: Script lines (5s+) ──
-    if(script){
-      const sA2=easeOut(clamp01((t-.80)/.18));ctx.globalAlpha=sA2*.65;
-      ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='300 '+W*.026+'px Inter,sans-serif';
-      const mxW2=W*.86;const wdsS=script.split(' ');let ln='';const lns=[];
-      wdsS.forEach(w=>{const ts=ln+w+' ';if(ctx.measureText(ts).width>mxW2&&ln){lns.push(ln.trim());ln=w+' ';}else ln=ts;});
-      if(ln)lns.push(ln.trim());
-      lns.slice(0,2).forEach((l,i)=>ctx.fillText(l,W/2,H*.958+i*H*.032));
-      ctx.globalAlpha=1;
-    }
-  }
-
-  function tick(){
-    if(vgStyle==='presenter')drawPresenterFrame(frame);else drawAbstractFrame(frame);
-    pf.style.width=(frame/TOTAL*100)+'%';
-    pl.textContent='Generating... '+Math.max(0,Math.round((TOTAL-frame)/FPS))+'s left';
-    frame++;
-    if(frame<=TOTAL){setTimeout(tick,0);}
-    else{if(recorder&&recorder.state!=='inactive')recorder.stop();if(!recorder){btn.disabled=false;pw.style.display='none';}}
-  }
-  if(vgStyle==='presenter')drawPresenterFrame(0);else drawAbstractFrame(0);
-  setTimeout(tick,0);
-}
-function downloadVideo(){
-  if(!vgVideoBlob)return;
-  const model=document.getElementById('vgModel').value.replace(/\s+/g,'-');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(vgVideoBlob);
-  a.download='breo-offer-'+model+'-'+Date.now()+'.webm';
-  a.click();
-}
-async function shareToInstagram(){
-  if(!vgVideoBlob){toast('Generate a video first.');return;}
-  if(navigator.share&&navigator.canShare){
-    try{
-      const file=new File([vgVideoBlob],'breo-offer.webm',{type:'video/webm'});
-      if(navigator.canShare({files:[file]})){
-        const caption=document.getElementById('captionOutput')?.textContent||'Amazing iPhone deal from Breo Mobile UAE!';
-        await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});
-        return;
-      }
-    }catch(e){if(e.name==='AbortError')return;}
-  }
-  const canvas=document.getElementById('vgCanvas');
-  canvas.toBlob(blob=>{
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='breo-offer-'+Date.now()+'.png';a.click();
-    setTimeout(()=>{
-      const ig=localStorage.getItem('breo_ig');
-      window.open(ig?'https://www.instagram.com/'+ig+'/':'https://www.instagram.com/','_blank');
-      toast('Image saved — now upload to Instagram!');
-    },600);
-  },'image/png');
+    await BreoDB.save(id,currentPostBlob);
+    const posts=getPosts();
+    posts.unshift({id,caption,product,price,hashtags,mimeType:currentPostBlob.type,createdAt:Date.now()});
+    savePosts(posts);
+    toast('✅ Published! Visible on your store now.');
+    updateStats();
+    renderPostsGrid();
+  }catch(e){toast('Error saving: '+e.message);}
 }
 
-
-// ─── HANDLE GENERATE (routes to canvas or wan2) ───
-function handleGenerate(){
-  if(vgStyle==='wan2'){generateWithWan2();}
-  else{generateVideo();}
-}
-
-// ─── WAN2.1 / REPLICATE ───
-let wan2VideoUrl=null;
-function saveWan2Key(){
-  const k=document.getElementById('wan2ApiKey').value.trim();
-  if(!k){toast('Paste your Replicate API key first.');return;}
-  localStorage.setItem('breo_fal_key',k);
-  document.getElementById('wan2KeySetup').style.display='none';
-  const saved=document.getElementById('wan2KeySaved');saved.style.display='flex';
-  toast('🔑 API key saved — you won\'t need to enter it again!');
-}
-function clearWan2Key(){
-  localStorage.removeItem('breo_fal_key');
-  document.getElementById('wan2ApiKey').value='';
-  document.getElementById('wan2KeySetup').style.display='block';
-  document.getElementById('wan2KeySaved').style.display='none';
-  toast('API key cleared. Enter a new key.');
-}
-function updateWan2Prompt(){
-  const model=document.getElementById('vgModel').value||'iPhone 16 Pro Max';
-  const price=document.getElementById('vgPrice').value||'3999';
-  const headline=document.getElementById('vgHeadline').value||'Special Offer';
-  const location=document.getElementById('vgLocation').value||'Burj Khalifa';
-  const script=document.getElementById('vgScript').value||'';
-  const prompt=`A beautiful Indian woman in a colorful saree standing at ${location} in Dubai at night, smiling confidently, holding and showing a ${model} smartphone. Luxury Dubai skyline with Burj Khalifa lit up behind her. She says: "${script||headline+' Only AED '+Number(price).toLocaleString()+'. Order now!'}". Cinematic advertisement video, 4K quality, smooth motion, professional lighting, vibrant colors.`;
-  document.getElementById('wan2Prompt').value=prompt;
-}
-async function generateWithWan2(){
-  const falKey=localStorage.getItem('breo_fal_key')||document.getElementById('wan2ApiKey').value.trim();
-  if(!falKey){toast('Enter your fal.ai API key first.');document.getElementById('wan2ApiKey').focus();return;}
-  const prompt=document.getElementById('wan2Prompt').value.trim();
-  if(!prompt){updateWan2Prompt();return;}
-  const btn=document.getElementById('wan2GenBtn');
-  const status=document.getElementById('wan2Status');
-  const video=document.getElementById('wan2ResultVideo');
-  const dlWrap=document.getElementById('wan2DlWrap');
-  btn.disabled=true;video.style.display='none';dlWrap.style.display='none';wan2VideoUrl=null;
-  status.innerHTML='<span style="color:#00c8ff;">⏳ Submitting to fal.ai Wan2.1...</span>';
-  try{
-    // Step 1: Create job via Vercel proxy (fast, < 2s)
-    const createResp=await fetch('/api/fal-create',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt,falKey})
-    });
-    if(!createResp.ok){
-      const err=await createResp.json().catch(()=>({}));
-      throw new Error(err.error||'fal.ai error '+createResp.status+'. Check your API key.');
-    }
-    const created=await createResp.json();
-    const requestId=created.request_id;
-    if(!requestId)throw new Error('No request ID returned. Check your fal.ai key.');
-    status.innerHTML='<span style="color:#00c8ff;">🎬 Generating Wan2.1 video... (~60–120s)</span>';
-    // Step 2: Poll status every 3s via Vercel proxy (each call < 1s, no timeout)
-    let attempts=0;const maxAttempts=60;
-    while(attempts<maxAttempts){
-      await new Promise(r=>setTimeout(r,3000));
-      attempts++;
-      const pollResp=await fetch('/api/fal-poll',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({requestId,falKey})
-      });
-      const pollData=await pollResp.json();
-      if(pollData.status==='COMPLETED'){
-        if(!pollData.videoUrl)throw new Error('Video URL missing from result.');
-        wan2VideoUrl=pollData.videoUrl;
-        video.src=pollData.videoUrl;video.style.display='block';
-        dlWrap.style.display='block';
-        status.innerHTML='<span style="color:#34C759;">✅ AI video ready! Download or post to Instagram.</span>';
-        toast('🤖 Wan2.1 AI video generated!');
-        break;
-      } else if(pollData.status==='ERROR'||pollData.error){
-        throw new Error(pollData.error||'Generation failed on fal.ai');
-      } else {
-        const pct=Math.min(95,Math.round((attempts/maxAttempts)*100));
-        const phase=pollData.status==='QUEUED'?'Queued...':'Processing...';
-        status.innerHTML='<span style="color:#00c8ff;">'+pct+'% — '+phase+'</span>';
-      }
-    }
-    if(!wan2VideoUrl)throw new Error('Timed out. Try again — the model may be busy.');
-  }catch(e){
-    status.innerHTML='<span style="color:var(--red);">❌ '+e.message+'</span>';
-    toast('Error: '+e.message.slice(0,60));
-  }finally{btn.disabled=false;}
-}
-function downloadWan2Video(){
-  if(!wan2VideoUrl)return;
-  const a=document.createElement('a');a.href=wan2VideoUrl;
-  a.download='breo-wan2-'+Date.now()+'.mp4';a.target='_blank';a.click();
-}
-async function shareWan2ToInstagram(){
-  if(!wan2VideoUrl){toast('Generate a video first.');return;}
+// ─── INSTAGRAM SHARE ──────────────────────────────────────────
+async function shareCurrentPostToInstagram(){
+  if(!currentPostBlob){toast('Upload a video first.');return;}
   const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  // ── Mobile: use Web Share API → opens system share sheet → Instagram ──
   if(isMobile){
     try{
-      let blob;
-      if(wan2VideoUrl.startsWith('blob:')){
-        const r=await fetch(wan2VideoUrl);blob=await r.blob();
-      } else {
-        const r=await fetch(wan2VideoUrl);blob=await r.blob();
-      }
-      const file=new File([blob],'breo-offer.mp4',{type:'video/mp4'});
+      const cap=(document.getElementById('postCaption').value||'')+'
+
+'+(document.getElementById('postHashtags').value||'');
+      const file=new File([currentPostBlob],'breo-post.mp4',{type:'video/mp4'});
       if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-        const caption=document.getElementById('captionOutput')?.textContent||'Exclusive deals at Breo Mobile! 🔥 #Apple #iPhone #Dubai';
-        await navigator.share({files:[file],title:'Breo Mobile Offer',text:caption});
-        return;
+        await navigator.share({files:[file],title:'Breo Mobile Offer',text:cap.trim()});return;
       }
     }catch(e){if(e.name==='AbortError')return;}
   }
-  // ── Desktop: download video + show Instagram instructions overlay ──
-  showInstagramOverlay();
+  showIgOverlay(currentPostBlob);
 }
-function showInstagramOverlay(){
-  let ov=document.getElementById('igOverlay');
-  if(!ov){
-    ov=document.createElement('div');
-    ov.id='igOverlay';
-    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
-    ov.innerHTML=`<div style="background:#0a1530;border:1px solid rgba(0,200,255,.3);border-radius:20px;padding:28px;max-width:380px;width:100%;text-align:center;">
-      <div style="font-size:32px;margin-bottom:8px;">📲</div>
-      <h3 style="color:#fff;font-size:17px;margin-bottom:6px;">Post to Instagram</h3>
-      <p style="color:rgba(255,255,255,.55);font-size:13px;margin-bottom:20px;line-height:1.6;">Follow these steps to post your video directly on Instagram:</p>
-      <div style="text-align:left;background:rgba(255,255,255,.04);border-radius:12px;padding:14px;margin-bottom:18px;font-size:13px;color:rgba(255,255,255,.75);line-height:2;">
+
+async function sharePostById(id){
+  const blob=await BreoDB.get(id);
+  if(!blob){toast('Video not found.');return;}
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile){
+    try{
+      const post=getPosts().find(p=>p.id===id)||{};
+      const cap=(post.caption||'')+'
+
+'+(post.hashtags||'');
+      const file=new File([blob],'breo-post.mp4',{type:'video/mp4'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'Breo Mobile Offer',text:cap.trim()});return;
+      }
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  showIgOverlay(blob);
+}
+
+function showIgOverlay(blob){
+  let ov=document.getElementById('igOverlayEl');
+  if(!ov){ov=document.createElement('div');ov.id='igOverlayEl';ov.className='ig-overlay';
+    ov.innerHTML=`<div class="ig-overlay-card">
+      <div style="font-size:36px;margin-bottom:10px;">📲</div>
+      <h3>Post to Instagram</h3>
+      <p>Follow these steps to post your video on Instagram:</p>
+      <div class="ig-steps-list">
         <div>① Click <strong style="color:#34C759;">Download Video</strong> below</div>
-        <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap <strong>+</strong> → Reel or Post</div>
-        <div>③ Select the downloaded video from your gallery</div>
-        <div>④ Add caption & post! 🚀</div>
+        <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap <strong>+</strong> → Reel</div>
+        <div>③ Select the downloaded video</div>
+        <div>④ Add caption &amp; post 🚀</div>
       </div>
-      <button onclick="triggerWan2Download();document.getElementById('igOverlay').remove();" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;">⬇ Download Video</button>
-      <button onclick="window.open('https://www.instagram.com/','_blank');document.getElementById('igOverlay').remove();" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;">Open Instagram.com</button>
-      <button onclick="document.getElementById('igOverlay').remove();" style="background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
+      <button class="ig-overlay-dl" id="igOverlayDlBtn">⬇ Download Video</button>
+      <button class="ig-overlay-open" onclick="window.open('https://www.instagram.com/','_blank');document.getElementById('igOverlayEl').style.display='none'">Open Instagram.com</button>
+      <button class="ig-overlay-cancel" onclick="document.getElementById('igOverlayEl').style.display='none'">Cancel</button>
     </div>`;
     document.body.appendChild(ov);
-    ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
-  } else {
-    ov.style.display='flex';
+    ov.addEventListener('click',e=>{if(e.target===ov)ov.style.display='none';});
+  }
+  document.getElementById('igOverlayDlBtn').onclick=()=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='breo-post-'+Date.now()+'.mp4';a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  };
+  ov.style.display='flex';
+}
+
+// ─── RENDER POSTS GRID ────────────────────────────────────────
+async function renderPostsGrid(){
+  const posts=getPosts();
+  const grid=document.getElementById('postsGrid');
+  const section=document.getElementById('publishedPostsSection');
+  if(!grid)return;
+  if(!posts.length){section.style.display='none';return;}
+  section.style.display='block';grid.innerHTML='';
+  for(const post of posts){
+    const card=document.createElement('div');card.className='post-card';
+    const blob=await BreoDB.get(post.id);
+    const vurl=blob?URL.createObjectURL(blob):'';
+    card.innerHTML=`
+      <div class="post-card-video-wrap" onclick="togglePostVideo(this)">
+        ${vurl?`<video src="${vurl}" playsinline muted loop></video><div class="post-card-play">▶</div>`:'<div style="height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:12px;">No video</div>'}
+      </div>
+      <div class="post-card-meta">
+        ${post.product?`<div class="post-card-product">${post.product}</div>`:''}
+        ${post.price?`<div class="post-card-price">AED ${Number(post.price).toLocaleString()}</div>`:''}
+      </div>
+      <div class="post-card-actions">
+        <button class="post-card-ig" onclick="sharePostById('${post.id}')">📲 Share</button>
+        <button class="post-card-del" onclick="deletePost('${post.id}')">🗑️</button>
+      </div>`;
+    grid.appendChild(card);
   }
 }
-function triggerWan2Download(){
-  if(!wan2VideoUrl)return;
-  const a=document.createElement('a');a.href=wan2VideoUrl;
-  a.download='breo-promo-'+Date.now()+'.mp4';document.body.appendChild(a);a.click();document.body.removeChild(a);
+function togglePostVideo(wrap){
+  const v=wrap.querySelector('video');if(!v)return;
+  const pi=wrap.querySelector('.post-card-play');
+  if(v.paused){v.play();if(pi)pi.style.display='none';}else{v.pause();if(pi)pi.style.display='flex';}
+}
+async function deletePost(id){
+  if(!confirm('Delete this post? It will be removed from the store too.'))return;
+  await BreoDB.del(id);
+  savePosts(getPosts().filter(p=>p.id!==id));
+  toast('Post deleted.');renderPostsGrid();updateStats();
 }
 
-// ─── CUSTOM PRODUCTS ───
-function getCustomProducts(){try{const s=localStorage.getItem('breo_custom_products');return s?JSON.parse(s):[];}catch(e){return [];}}
-function openAddProdForm(){
-  document.getElementById('addProdForm').classList.add('open');
-  document.getElementById('addProdBtn').style.display='none';
-  document.getElementById('addProdForm').scrollIntoView({behavior:'smooth'});
-}
-function closeAddProdForm(){
-  document.getElementById('addProdForm').classList.remove('open');
-  document.getElementById('addProdBtn').style.display='flex';
-}
-function saveNewProduct(){
-  const name=document.getElementById('apName').value.trim();
-  const cat=document.getElementById('apCat').value;
-  const emoji=document.getElementById('apEmoji').value;
-  const spec=document.getElementById('apSpec').value.trim()||'—';
-  const price=parseInt(document.getElementById('apPrice').value)||0;
-  const badge=document.getElementById('apBadge').value.trim();
-  if(!name){toast('Please enter a product name.');return;}
-  const custom=getCustomProducts();
-  const id='c'+Date.now();
-  custom.push({id,cat,emoji,name,spec,defaultPrice:price,badge,custom:true});
-  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
-  const settings=getDcSettings();
-  settings[id]={on:true,price};
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  ['apName','apSpec','apBadge'].forEach(k=>document.getElementById(k).value='');
-  document.getElementById('apPrice').value='';
-  closeAddProdForm();renderDcPanel();
-  toast(name+' added to your store!');
-}
-function deleteCustomProduct(id){
-  if(!confirm('Remove this product from store?'))return;
-  let custom=getCustomProducts();
-  const name=custom.find(p=>p.id===id)?.name||'Product';
-  custom=custom.filter(p=>p.id!==id);
-  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
-  const settings=getDcSettings();delete settings[id];
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  renderDcPanel();toast(name+' removed.');
+// ─── UPDATE STATS ─────────────────────────────────────────────
+function updateStats(){
+  const deals=JSON.parse(localStorage.getItem('breo_deals')||'[]');
+  const el=document.getElementById('statDeals');if(el)el.textContent=deals.filter(d=>d.on!==false).length||deals.length;
+  const wa=localStorage.getItem('breo_wa');const wel=document.getElementById('statWa');if(wel)wel.textContent=wa?'+'+wa:'Not set';
+  const ig=localStorage.getItem('breo_ig');const iel=document.getElementById('statIg');if(iel)iel.textContent=ig?'@'+ig:'Not set';
+  const posts=getPosts();const pel=document.getElementById('statVideo');if(pel)pel.textContent=posts.length?posts.length+' post'+(posts.length>1?'s':''):'None';
 }
 
-// ─── DISPLAY CONTROL ───
-const DC_PRODUCTS=[
-  {id:1,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro Max',spec:'256GB',defaultPrice:5999,badge:'NEW'},
-  {id:2,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro',spec:'256GB',defaultPrice:5199,badge:'NEW'},
-  {id:3,cat:'iPhone',emoji:'📱',name:'iPhone 15 Pro Max',spec:'256GB',defaultPrice:4499,badge:''},
-  {id:4,cat:'iPhone',emoji:'📱',name:'iPhone 15',spec:'128GB',defaultPrice:2799,badge:''},
-  {id:5,cat:'iPhone',emoji:'📱',name:'iPhone 14 Pro Max',spec:'256GB',defaultPrice:3799,badge:''},
-  {id:6,cat:'iPhone',emoji:'📱',name:'iPhone 14',spec:'128GB',defaultPrice:2299,badge:''},
-  {id:7,cat:'iPhone',emoji:'📱',name:'iPhone 13',spec:'128GB',defaultPrice:1799,badge:''},
-  {id:8,cat:'iPhone',emoji:'📱',name:'iPhone SE',spec:'64GB',defaultPrice:1299,badge:''},
-  {id:9,cat:'MacBook',emoji:'💻',name:'MacBook Air M3',spec:'8GB 256GB',defaultPrice:4299,badge:'NEW'},
-  {id:10,cat:'MacBook',emoji:'💻',name:'MacBook Pro M3',spec:'16GB 512GB',defaultPrice:7299,badge:''},
-  {id:11,cat:'iPad',emoji:'🖥',name:'iPad Pro M4',spec:'256GB Wi-Fi',defaultPrice:2899,badge:'NEW'},
-  {id:12,cat:'iPad',emoji:'🖥',name:'iPad Air M2',spec:'128GB Wi-Fi',defaultPrice:1999,badge:''},
-  {id:13,cat:'Watch',emoji:'⌚',name:'Apple Watch Series 10',spec:'GPS 46mm',defaultPrice:1599,badge:'NEW'},
-  {id:14,cat:'Watch',emoji:'⌚',name:'Apple Watch Ultra 2',spec:'GPS+Cell',defaultPrice:3499,badge:''},
-  {id:15,cat:'AirPods',emoji:'🎧',name:'AirPods Pro 2',spec:'USB-C',defaultPrice:999,badge:''},
-  {id:16,cat:'AirPods',emoji:'🎧',name:'AirPods Max',spec:'USB-C',defaultPrice:2299,badge:''},
-];
-function getDcSettings(){
-  try{const s=localStorage.getItem('breo_display');if(s)return JSON.parse(s);}catch(e){}
-  const def={};DC_PRODUCTS.forEach(p=>{def[p.id]={on:p.cat==='iPhone',price:p.defaultPrice};});return def;
-}
-function getAllDcProducts(){return [...DC_PRODUCTS,...getCustomProducts()];}
-function renderDcPanel(){
-  const settings=getDcSettings();
-  const allProds=getAllDcProducts();
-  const cats=[...new Set(allProds.map(p=>p.cat))];
-  const catBar=document.getElementById('dcCatBar');
-  const list=document.getElementById('dcProdList');
-  if(!catBar||!list)return;
-  catBar.innerHTML=cats.map(cat=>{
-    const anyOn=allProds.filter(p=>p.cat===cat).some(p=>settings[p.id]?.on);
-    const em=cat==='iPhone'?'📱':cat==='MacBook'?'💻':cat==='iPad'?'🖥':cat==='Watch'?'⌚':cat==='AirPods'?'🎧':'📦';
-    return '<div class="dc-cat-toggle'+(anyOn?' on':'')+'" onclick="dcToggleCat(\''+cat+'\',this)">'+em+' '+cat+'</div>';
-  }).join('');
-  list.innerHTML=allProds.map(p=>{
-    const cfg=settings[p.id]||{on:false,price:p.defaultPrice};
-    const delBtn=p.custom?'<button class="del-custom-btn" onclick="deleteCustomProduct(\''+p.id+'\')">✕ Remove</button>':'<span></span>';
-    const custLabel=p.custom?' <span style="font-size:10px;color:#34C759;background:rgba(52,199,89,.12);padding:1px 6px;border-radius:4px;">Custom</span>':'';
-    return '<div class="dc-prod-row'+(cfg.on?'':' off')+'" id="dcrow-'+p.id+'">'+
-      '<div class="dc-prod-emoji">'+p.emoji+'</div>'+
-      '<div class="dc-prod-info"><div class="dc-prod-name">'+p.name+custLabel+'</div><div class="dc-prod-cat">'+p.cat+' · '+p.spec+'</div></div>'+
-      (p.badge?'<span class="dc-badge">'+p.badge+'</span>':delBtn)+
-      '<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--muted);">AED</span>'+
-      '<input class="dc-price-input" id="dcprice-'+p.id+'" type="number" value="'+cfg.price+'" onchange="dcPriceChange(\''+p.id+'\',this.value)">'+
-      '</div><label class="dc-toggle"><input type="checkbox" id="dctoggle-'+p.id+'" '+(cfg.on?'checked':'')+' onchange="dcToggleProd(\''+p.id+'\',this.checked)">'+
-      '<span class="dc-toggle-slider"></span></label></div>';
-  }).join('');
-  updateDcCount(settings);
-}
-function dcToggleProd(id,on){
-  const settings=getDcSettings();
-  const allP=getAllDcProducts();
-  if(!settings[id])settings[id]={on:false,price:allP.find(p=>String(p.id)===String(id))?.defaultPrice||0};
-  settings[id].on=on;
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  const row=document.getElementById('dcrow-'+id);if(row)row.classList.toggle('off',!on);
-  updateDcCount(settings);
-}
-function dcPriceChange(id,val){
-  const settings=getDcSettings();
-  if(!settings[id])settings[id]={on:true,price:0};
-  settings[id].price=parseInt(val)||0;
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-}
-function dcToggleCat(cat,el){
-  const settings=getDcSettings();
-  const catProds=getAllDcProducts().filter(p=>p.cat===cat);
-  const anyOn=catProds.some(p=>settings[p.id]?.on);
-  const newState=!anyOn;
-  catProds.forEach(p=>{
-    if(!settings[p.id])settings[p.id]={on:newState,price:p.defaultPrice};
-    settings[p.id].on=newState;
-    const cb=document.getElementById('dctoggle-'+p.id);if(cb)cb.checked=newState;
-    const row=document.getElementById('dcrow-'+p.id);if(row)row.classList.toggle('off',!newState);
-  });
-  el.classList.toggle('on',newState);
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  updateDcCount(settings);
-}
-function updateDcCount(settings){
-  const count=Object.values(settings).filter(v=>v.on).length;
-  const el=document.getElementById('dcActiveCount');if(el)el.textContent=count;
-}
-function saveDisplaySettings(){
-  const settings=getDcSettings();
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  const count=Object.values(settings).filter(v=>v.on).length;
-  toast(count+' products now live on your store!');
-}
 
-// ─── TOAST ───
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
-
-// ─── INIT ───
+// ─── INIT ────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  if(sessionStorage.getItem('breo_auth')==='1'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    init();
+  }
+});
 function init(){
-  renderDealsAdmin();renderWaPreview();
-  const waNum=localStorage.getItem('breo_wa');
-  if(waNum){document.getElementById('waNumber').value=waNum;const c=document.getElementById('waSaveConfirm');if(c)c.style.display='block';}
-  const igH=localStorage.getItem('breo_ig');
-  if(igH)document.getElementById('igHandle').value=igH;
-  const vid=localStorage.getItem('breo_promo_video');
-  if(vid){document.getElementById('promoVideoUrl').value=vid;previewVideo(vid);}
-  renderDcPanel();
-  // Restore wan2 key
-  const w2k=localStorage.getItem('breo_fal_key');
-  if(w2k){
-    const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
-    const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
-    if(setup&&saved){setup.style.display='none';saved.style.display='flex';}
-  }
-  const cv=document.getElementById('vgCanvas');
-  if(cv){
-    const cx=cv.getContext('2d');
-    cx.fillStyle='#0d0d1a';cx.fillRect(0,0,cv.width,cv.height);
-    cx.font='48px serif';cx.textAlign='center';cx.fillText('🎬',cv.width/2,cv.height/2-20);
-    cx.font='700 16px Inter,sans-serif';cx.fillStyle='rgba(167,139,250,0.4)';
-    cx.fillText('Select style & Generate',cv.width/2,cv.height/2+30);
-  }
   updateStats();
+  renderDealsAdmin();
+  renderDcPanel();
+  renderPostsGrid();
+  const wa=localStorage.getItem('breo_wa');if(wa){document.getElementById('waNumber').value=wa;}
+  const ig=localStorage.getItem('breo_ig');if(ig){document.getElementById('igHandle').value=ig;}
+  const ds=localStorage.getItem('breo_display');
+  if(ds){try{dcSettings=JSON.parse(ds);}catch(e){}}
+  // Populate caption deal select
+  const sel=document.getElementById('captionDeal');
+  if(sel){const deals=JSON.parse(localStorage.getItem('breo_deals')||'[]');sel.innerHTML='<option value="">— Select a deal —</option>';deals.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.model+' · AED '+d.price;sel.appendChild(o);});}
+  const bioEl=document.getElementById('bioLinkDisplay');const waNum=localStorage.getItem('breo_wa');if(bioEl&&waNum)bioEl.textContent='https://wa.me/'+waNum;
 }
-if(sessionStorage.getItem('breo_auth')==='1')init();
 </script>
 </body>
 </html>
