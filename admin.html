@@ -359,6 +359,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="tabn" onclick="showTab('posts',this)">📲 Instagram</button>
     <button class="tabn" onclick="showTab('settings',this)">⚙️ Settings</button>
     <button class="tabn" onclick="showTab('leads',this);renderLeads()">📥 Leads</button>
+    <button class="tabn" onclick="showTab('aigen',this)">🤖 AI Generator</button>
   </div>
 
   <div class="admin-body">
@@ -486,6 +487,157 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       </div>
     </div>
 
+
+
+    <!-- AI GENERATOR -->
+    <div id="tab-aigen" class="tab-pane">
+      <div class="page-header">
+        <h1>🤖 AI Content Generator</h1>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Enter product details → AI generates your Reel script, caption, hashtags, and more in one click.</p>
+
+      <div class="ai-form-grid">
+        <div class="field-group span2">
+          <label>Product Name *</label>
+          <input type="text" id="aiName" class="cf-input" placeholder="e.g. iPhone 17 Pro" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Storage / Variant</label>
+          <input type="text" id="aiVariant" class="cf-input" placeholder="e.g. 256GB" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Color</label>
+          <input type="text" id="aiColor" class="cf-input" placeholder="e.g. Cosmic Orange" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Original Price (AED) *</label>
+          <input type="number" id="aiOrigPrice" class="cf-input" placeholder="5000" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Offer Price (AED) *</label>
+          <input type="number" id="aiOfferPrice" class="cf-input" placeholder="4499" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Stock Status</label>
+          <select id="aiStock" class="cf-input" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+            <option value="limited">🔥 Limited Stock</option>
+            <option value="available">✅ Available Now</option>
+            <option value="last">⚠️ Last Few Units</option>
+            <option value="today">⏰ Today Only</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Offer End Date</label>
+          <input type="text" id="aiEndDate" class="cf-input" placeholder="e.g. Sunday midnight" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group span2">
+          <label>Key Features (comma separated)</label>
+          <input type="text" id="aiFeatures" class="cf-input" placeholder="Pro Camera, A18 chip, Titanium design, USB-C" style="background:var(--surface2);border-color:var(--border2);color:var(--text);">
+        </div>
+        <div class="field-group span2">
+          <label>Target City / Market</label>
+          <input type="text" id="aiCity" class="cf-input" placeholder="Dubai, UAE" style="background:var(--surface2);border-color:var(--border2);color:var(--text);" value="Dubai, UAE">
+        </div>
+      </div>
+
+      <button class="ai-generate-btn" id="aiGenBtn" onclick="generateAIContent()">
+        <span id="aiGenBtnIcon">✨</span>
+        <span id="aiGenBtnText">Generate All Content</span>
+      </button>
+
+      <!-- OUTPUTS -->
+      <div class="ai-outputs" id="aiOutputs">
+
+        <!-- 1. Reel Prompt -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">🎬 Instagram Reel Video Prompt</div>
+            <div class="ai-output-actions">
+              <button class="copy-btn" onclick="copyOutput('aiReelPrompt',this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiReelPrompt" rows="14"></textarea>
+          </div>
+        </div>
+
+        <!-- 2. Voiceover -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">🎙️ Voice-over Script</div>
+            <div class="ai-output-actions">
+              <button class="copy-btn" onclick="copyOutput('aiVoiceover',this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiVoiceover" rows="8"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. Caption EN + AR -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">📝 Instagram Caption</div>
+            <div class="ai-output-actions">
+              <div class="ai-lang-toggle" style="margin:0">
+                <button class="lang-btn active" id="capEnBtn" onclick="switchCapLang('en')">🇬🇧 EN</button>
+                <button class="lang-btn" id="capArBtn" onclick="switchCapLang('ar')">🇦🇪 AR</button>
+              </div>
+              <button class="copy-btn" onclick="copyOutput('aiCaption',this)" style="margin-left:8px">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiCaption" rows="12"></textarea>
+          </div>
+        </div>
+
+        <!-- 4. Hashtags -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">🏷️ Hashtags</div>
+            <div class="ai-output-actions">
+              <button class="copy-btn" onclick="copyOutput('aiHashtags',this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiHashtags" rows="4"></textarea>
+          </div>
+        </div>
+
+        <!-- 5. WhatsApp CTA -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">💬 WhatsApp CTA Message</div>
+            <div class="ai-output-actions">
+              <button class="copy-btn" onclick="copyOutput('aiWaCta',this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiWaCta" rows="4"></textarea>
+          </div>
+        </div>
+
+        <!-- 6. Banner -->
+        <div class="ai-output-card">
+          <div class="ai-output-header">
+            <div class="ai-output-title">🖼️ Website Hero Banner Text</div>
+            <div class="ai-output-actions">
+              <button class="copy-btn" onclick="copyOutput('aiBanner',this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="ai-output-body">
+            <textarea class="ai-output-text" id="aiBanner" rows="3"></textarea>
+            <div class="ai-banner-preview" id="aiBannerPreview"></div>
+          </div>
+          <div class="ai-action-strip">
+            <button class="ai-action-btn green" onclick="pushBannerToHero()">🚀 Push to Store Hero</button>
+            <button class="ai-action-btn blue" onclick="sendToPostCreator()">📲 Send to Instagram Post Creator</button>
+            <button class="ai-action-btn purple" onclick="createProductFromAI()">📦 Create Product from This</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- LEADS -->
     <div id="tab-leads" class="tab-pane">
@@ -1062,6 +1214,305 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
+
+
+// ── AI CONTENT GENERATOR ──────────────────────────────────────────────────────
+let aiCaptionEN='', aiCaptionAR='';
+
+function generateAIContent(){
+  const name    = document.getElementById('aiName').value.trim();
+  const variant = document.getElementById('aiVariant').value.trim();
+  const color   = document.getElementById('aiColor').value.trim();
+  const origP   = parseFloat(document.getElementById('aiOrigPrice').value)||0;
+  const offerP  = parseFloat(document.getElementById('aiOfferPrice').value)||0;
+  const stock   = document.getElementById('aiStock').value;
+  const endDate = document.getElementById('aiEndDate').value.trim();
+  const featRaw = document.getElementById('aiFeatures').value.trim();
+  const city    = document.getElementById('aiCity').value.trim()||'Dubai, UAE';
+
+  if(!name){toast('⚠️ Enter a product name');return;}
+  if(!origP||!offerP){toast('⚠️ Enter both prices');return;}
+
+  // Animate button
+  const btn=document.getElementById('aiGenBtn');
+  document.getElementById('aiGenBtnIcon').innerHTML='<span class="ai-spinner"></span>';
+  document.getElementById('aiGenBtnText').textContent='Generating...';
+  btn.disabled=true;
+
+  setTimeout(()=>{
+    try{ _buildContent(name,variant,color,origP,offerP,stock,endDate,featRaw,city); }
+    catch(e){ toast('Error: '+e.message); }
+    document.getElementById('aiGenBtnIcon').textContent='✨';
+    document.getElementById('aiGenBtnText').textContent='Regenerate Content';
+    btn.disabled=false;
+    document.getElementById('aiOutputs').classList.add('visible');
+    document.getElementById('aiOutputs').scrollIntoView({behavior:'smooth',block:'start'});
+  }, 900);
+}
+
+function _buildContent(name,variant,color,origP,offerP,stock,endDate,featRaw,city){
+  const fullName = [name,color,variant].filter(Boolean).join(' ');
+  const savings  = Math.round((1-offerP/origP)*100);
+  const saveAmt  = Math.round(origP-offerP).toLocaleString();
+  const origFmt  = origP.toLocaleString();
+  const offerFmt = offerP.toLocaleString();
+  const waNum    = (getSettings().waNumber||localStorage.getItem('breo_wa')||'').replace(/\D/g,'');
+  const waLink   = waNum ? 'https://wa.me/'+waNum : 'WhatsApp';
+
+  const stockLines={
+    limited:'🔥 Limited stock available!',
+    available:'✅ In stock — order today!',
+    last:'⚠️ Last few units remaining!',
+    today:'⏰ Today only — offer expires tonight!'
+  };
+  const stockMsg = stockLines[stock]||stockLines.limited;
+  const deadline = endDate ? `Offer ends: ${endDate}` : 'While stocks last';
+
+  const feats = featRaw ? featRaw.split(',').map(f=>f.trim()).filter(Boolean) : getDefaultFeatures(name);
+  const featsEmoji = feats.slice(0,4).map(f=>'✨ '+f).join('\n');
+  const featsBullet = feats.slice(0,4).map(f=>'• '+f).join('\n');
+
+  // ── Reel Prompt ──────────────────────────────────────────────────────────
+  const reelPrompt =
+`Product: ${fullName}
+Create a viral Instagram Reel (15–20 seconds).
+
+🎬 OPENING SCENE (0–3s):
+Cinematic slow-motion shot of the ${name} in ${color||'premium color'}, rotating on a luxury display stand with dramatic lighting. Upbeat background music kicks in.
+
+🎙️ VOICE-OVER:
+"${city}! The wait is OVER. The all-new ${fullName} is NOW available — at an unbelievable price."
+
+📱 SCENE 2 (3–7s):
+Close-up beauty shots of the device from multiple angles. Highlight the ${color||'design'}.
+${feats.slice(0,2).map(f=>'Show: '+f).join('\n')}
+
+🎙️ VOICE-OVER:
+"Regular price — AED ${origFmt}."
+Display on screen: ❌ AED ${origFmt} (crossed out, in red)
+
+🔥 SCENE 3 (7–12s):
+Big price reveal with confetti animation.
+🎙️ VOICE-OVER:
+"Today — get yours for just AED ${offerFmt}! That's AED ${saveAmt} OFF!"
+Display: 🔥 AED ${offerFmt} 🔥 (pulsing green text)
+
+⚡ SCENE 4 (12–17s):
+Show the device being unboxed or used by a stylish person in ${city}.
+🎙️ VOICE-OVER:
+"${stockMsg.replace(/[🔥✅⚠️⏰]/g,'').trim()} Message us on WhatsApp NOW before it's gone!"
+
+📲 END SCREEN (17–20s):
+Overlay text animation:
+📱 ${fullName}
+🔥 AED ${offerFmt}
+💰 Save AED ${saveAmt} (${savings}% OFF)
+📲 WhatsApp Now to Order
+📦 ${deadline}
+Branding: BreoMobile logo fade in`;
+
+  // ── Voiceover Script ─────────────────────────────────────────────────────
+  const voiceover =
+`🎙️ VOICE-OVER SCRIPT — "${fullName}"
+(Upbeat, energetic tone. Duration: ~18 seconds)
+
+[BEAT 1 — 0s]
+"${city}! Are you ready for this?"
+
+[BEAT 2 — 3s]
+"Introducing the stunning ${fullName} — NOW available at BreoMobile."
+
+[BEAT 3 — 6s]
+"${feats.slice(0,2).join('. ')}. This is the phone you've been waiting for."
+
+[BEAT 4 — 10s]
+"Regular price? AED ${origFmt}. Our price TODAY? Just AED ${offerFmt}!"
+
+[BEAT 5 — 14s]
+"That's AED ${saveAmt} in your pocket — ${savings}% OFF!"
+
+[BEAT 6 — 16s]
+"${stockMsg.replace(/[🔥✅⚠️⏰]/g,'').trim()} WhatsApp us NOW. Link in bio!"
+
+[OUTRO — 18s]
+"BreoMobile — Premium Apple Devices, Unbeatable Prices."
+
+📝 Voice style: Confident, fast-paced, Middle-East market friendly. Pause after each price reveal.`;
+
+  // ── Caption EN ───────────────────────────────────────────────────────────
+  aiCaptionEN =
+`🔥 PRICE DROP ALERT — ${city.toUpperCase()}! 🔥
+
+📱 ${fullName} is HERE!
+
+💰 Was: AED ${origFmt}
+🔥 NOW: AED ${offerFmt}
+💸 You SAVE: AED ${saveAmt} (${savings}% OFF!)
+
+${featsEmoji}
+
+${stockMsg}
+${deadline}
+
+📲 DM us or tap the link in bio to order via WhatsApp!
+👉 ${waLink}
+
+🎁 We deliver across UAE. Same-day delivery available in ${city.split(',')[0]}.
+💯 100% Genuine. Warranty included.`;
+
+  // ── Caption AR ───────────────────────────────────────────────────────────
+  aiCaptionAR =
+`🔥 تنبيه انخفاض الأسعار — ${city.split(',')[0].toUpperCase()}! 🔥
+
+📱 ${fullName} متوفر الآن!
+
+💰 السعر القديم: ${origFmt} درهم
+🔥 السعر الجديد: ${offerFmt} درهم
+💸 وفّر: ${saveAmt} درهم (خصم ${savings}%!)
+
+${feats.slice(0,4).map(f=>'✨ '+f).join('\n')}
+
+${savings >= 10 ? '🚨 عرض محدود — لا تفوّت الفرصة!' : '✅ متوفر الآن — اطلب اليوم!'}
+${deadline}
+
+📲 راسلنا على واتساب الآن عبر الرابط في البايو!
+👉 ${waLink}
+
+🎁 التوصيل متوفر لجميع أنحاء الإمارات.
+💯 أصلي 100% مع ضمان.`;
+
+  // ── Hashtags ─────────────────────────────────────────────────────────────
+  const productTag = name.replace(/\s+/g,'');
+  const colorTag   = color.replace(/\s+/g,'');
+  const cityTag    = city.split(',')[0].replace(/\s+/g,'');
+
+  const hashtags =
+`#${productTag} #${productTag}${variant.replace(/[^a-zA-Z0-9]/g,'')} #${colorTag} #${cityTag}Deals #UAEOffers #${productTag}${cityTag} #Apple${cityTag} #TechDeals #${cityTag}Shopping #MobileOffers #Electronics${cityTag} #WhatsAppOrder #LimitedOffer #${productTag}Sale #SmartphoneDeals #${cityTag}Tech #AppleUAE #iPhoneUAE #DubaiMall #AbuDhabiDeals #UAETech #GulfTech #PriceDrop #BestPrice #BreoMobile #PremiumApple`;
+
+  // ── WhatsApp CTA ──────────────────────────────────────────────────────────
+  const waCta =
+`💬 WHATSAPP MESSAGE TEMPLATE:
+
+Hi! I saw the ${fullName} offer on your Instagram. 🔥
+Is it still available at AED ${offerFmt}?
+I'd like to place an order. Please confirm availability and delivery options. Thank you!
+
+---
+📲 Pre-filled WhatsApp link:
+${waLink}?text=${encodeURIComponent('Hi BreoMobile! I saw the '+fullName+' for AED '+offerFmt+'. Is it still available? I want to order!')}`;
+
+  // ── Banner ────────────────────────────────────────────────────────────────
+  const banner = `🔥 ${fullName} — PRICE DROP! Was AED ${origFmt}, Now Only AED ${offerFmt}. Save AED ${saveAmt}! ${stockMsg.replace(/[🔥✅⚠️⏰]/g,'').trim()} WhatsApp to Order NOW! 🔥`;
+
+  // ── Set outputs ───────────────────────────────────────────────────────────
+  document.getElementById('aiReelPrompt').value  = reelPrompt;
+  document.getElementById('aiVoiceover').value   = voiceover;
+  document.getElementById('aiCaption').value     = aiCaptionEN;
+  document.getElementById('aiHashtags').value    = hashtags;
+  document.getElementById('aiWaCta').value       = waCta;
+  document.getElementById('aiBanner').value      = banner;
+  document.getElementById('aiBannerPreview').textContent = banner;
+
+  document.getElementById('capEnBtn').classList.add('active');
+  document.getElementById('capArBtn').classList.remove('active');
+
+  // Auto-resize textareas
+  document.querySelectorAll('.ai-output-text').forEach(ta=>{
+    ta.style.height='auto';
+    ta.style.height=ta.scrollHeight+'px';
+  });
+}
+
+function getDefaultFeatures(name){
+  const n=name.toLowerCase();
+  if(n.includes('iphone')) return['Pro Camera System','A18 Pro Chip','Titanium Design','All-Day Battery'];
+  if(n.includes('macbook')) return['Apple Silicon M-Series','Retina Display','Up to 18hr Battery','Thunderbolt Ports'];
+  if(n.includes('ipad')) return['Liquid Retina Display','Apple Pencil Support','A-Series Chip','All-Day Battery'];
+  if(n.includes('watch')) return['Always-On Display','Health Monitoring','Crash Detection','WaterProof'];
+  if(n.includes('airpods')) return['Active Noise Cancellation','Spatial Audio','Wireless Charging','Transparency Mode'];
+  return['Premium Build Quality','Latest Technology','Best Performance','Long Battery Life'];
+}
+
+function switchCapLang(lang){
+  document.getElementById('capEnBtn').classList.toggle('active',lang==='en');
+  document.getElementById('capArBtn').classList.toggle('active',lang==='ar');
+  const ta=document.getElementById('aiCaption');
+  ta.value = lang==='ar' ? aiCaptionAR : aiCaptionEN;
+  ta.style.height='auto';
+  ta.style.height=ta.scrollHeight+'px';
+  ta.style.direction = lang==='ar' ? 'rtl' : 'ltr';
+}
+
+function copyOutput(id,btn){
+  const val=document.getElementById(id).value;
+  if(!val)return;
+  navigator.clipboard.writeText(val).then(()=>{
+    btn.textContent='✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);
+  }).catch(()=>{
+    // fallback
+    const ta=document.getElementById(id);
+    ta.select();document.execCommand('copy');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>{btn.textContent='📋 Copy';},2000);
+  });
+}
+
+function pushBannerToHero(){
+  const banner=document.getElementById('aiBanner').value;
+  if(!banner)return;
+  const name=document.getElementById('aiName').value.trim();
+  const offerP=parseFloat(document.getElementById('aiOfferPrice').value)||0;
+  const origP=parseFloat(document.getElementById('aiOrigPrice').value)||0;
+  const heroBanners=JSON.parse(localStorage.getItem('breo_hero_banners')||'[]');
+  heroBanners.unshift({text:banner,product:name,price:offerP,origPrice:origP,createdAt:new Date().toISOString()});
+  localStorage.setItem('breo_hero_banners',JSON.stringify(heroBanners.slice(0,5)));
+  toast('🚀 Banner pushed to store hero!');
+}
+
+function sendToPostCreator(){
+  const caption=document.getElementById('aiCaption').value;
+  const hashtags=document.getElementById('aiHashtags').value.trim().split('\n')[0];
+  const price=document.getElementById('aiOfferPrice').value;
+  const product=document.getElementById('aiName').value.trim();
+  if(caption)localStorage.setItem('_aiDraftCaption',caption);
+  if(hashtags)localStorage.setItem('_aiDraftHashtags',hashtags);
+  if(price)localStorage.setItem('_aiDraftPrice',price);
+  if(product)localStorage.setItem('_aiDraftProduct',product);
+  showTab('posts',document.querySelector('.tabn:nth-child(4)'));
+  // Pre-fill the form
+  const capEl=document.getElementById('postCaption');
+  const tagEl=document.getElementById('postHashtags');
+  const prEl=document.getElementById('postPrice');
+  if(capEl)capEl.value=caption.slice(0,300);
+  if(tagEl)tagEl.value=hashtags;
+  if(prEl)prEl.value=price;
+  toast('✅ Content sent to Instagram Post Creator!');
+}
+
+function createProductFromAI(){
+  const name=document.getElementById('aiName').value.trim();
+  const price=parseFloat(document.getElementById('aiOrigPrice').value)||0;
+  const offerPrice=parseFloat(document.getElementById('aiOfferPrice').value)||0;
+  const variant=document.getElementById('aiVariant').value.trim();
+  if(!name||!price){toast('Fill product name and price first');return;}
+  // Determine category
+  const n=name.toLowerCase();
+  const cat=n.includes('iphone')?'iPhone':n.includes('macbook')?'MacBook':n.includes('ipad')?'iPad':n.includes('watch')?'Apple Watch':n.includes('airpods')?'AirPods':'Other';
+  const prod={
+    id:'prod_'+Date.now(),name:name+(variant?' '+variant:''),
+    description:document.getElementById('aiFeatures').value.trim(),
+    category:cat,stock:'limited',price,offerPrice:offerPrice||null,
+    published:true,isOffer:false,imageId:null,videoId:null,
+    createdAt:new Date().toISOString()
+  };
+  const products=getProducts();
+  products.unshift(prod);
+  saveProducts(products);
+  updateDashboard();
+  toast('📦 Product created and published to store!');
+}
 
 // ── LEADS ─────────────────────────────────────────────────────────────────────
 function renderLeads(){
