@@ -365,6 +365,91 @@ button{font-family:inherit;cursor:pointer;}
   .header-wa .wa-label{display:none;}
   .topbar{padding:0 12px;gap:8px;}
 }
+
+/* ── CONTACT FORM ───────────────────────────── */
+.quote-fab{
+  position:fixed;bottom:24px;right:20px;z-index:400;
+  background:var(--wa);color:#fff;border:none;border-radius:28px;
+  padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 6px 24px rgba(37,211,102,.45);
+  transition:transform .2s,box-shadow .2s;
+  animation:fabPop .4s ease 1s both;
+}
+.quote-fab:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.55);}
+@keyframes fabPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.fab-pulse{
+  position:absolute;top:-4px;right:-4px;width:14px;height:14px;
+  background:var(--red);border-radius:50%;border:2px solid #fff;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+.contact-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:450;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.contact-overlay.open{display:flex;}
+@media(min-width:600px){.contact-overlay{align-items:center;padding:20px;}}
+
+.contact-modal{
+  background:#fff;border-radius:24px 24px 0 0;
+  width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  animation:slideUp .28s ease;
+}
+@media(min-width:600px){.contact-modal{border-radius:20px;}}
+
+.contact-header{
+  padding:20px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;
+  position:sticky;top:0;background:#fff;z-index:1;padding-bottom:4px;
+}
+.contact-header-text h2{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:2px;}
+.contact-header-text p{font-size:13px;color:#6b6b80;}
+.contact-close{
+  background:#f0f0f5;border:none;color:#6b6b80;width:32px;height:32px;
+  border-radius:50%;font-size:16px;cursor:pointer;flex-shrink:0;transition:all .15s;
+}
+.contact-close:hover{background:#fce;color:#e00;}
+
+.loc-banner{
+  margin:14px 22px 0;background:#f0faf4;border:1px solid #c3e8cf;
+  border-radius:10px;padding:9px 12px;
+  display:flex;align-items:center;gap:8px;font-size:12px;color:#2d7a4f;font-weight:500;
+}
+.loc-banner.loading{background:#f5f5fa;border-color:#ddd;color:#999;}
+
+.contact-body{padding:16px 22px 28px;display:flex;flex-direction:column;gap:14px;}
+.cf-label{font-size:11px;font-weight:700;color:#6b6b80;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.cf-input{
+  width:100%;background:#f5f5fa;border:1.5px solid #e0e0ee;
+  border-radius:11px;padding:11px 14px;font-size:14px;color:#1a1a2e;
+  outline:none;font-family:inherit;transition:border-color .2s;
+}
+.cf-input:focus{border-color:var(--green);background:#fff;}
+.cf-input::placeholder{color:#b0b0c0;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cf-model-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:2px;}
+.cf-model-chip{
+  background:#f5f5fa;border:1.5px solid #e0e0ee;border-radius:9px;
+  padding:8px 6px;font-size:12px;font-weight:600;color:#6b6b80;
+  cursor:pointer;text-align:center;transition:all .15s;
+}
+.cf-model-chip.selected{background:rgba(52,199,89,.1);border-color:var(--green);color:#1a7a3a;}
+.cf-submit{
+  background:var(--wa);color:#fff;border:none;border-radius:13px;
+  padding:15px;font-size:15px;font-weight:700;width:100%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:background .15s;margin-top:4px;
+}
+.cf-submit:hover{background:var(--wa-dark);}
+.cf-submit svg{width:19px;height:19px;fill:#fff;flex-shrink:0;}
+.cf-success{
+  text-align:center;padding:32px 20px;display:none;
+}
+.cf-success-icon{font-size:52px;margin-bottom:10px;}
+.cf-success h3{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:6px;}
+.cf-success p{font-size:14px;color:#6b6b80;}
+
 </style>
 </head>
 <body>
@@ -442,6 +527,75 @@ button{font-family:inherit;cursor:pointer;}
   <p class="footer-copy">© 2026 BreoMobile. All rights reserved.</p>
 </footer>
 
+
+
+<!-- ── QUOTE FAB ── -->
+<button class="quote-fab" onclick="openContact()">
+  <span class="fab-pulse"></span>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+  Get a Quote
+</button>
+
+<!-- ── CONTACT MODAL ── -->
+<div id="contactOverlay" class="contact-overlay" onclick="if(event.target===this)closeContact()">
+  <div class="contact-modal">
+    <div class="contact-header">
+      <div class="contact-header-text">
+        <h2>📋 Request a Quote</h2>
+        <p>Fill in the details — we'll reply on WhatsApp</p>
+      </div>
+      <button class="contact-close" onclick="closeContact()">✕</button>
+    </div>
+    <div id="locBanner" class="loc-banner loading">
+      📍 Detecting your location...
+    </div>
+    <div class="contact-body">
+      <div>
+        <div class="cf-label">Your Name *</div>
+        <input class="cf-input" id="cfName" type="text" placeholder="Enter your name">
+      </div>
+      <div>
+        <div class="cf-label">WhatsApp / Phone *</div>
+        <input class="cf-input" id="cfPhone" type="tel" placeholder="+971 50 123 4567">
+      </div>
+      <div>
+        <div class="cf-label">Product / Model Interested In *</div>
+        <div class="cf-model-grid" id="cfModelGrid">
+          <div class="cf-model-chip" onclick="selectChip(this)">📱 iPhone</div>
+          <div class="cf-model-chip" onclick="selectChip(this)">💻 MacBook</div>
+          <div class="cf-model-chip" onclick="selectChip(this)">🖥️ iPad</div>
+          <div class="cf-model-chip" onclick="selectChip(this)">⌚ Apple Watch</div>
+          <div class="cf-model-chip" onclick="selectChip(this)">🎧 AirPods</div>
+          <div class="cf-model-chip" onclick="selectChip(this)">📦 Other</div>
+        </div>
+        <input class="cf-input" id="cfModel" type="text" placeholder="Specific model e.g. iPhone 16 Pro 256GB" style="margin-top:10px">
+      </div>
+      <div class="cf-row">
+        <div>
+          <div class="cf-label">No. of Units *</div>
+          <input class="cf-input" id="cfUnits" type="number" min="1" value="1" placeholder="1">
+        </div>
+        <div>
+          <div class="cf-label">Budget (AED)</div>
+          <input class="cf-input" id="cfBudget" type="text" placeholder="Optional">
+        </div>
+      </div>
+      <div>
+        <div class="cf-label">Additional Notes</div>
+        <textarea class="cf-input" id="cfNotes" rows="2" placeholder="Color preference, storage, condition, urgency..."></textarea>
+      </div>
+      <button class="cf-submit" onclick="submitContactForm()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+        Send Enquiry via WhatsApp
+      </button>
+      <div class="cf-success" id="cfSuccess">
+        <div class="cf-success-icon">✅</div>
+        <h3>Enquiry Sent!</h3>
+        <p>We'll get back to you on WhatsApp shortly.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ── VIDEO LIGHTBOX ── -->
 <div id="vboxBg" class="vbox-bg" onclick="if(event.target===this)closeVbox()">
@@ -922,8 +1076,112 @@ function closeVbox(){
   vboxCurrentPost=null;
 }
 
+
+// ── LOCATION ─────────────────────────────────────────────────────────────────
+let visitorLocation={city:'',country:'',ip:''};
+let selectedCategory='';
+
+async function detectLocation(){
+  try{
+    const r=await fetch('https://ipapi.co/json/',{signal:AbortSignal.timeout(5000)});
+    const d=await r.json();
+    visitorLocation={
+      city:d.city||'',
+      country:d.country_name||'',
+      region:d.region||'',
+      ip:d.ip||''
+    };
+    const banner=document.getElementById('locBanner');
+    if(banner){
+      const loc=[d.city,d.country_name].filter(Boolean).join(', ');
+      banner.className='loc-banner';
+      banner.innerHTML=`📍 Enquiring from <strong>${loc||'your location'}</strong>`;
+    }
+    // Save visit to localStorage for admin view
+    const visits=JSON.parse(localStorage.getItem('breo_visits')||'[]');
+    visits.unshift({
+      ip:d.ip,city:d.city,country:d.country_name,region:d.region,
+      org:d.org||'',ts:new Date().toISOString(),
+      page:location.href
+    });
+    localStorage.setItem('breo_visits',JSON.stringify(visits.slice(0,200)));
+  }catch(e){
+    const banner=document.getElementById('locBanner');
+    if(banner){banner.className='loc-banner loading';banner.textContent='📍 Location unavailable';}
+  }
+}
+
+// ── CONTACT FORM ──────────────────────────────────────────────────────────────
+function openContact(){
+  document.getElementById('contactOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('cfSuccess').style.display='none';
+  document.getElementById('cfName').focus();
+}
+
+function closeContact(){
+  document.getElementById('contactOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function selectChip(el){
+  selectedCategory=el.textContent.replace(/^[^\w]*/,'').trim();
+  document.querySelectorAll('.cf-model-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  // Auto-fill model input with category if blank
+  const modelInput=document.getElementById('cfModel');
+  if(!modelInput.value)modelInput.placeholder='e.g. '+selectedCategory+' — specify model';
+}
+
+function submitContactForm(){
+  const name=document.getElementById('cfName').value.trim();
+  const phone=document.getElementById('cfPhone').value.trim();
+  const model=document.getElementById('cfModel').value.trim()||selectedCategory;
+  const units=document.getElementById('cfUnits').value||'1';
+  const budget=document.getElementById('cfBudget').value.trim();
+  const notes=document.getElementById('cfNotes').value.trim();
+
+  if(!name){alert('Please enter your name');document.getElementById('cfName').focus();return;}
+  if(!phone){alert('Please enter your WhatsApp / phone number');document.getElementById('cfPhone').focus();return;}
+  if(!model){alert('Please enter or select the model you want');document.getElementById('cfModel').focus();return;}
+
+  const waNum=getWaNumber();
+  if(!waNum){alert('WhatsApp not configured. Please contact the store directly.');return;}
+
+  // Save lead locally
+  const lead={
+    id:'lead_'+Date.now(),
+    name,phone,model,units,budget,notes,
+    category:selectedCategory,
+    location:visitorLocation,
+    createdAt:new Date().toISOString()
+  };
+  const leads=JSON.parse(localStorage.getItem('breo_leads')||'[]');
+  leads.unshift(lead);
+  localStorage.setItem('breo_leads',JSON.stringify(leads.slice(0,500)));
+
+  // Build WhatsApp message
+  const loc=visitorLocation.city?` (${visitorLocation.city}, ${visitorLocation.country})`:'';
+  let msg=`🛒 *New Enquiry from BreoMobile*\n\n`;
+  msg+=`👤 *Name:* ${name}\n`;
+  msg+=`📱 *Phone:* ${phone}\n`;
+  msg+=`🍎 *Model:* ${model}\n`;
+  msg+=`📦 *Units:* ${units}\n`;
+  if(budget)msg+=`💰 *Budget:* AED ${budget}\n`;
+  if(notes)msg+=`📝 *Notes:* ${notes}\n`;
+  msg+=`📍 *Location:* ${[visitorLocation.city,visitorLocation.country].filter(Boolean).join(', ')||'Not detected'}\n`;
+  msg+=`🕐 *Time:* ${new Date().toLocaleString()}`;
+
+  window.open('https://wa.me/'+waNum+'?text='+encodeURIComponent(msg),'_blank');
+
+  // Show success
+  document.getElementById('cfSuccess').style.display='block';
+  setTimeout(closeContact,3000);
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init(){
+  detectLocation();
   buildHero();
   buildOffers();
   buildPosts();

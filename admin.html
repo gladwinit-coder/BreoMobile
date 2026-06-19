@@ -358,6 +358,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="tabn" onclick="showTab('offers',this)">🎯 Offers</button>
     <button class="tabn" onclick="showTab('posts',this)">📲 Instagram</button>
     <button class="tabn" onclick="showTab('settings',this)">⚙️ Settings</button>
+    <button class="tabn" onclick="showTab('leads',this);renderLeads()">📥 Leads</button>
   </div>
 
   <div class="admin-body">
@@ -483,6 +484,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
         </div>
       </div>
+    </div>
+
+
+    <!-- LEADS -->
+    <div id="tab-leads" class="tab-pane">
+      <div class="page-header">
+        <h1>Customer Leads</h1>
+        <button class="clear-leads" onclick="clearLeads()">🗑 Clear All</button>
+      </div>
+      <div id="leadsContainer"></div>
     </div>
 
   </div><!-- /admin-body -->
@@ -1049,6 +1060,67 @@ function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+
+// ── LEADS ─────────────────────────────────────────────────────────────────────
+function renderLeads(){
+  const leads=JSON.parse(localStorage.getItem('breo_leads')||'[]');
+  const visits=JSON.parse(localStorage.getItem('breo_visits')||'[]');
+  const container=document.getElementById('leadsContainer');
+  if(!leads.length&&!visits.length){
+    container.innerHTML='<div class="empty-state">No enquiries yet. They will appear here when customers fill the contact form.</div>';
+    return;
+  }
+  let html='';
+  if(leads.length){
+    html+=`<div class="leads-count">${leads.length} enquir${leads.length===1?'y':'ies'} received</div>`;
+    html+=leads.map(l=>{
+      const loc=[l.location&&l.location.city,l.location&&l.location.country].filter(Boolean).join(', ');
+      const waNum=l.phone.replace(/\D/g,'');
+      const msg=encodeURIComponent(`Hi ${l.name}! Thank you for your enquiry about ${l.model}. We have it available. When would you like to proceed?`);
+      return`<div class="lead-card">
+        <div class="lead-card-header">
+          <div>
+            <div class="lead-name">${l.name}</div>
+            <div class="lead-time">${timeAgo(l.createdAt)}</div>
+            ${loc?`<div class="lead-loc">📍 ${loc}</div>`:''}
+          </div>
+          <a href="https://wa.me/${waNum}?text=${msg}" target="_blank"><button class="lead-wa-btn">💬 Reply on WhatsApp</button></a>
+        </div>
+        <div class="lead-details">
+          <div class="lead-tag"><span>Model:</span>${l.model||'—'}</div>
+          <div class="lead-tag"><span>Units:</span>${l.units||1}</div>
+          ${l.budget?`<div class="lead-tag"><span>Budget:</span>AED ${l.budget}</div>`:''}
+          <div class="lead-tag"><span>Phone:</span>${l.phone}</div>
+        </div>
+        ${l.notes?`<div style="font-size:13px;color:var(--muted);padding-top:8px;border-top:1px solid var(--border)">📝 ${l.notes}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+  if(visits.length){
+    html+=`<div class="section-title" style="margin-top:24px;">Site Visitors (${visits.length})</div>`;
+    html+=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="text-align:left;color:var(--muted);border-bottom:1px solid var(--border)">
+        <th style="padding:8px 10px">IP</th><th style="padding:8px 10px">City</th><th style="padding:8px 10px">Country</th><th style="padding:8px 10px">Time</th>
+      </tr></thead>
+      <tbody>${visits.map(v=>`<tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:7px 10px;color:var(--muted)">${v.ip||'—'}</td>
+        <td style="padding:7px 10px">${v.city||'—'}</td>
+        <td style="padding:7px 10px">${v.country||'—'}</td>
+        <td style="padding:7px 10px;color:var(--muted)">${timeAgo(v.ts)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+  container.innerHTML=html;
+}
+
+function clearLeads(){
+  if(!confirm('Clear all leads and visitor data?'))return;
+  localStorage.removeItem('breo_leads');
+  localStorage.removeItem('breo_visits');
+  renderLeads();
+  toast('🗑 Cleared');
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
