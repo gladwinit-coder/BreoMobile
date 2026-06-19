@@ -518,7 +518,7 @@ button{font-family:inherit;cursor:pointer;}
 
 <!-- ── FOOTER ── -->
 <footer class="footer">
-  <div class="footer-logo">🍎 <span>Breo</span>mobile</div>
+  <div class="footer-logo" id="footerLogo">🍎 <span>Breo</span>mobile</div>
   <p class="footer-tagline">Premium Apple Devices · Best Prices in UAE</p>
   <button class="footer-wa" id="footerWaBtn" onclick="openWhatsApp(null)">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2c-5.523 0-10 4.477-10 10 0 1.762.461 3.417 1.27 4.853L2 22l5.306-1.253A9.956 9.956 0 0012.004 22c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
@@ -649,12 +649,27 @@ button{font-family:inherit;cursor:pointer;}
 // ── DATA ──────────────────────────────────────────────────────────────────────
 function getProducts(){try{return JSON.parse(localStorage.getItem('breo_products')||'[]');}catch(e){return[];}}
 function getPosts(){try{return JSON.parse(localStorage.getItem('breo_posts')||'[]');}catch(e){return[];}}
-function getSettings(){try{return JSON.parse(localStorage.getItem('breo_settings')||'{}');}catch(e){return {};}}
+function getGlobalSettings(){
+  try{
+    const g=JSON.parse(localStorage.getItem('breo_global')||'{}');
+    if(!g.waNumber){
+      const leg=JSON.parse(localStorage.getItem('breo_settings')||'{}');
+      g.waNumber=leg.waNumber||localStorage.getItem('breo_wa')||'';
+    }
+    return g;
+  }catch(e){return {};}
+}
 
 function getWaNumber(){
-  const s=getSettings();
-  const num=(s.waNumber||localStorage.getItem('breo_wa')||'').replace(/\D/g,'');
-  return num;
+  return (getGlobalSettings().waNumber||'').replace(/\D/g,'');
+}
+
+function getCompanyName(){
+  return getGlobalSettings().companyName||'BreoMobile';
+}
+
+function getWebsite(){
+  return getGlobalSettings().website||location.origin;
 }
 
 // ── INDEXED DB ────────────────────────────────────────────────────────────────
@@ -1181,11 +1196,28 @@ function submitContactForm(){
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init(){
+  applyGlobalBranding();
   detectLocation();
   buildHero();
   buildOffers();
   buildPosts();
   renderProductGrid();
+}
+
+function applyGlobalBranding(){
+  const g = getGlobalSettings();
+  if(g.companyName){
+    // Update page title
+    document.title = g.companyName + ' — Premium Apple Devices';
+    // Footer logo
+    const fl = document.getElementById('footerLogo');
+    if(fl) fl.innerHTML = '🍎 ' + g.companyName;
+  }
+  // Update all static WA buttons that have an onclick
+  if(g.storeAddress){
+    const tagline = document.querySelector('.footer-tagline');
+    if(tagline) tagline.textContent = 'Premium Apple Devices · ' + (g.storeAddress||'Best Prices in UAE');
+  }
 }
 
 window.addEventListener('DOMContentLoaded',init);

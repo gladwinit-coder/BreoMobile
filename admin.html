@@ -453,28 +453,56 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
     <!-- SETTINGS -->
     <div id="tab-settings" class="tab-pane">
-      <div class="page-header"><h1>Settings</h1></div>
+      <div class="page-header"><h1>⚙️ Global Business Settings</h1></div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">
+        These settings apply <strong style="color:var(--text)">everywhere</strong> — all WhatsApp buttons, AI-generated captions, video prompts, offer banners, and customer pages update automatically.
+      </p>
+
+      <div id="settingsSavedBanner" style="display:none;background:rgba(52,199,89,.12);border:1px solid rgba(52,199,89,.3);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--green);font-weight:600;">
+        ✅ Global settings saved — all buttons, captions &amp; prompts are now updated.
+      </div>
+
       <div class="settings-card">
-        <div class="settings-section-title">💬 WhatsApp Integration</div>
-        <div class="field-group">
-          <label>WhatsApp Number</label>
-          <div class="input-row">
-            <input type="tel" id="waNumber" placeholder="+971501234567">
-            <button class="btn-save" onclick="saveSettings()">Save</button>
+        <div class="settings-section-title">🏢 Business Identity</div>
+        <div class="form-grid">
+          <div class="field-group span2">
+            <label>Company / Store Name</label>
+            <input type="text" id="gsCompanyName" placeholder="BreoMobile">
           </div>
-          <p class="field-hint">Customers click "Buy on WhatsApp" → message sent to this number</p>
+          <div class="field-group span2">
+            <label>Store Address</label>
+            <input type="text" id="gsStoreAddress" placeholder="e.g. Dubai, UAE">
+          </div>
+          <div class="field-group span2">
+            <label>Website Address</label>
+            <input type="text" id="gsWebsite" placeholder="https://breomobile.vercel.app">
+          </div>
         </div>
       </div>
+
       <div class="settings-card">
-        <div class="settings-section-title">📸 Instagram</div>
-        <div class="field-group">
-          <label>Instagram Handle</label>
-          <div class="input-row">
-            <input type="text" id="igHandle" placeholder="@breomobile">
-            <button class="btn-save" onclick="saveSettings()">Save</button>
+        <div class="settings-section-title">💬 WhatsApp (Global)</div>
+        <div class="field-group" style="margin-bottom:14px">
+          <label>WhatsApp Number *</label>
+          <input type="tel" id="gsWaNumber" placeholder="+971 50 123 4567" oninput="updateWaPreview()">
+          <p class="field-hint">This number is used for ALL product buttons, enquiry links, and AI-generated content. Change once — updates everywhere.</p>
+        </div>
+        <div id="waPreview" style="display:none;background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:13px;border:1px solid var(--border)">
+          <div style="color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Preview Link</div>
+          <a id="waPreviewLink" href="#" target="_blank" style="color:#25D366;font-weight:600;word-break:break-all;"></a>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="settings-section-title">📸 Social Media</div>
+        <div class="form-grid">
+          <div class="field-group span2">
+            <label>Instagram Profile Link</label>
+            <input type="text" id="gsInstagram" placeholder="https://instagram.com/breomobile">
           </div>
         </div>
       </div>
+
       <div class="settings-card">
         <div class="settings-section-title">🔐 Admin Password</div>
         <div class="field-group">
@@ -485,16 +513,50 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
         </div>
       </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn-primary" style="flex:1;min-width:160px;" onclick="saveGlobalSettings()">💾 Save All Settings</button>
+        <button class="btn-secondary" style="flex:1;min-width:160px;" onclick="testWaLink()">📲 Test WhatsApp Link</button>
+      </div>
+
+      <div style="margin-top:28px;">
+        <div class="section-title">Where This Data Is Used</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">📦 Product Cards</div>
+            <div style="color:var(--muted)">WhatsApp Now button uses global number</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">🤖 AI Generator</div>
+            <div style="color:var(--muted)">Auto-fills WA number in all scripts</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">📲 Instagram Captions</div>
+            <div style="color:var(--muted)">WA link injected in every caption</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">🌐 Customer Website</div>
+            <div style="color:var(--muted)">All buttons read live from global settings</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">📋 Contact Form</div>
+            <div style="color:var(--muted)">Customer enquiries routed to global WA</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:4px;">🖼️ Offer Banners</div>
+            <div style="color:var(--muted)">Banner CTAs use website address</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-
 
     <!-- AI GENERATOR -->
     <div id="tab-aigen" class="tab-pane">
       <div class="page-header">
         <h1>🤖 AI Content Generator</h1>
       </div>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Enter product details → AI generates your Reel script, caption, hashtags, and more in one click.</p>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Enter product details — AI generates your Reel script, caption, hashtags, and more in one click.</p>
 
       <div class="ai-form-grid">
         <div class="field-group span2">
@@ -550,7 +612,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             </div>
             <img id="aiImgPreview" style="display:none;max-height:180px;max-width:100%;border-radius:10px;object-fit:contain;pointer-events:none">
           </div>
-          <div id="aiImgActions" style="display:none;margin-top:8px;display:none;gap:8px;">
+          <div id="aiImgActions" style="display:none;margin-top:8px;gap:8px;">
             <button class="ai-action-btn" onclick="clearAiImage(event)" style="font-size:12px;padding:6px 12px;">✕ Remove Image</button>
           </div>
         </div>
@@ -561,36 +623,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <span id="aiGenBtnText">Generate All Content</span>
       </button>
 
-      <!-- OUTPUTS -->
       <div class="ai-outputs" id="aiOutputs">
-
-        <!-- 1. Reel Prompt -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">🎬 Instagram Reel Video Prompt</div>
-            <div class="ai-output-actions">
-              <button class="copy-btn" onclick="copyOutput('aiReelPrompt',this)">📋 Copy</button>
-            </div>
+            <button class="copy-btn" onclick="copyOutput('aiReelPrompt',this)">📋 Copy</button>
           </div>
-          <div class="ai-output-body">
-            <textarea class="ai-output-text" id="aiReelPrompt" rows="14"></textarea>
-          </div>
+          <div class="ai-output-body"><textarea class="ai-output-text" id="aiReelPrompt" rows="14"></textarea></div>
         </div>
-
-        <!-- 2. Voiceover -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">🎙️ Voice-over Script</div>
-            <div class="ai-output-actions">
-              <button class="copy-btn" onclick="copyOutput('aiVoiceover',this)">📋 Copy</button>
-            </div>
+            <button class="copy-btn" onclick="copyOutput('aiVoiceover',this)">📋 Copy</button>
           </div>
-          <div class="ai-output-body">
-            <textarea class="ai-output-text" id="aiVoiceover" rows="8"></textarea>
-          </div>
+          <div class="ai-output-body"><textarea class="ai-output-text" id="aiVoiceover" rows="8"></textarea></div>
         </div>
-
-        <!-- 3. Caption EN + AR -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">📝 Instagram Caption</div>
@@ -602,44 +649,26 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
               <button class="copy-btn" onclick="copyOutput('aiCaption',this)" style="margin-left:8px">📋 Copy</button>
             </div>
           </div>
-          <div class="ai-output-body">
-            <textarea class="ai-output-text" id="aiCaption" rows="12"></textarea>
-          </div>
+          <div class="ai-output-body"><textarea class="ai-output-text" id="aiCaption" rows="12"></textarea></div>
         </div>
-
-        <!-- 4. Hashtags -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">🏷️ Hashtags</div>
-            <div class="ai-output-actions">
-              <button class="copy-btn" onclick="copyOutput('aiHashtags',this)">📋 Copy</button>
-            </div>
+            <button class="copy-btn" onclick="copyOutput('aiHashtags',this)">📋 Copy</button>
           </div>
-          <div class="ai-output-body">
-            <textarea class="ai-output-text" id="aiHashtags" rows="4"></textarea>
-          </div>
+          <div class="ai-output-body"><textarea class="ai-output-text" id="aiHashtags" rows="4"></textarea></div>
         </div>
-
-        <!-- 5. WhatsApp CTA -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">💬 WhatsApp CTA Message</div>
-            <div class="ai-output-actions">
-              <button class="copy-btn" onclick="copyOutput('aiWaCta',this)">📋 Copy</button>
-            </div>
+            <button class="copy-btn" onclick="copyOutput('aiWaCta',this)">📋 Copy</button>
           </div>
-          <div class="ai-output-body">
-            <textarea class="ai-output-text" id="aiWaCta" rows="4"></textarea>
-          </div>
+          <div class="ai-output-body"><textarea class="ai-output-text" id="aiWaCta" rows="4"></textarea></div>
         </div>
-
-        <!-- 6. Banner -->
         <div class="ai-output-card">
           <div class="ai-output-header">
             <div class="ai-output-title">🖼️ Website Hero Banner Text</div>
-            <div class="ai-output-actions">
-              <button class="copy-btn" onclick="copyOutput('aiBanner',this)">📋 Copy</button>
-            </div>
+            <button class="copy-btn" onclick="copyOutput('aiBanner',this)">📋 Copy</button>
           </div>
           <div class="ai-output-body">
             <textarea class="ai-output-text" id="aiBanner" rows="3"></textarea>
@@ -652,11 +681,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
           <div class="ai-action-strip">
             <button class="ai-action-btn green" onclick="pushBannerToHero()">🚀 Push to Store Hero</button>
-            <button class="ai-action-btn blue" onclick="sendToPostCreator()">📲 Send to Instagram Post Creator</button>
-            <button class="ai-action-btn purple" onclick="createProductFromAI()">📦 Create Product from This</button>
+            <button class="ai-action-btn blue" onclick="sendToPostCreator()">📲 Send to Post Creator</button>
+            <button class="ai-action-btn purple" onclick="createProductFromAI()">📦 Create Product</button>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -1204,22 +1232,78 @@ async function deletePost(id){
   toast('🗑 Deleted');
 }
 
-// ── SETTINGS ──────────────────────────────────────────────────────────────────
-function loadSettings(){
-  const s=getSettings();
-  if(s.waNumber)document.getElementById('waNumber').value=s.waNumber;
-  if(s.igHandle)document.getElementById('igHandle').value=s.igHandle;
+// ── GLOBAL SETTINGS ───────────────────────────────────────────────────────────
+const GLOBAL_KEY = 'breo_global';
+
+function getGlobalSettings(){
+  try{
+    const g = JSON.parse(localStorage.getItem(GLOBAL_KEY)||'{}');
+    // Merge legacy keys as fallback
+    if(!g.waNumber){
+      const legacy = JSON.parse(localStorage.getItem('breo_settings')||'{}');
+      g.waNumber = legacy.waNumber || localStorage.getItem('breo_wa') || '';
+    }
+    return g;
+  }catch(e){return {};}
 }
 
-function saveSettings(){
-  const s=getSettings();
-  s.waNumber=document.getElementById('waNumber').value.trim();
-  s.igHandle=document.getElementById('igHandle').value.trim();
-  saveSettingsData(s);
-  // Also save to legacy keys for store.html compat
-  if(s.waNumber)localStorage.setItem('breo_wa',s.waNumber.replace(/\D/g,''));
-  if(s.igHandle)localStorage.setItem('breo_ig',s.igHandle.replace('@',''));
-  toast('✅ Settings saved!');
+function getWaNumber(){
+  const n = getGlobalSettings().waNumber || '';
+  return n.replace(/\D/g,'');
+}
+
+function saveGlobalSettings(){
+  const g = {
+    companyName   : document.getElementById('gsCompanyName').value.trim(),
+    storeAddress  : document.getElementById('gsStoreAddress').value.trim(),
+    website       : document.getElementById('gsWebsite').value.trim(),
+    waNumber      : document.getElementById('gsWaNumber').value.trim(),
+    instagram     : document.getElementById('gsInstagram').value.trim(),
+    updatedAt     : new Date().toISOString()
+  };
+  localStorage.setItem(GLOBAL_KEY, JSON.stringify(g));
+  // Keep legacy keys in sync so old code still works
+  localStorage.setItem('breo_wa', g.waNumber.replace(/\D/g,''));
+  localStorage.setItem('breo_ig', g.instagram.replace(/^@/,'').replace('https://instagram.com/',''));
+  localStorage.setItem('breo_settings', JSON.stringify({waNumber:g.waNumber,igHandle:g.instagram}));
+  updateWaPreview();
+  const banner = document.getElementById('settingsSavedBanner');
+  banner.style.display = 'block';
+  setTimeout(()=>banner.style.display='none', 4000);
+  toast('✅ Global settings saved — updates everywhere!');
+}
+
+function loadGlobalSettings(){
+  const g = getGlobalSettings();
+  const v = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
+  v('gsCompanyName',  g.companyName);
+  v('gsStoreAddress', g.storeAddress);
+  v('gsWebsite',      g.website);
+  v('gsWaNumber',     g.waNumber);
+  v('gsInstagram',    g.instagram);
+  updateWaPreview();
+}
+
+function updateWaPreview(){
+  const raw = (document.getElementById('gsWaNumber')||{}).value||'';
+  const num = raw.replace(/\D/g,'');
+  const preview = document.getElementById('waPreview');
+  const link    = document.getElementById('waPreviewLink');
+  if(!preview||!link)return;
+  if(num.length>6){
+    const url = 'https://wa.me/'+num+'?text='+encodeURIComponent('Hi BreoMobile! I want to enquire about a product.');
+    preview.style.display='block';
+    link.href = url;
+    link.textContent = url;
+  }else{
+    preview.style.display='none';
+  }
+}
+
+function testWaLink(){
+  const num = getWaNumber();
+  if(!num){toast('⚠️ Enter a WhatsApp number first');return;}
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent('Hi! Testing BreoMobile WhatsApp link.'),'_blank');
 }
 
 function populatePostProductSelect(){
@@ -1315,7 +1399,7 @@ function _buildContent(name,variant,color,origP,offerP,stock,endDate,featRaw,cit
   const saveAmt  = Math.round(origP-offerP).toLocaleString();
   const origFmt  = origP.toLocaleString();
   const offerFmt = offerP.toLocaleString();
-  const waNum    = (getSettings().waNumber||localStorage.getItem('breo_wa')||'').replace(/\D/g,'');
+  const waNum    = getWaNumber();
   const waLink   = waNum ? 'https://wa.me/'+waNum : 'WhatsApp';
 
   const stockLines={
@@ -1654,7 +1738,7 @@ function initAdmin(){
   renderProducts();
   renderOffers();
   renderPostsGrid();
-  loadSettings();
+  loadGlobalSettings();
   populatePostProductSelect();
 }
 
