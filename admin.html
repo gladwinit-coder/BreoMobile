@@ -829,7 +829,7 @@ function loadVideo(file){
 }
 
 // ─── PUBLISH ──────────────────────────────────────────────────
-async async function publishPost(){
+async function publishPost(){
   if(!currentPostBlob){toast('Upload a video first.');return;}
   const caption=document.getElementById('postCaption').value.trim();
   const product=document.getElementById('postProduct').value.trim();
@@ -849,7 +849,7 @@ async async function publishPost(){
 }
 
 // ─── INSTAGRAM SHARE ──────────────────────────────────────────
-async async function shareCurrentPostToInstagram(){
+async function shareCurrentPostToInstagram(){
   if(!currentPostBlob){toast('Upload a video first.');return;}
   const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   if(isMobile){
@@ -866,7 +866,7 @@ async async function shareCurrentPostToInstagram(){
   showIgOverlay(currentPostBlob);
 }
 
-async async function sharePostById(id){
+async function sharePostById(id){
   const blob=await BreoDB.get(id);
   if(!blob){toast('Video not found.');return;}
   const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -914,7 +914,7 @@ function showIgOverlay(blob){
 }
 
 // ─── RENDER POSTS GRID ────────────────────────────────────────
-async async function renderPostsGrid(){
+async function renderPostsGrid(){
   const posts=getPosts();
   const grid=document.getElementById('postsGrid');
   const section=document.getElementById('publishedPostsSection');
