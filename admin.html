@@ -2,1162 +2,1078 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Breo Admin — Control Panel</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BreoMobile — Admin</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#050508;--surface:#0f0f18;--surface2:#181820;--surface3:#1e1e28;
-  --border:rgba(255,255,255,0.08);--blue:#0A84FF;--pink:#FF375F;
-  --gold:#FFD60A;--green:#25D366;--red:#FF453A;
-  --text:#F5F5F7;--muted:rgba(255,255,255,0.5);
+  --bg:#0a0a0f;--surface:#111118;--surface2:#1a1a24;--surface3:#22222e;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --text:#f0f0f5;--muted:rgba(255,255,255,.45);--muted2:rgba(255,255,255,.25);
+  --green:#34C759;--blue:#0A84FF;--red:#FF3B30;--orange:#FF9500;--purple:#BF5AF2;
+  --pink:#E1306C;--gold:#FFD60A;
+  --nav-h:56px;--tabs-h:48px;
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
 
-/* ─── LOGIN ─── */
+/* ── LOGIN ─────────────────────────────────── */
 #loginScreen{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(10,132,255,0.1) 0%,transparent 70%);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  background:radial-gradient(ellipse at 30% 20%,rgba(52,199,89,.12) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 80%,rgba(10,132,255,.1) 0%,transparent 60%),
+             var(--bg);
 }
 .login-box{
-  background:var(--surface);border:1px solid var(--border);border-radius:28px;
-  padding:48px 40px;width:380px;text-align:center;
-  animation:loginIn .5s cubic-bezier(0.34,1.56,0.64,1);
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:20px;padding:40px 32px;width:100%;max-width:380px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
 }
-@keyframes loginIn{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.login-icon{font-size:48px;margin-bottom:12px;display:block;animation:iconPop .5s .15s cubic-bezier(0.34,1.56,0.64,1) both;}
-@keyframes iconPop{from{transform:scale(0)}to{transform:scale(1)}}
-.login-logo{font-size:24px;font-weight:900;margin-bottom:4px;}
-.login-logo span{background:linear-gradient(135deg,#0A84FF,#FF375F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:36px;}
-.input-wrap{position:relative;margin-bottom:12px;}
-.input-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
-.login-box input{
-  width:100%;background:var(--surface2);border:1px solid var(--border);
-  color:var(--text);padding:13px 16px 13px 42px;border-radius:13px;
-  font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;
+.login-logo{font-size:28px;font-weight:700;text-align:center;margin-bottom:6px;}
+.login-logo span{color:var(--green);}
+.login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:28px;}
+.login-field{margin-bottom:16px;}
+.login-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.login-field input{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;outline:none;
+  transition:border-color .2s;
 }
-.login-box input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,132,255,0.12);}
+.login-field input:focus{border-color:var(--green);}
 .login-btn{
-  width:100%;background:linear-gradient(135deg,var(--blue),#5856D6);color:#fff;
-  border:none;padding:14px;border-radius:13px;font-size:15px;font-weight:700;
-  cursor:pointer;transition:opacity .2s,transform .2s;margin-top:4px;font-family:inherit;
+  width:100%;background:var(--green);color:#000;border:none;border-radius:12px;
+  padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;
+  transition:opacity .15s;
 }
-.login-btn:hover{opacity:.9;transform:translateY(-1px);}
-.login-btn:active{transform:translateY(0);}
-.login-err{color:var(--red);font-size:13px;margin-top:12px;display:none;animation:shake .3s;}
+.login-btn:hover{opacity:.88;}
+.login-err{
+  color:var(--red);font-size:13px;text-align:center;margin-top:12px;
+  display:none;
+}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.login-note{font-size:11px;color:rgba(255,255,255,0.18);margin-top:20px;}
 
-/* ─── ADMIN PANEL ─── */
-#adminPanel{display:none;}
-.admin-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:58px;
-  background:rgba(5,5,8,0.95);backdrop-filter:blur(16px);
+/* ── ADMIN SHELL ───────────────────────────── */
+#adminPanel{display:none;min-height:100vh;padding-bottom:80px;}
+
+/* top nav */
+.topnav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(10,10,15,.92);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
+  height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
 }
-.admin-logo{font-size:16px;font-weight:900;}
-.admin-logo span{background:linear-gradient(135deg,#0A84FF,#FF375F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.admin-logo em{font-style:normal;color:rgba(255,255,255,0.3);font-size:11px;margin-left:6px;background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;}
-.admin-nav-right{display:flex;align-items:center;gap:10px;}
-.view-site-btn{
-  background:transparent;border:1px solid var(--border);color:var(--muted);
-  padding:7px 14px;border-radius:10px;font-size:13px;cursor:pointer;
-  text-decoration:none;transition:all .2s;font-family:inherit;
-}
-.view-site-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.nav-logo{font-size:18px;font-weight:700;}
+.nav-logo span{color:var(--green);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-user{font-size:13px;color:var(--muted);}
 .logout-btn{
-  background:rgba(255,69,58,0.1);border:1px solid rgba(255,69,58,0.2);
-  color:var(--red);font-size:13px;cursor:pointer;font-family:inherit;
-  padding:7px 14px;border-radius:10px;transition:all .2s;
+  background:rgba(255,255,255,.07);border:1px solid var(--border);
+  border-radius:8px;padding:6px 12px;color:var(--muted);font-size:13px;cursor:pointer;
+  transition:all .2s;
 }
-.logout-btn:hover{background:rgba(255,69,58,0.2);}
-.admin-body{padding:78px 28px 60px;max-width:1000px;margin:0 auto;}
+.logout-btn:hover{background:rgba(255,59,48,.15);color:var(--red);border-color:rgba(255,59,48,.3);}
 
-/* ─── STATS ─── */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
+/* tab nav */
+.tab-nav{
+  position:sticky;top:var(--nav-h);z-index:190;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;overflow-x:auto;scrollbar-width:none;
+}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tabn{
+  flex:none;padding:0 18px;height:var(--tabs-h);
+  background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;
+  cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;
+  transition:all .2s;
+}
+.tabn.active{color:var(--green);border-bottom-color:var(--green);}
+.tabn:hover:not(.active){color:var(--text);}
+
+/* content area */
+.admin-body{max-width:900px;margin:0 auto;padding:24px 16px;}
+
+/* tab panes */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* page header */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.page-header h1{font-size:22px;font-weight:700;}
+
+/* ── BUTTONS ───────────────────────────────── */
+.btn-primary{
+  background:var(--green);color:#000;border:none;border-radius:10px;
+  padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;
+  transition:opacity .15s;white-space:nowrap;
+}
+.btn-primary:hover{opacity:.85;}
+.btn-secondary{
+  background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border2);
+  border-radius:10px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.14);}
+.btn-ghost{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:10px;padding:10px 18px;font-size:14px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);}
+.btn-save{
+  background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;
+  transition:opacity .15s;white-space:nowrap;
+}
+.btn-save:hover{opacity:.85;}
+
+/* ── DASHBOARD ─────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+@media(min-width:540px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
 .stat-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;
-  transition:border-color .2s,transform .2s;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:18px;text-align:center;
 }
-.stat-card:hover{border-color:rgba(10,132,255,0.2);transform:translateY(-2px);}
-.stat-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
-.stat-val{font-size:28px;font-weight:900;}
-.stat-note{font-size:12px;color:var(--muted);margin-top:4px;}
+.stat-icon{font-size:24px;margin-bottom:8px;}
+.stat-val{font-size:28px;font-weight:800;color:var(--text);}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;}
 
-/* ─── TABS ─── */
-.tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--surface);border-radius:14px;padding:5px;width:fit-content;flex-wrap:wrap;}
-.tab{padding:8px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:6px;}
-.tab.active{background:var(--surface2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.3);}
-.tab-content{display:none;}
-.tab-content.active{display:block;animation:tabIn .25s ease;}
-@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.sec-title{font-size:20px;font-weight:800;margin-bottom:6px;}
-.sec-sub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.section-title{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;}
 
-/* ─── DEAL CARDS ─── */
-.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:20px;}
-.deal-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:border-color .2s;}
-.deal-card:hover{border-color:rgba(10,132,255,0.25);}
-.deal-card-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;}
-.deal-card-body{padding:14px 16px;}
-.deal-card-title{font-size:15px;font-weight:700;margin-bottom:4px;}
-.deal-card-price{font-size:22px;font-weight:900;color:var(--gold);}
-.deal-card-old{font-size:12px;color:var(--muted);text-decoration:line-through;}
-.deal-card-actions{display:flex;gap:8px;margin-top:12px;}
-.edit-btn,.del-btn{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:opacity .2s;}
-.edit-btn{background:rgba(10,132,255,0.15);color:#60A5FA;}
-.del-btn{background:rgba(255,69,58,0.12);color:var(--red);}
-.edit-btn:hover,.del-btn:hover{opacity:.75;}
-.add-deal-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  background:rgba(10,132,255,0.08);border:1px dashed rgba(10,132,255,0.3);
-  color:#60A5FA;padding:14px;font-size:14px;font-weight:700;cursor:pointer;
-  border-radius:18px;transition:all .2s;width:100%;font-family:inherit;
+.activity-feed{display:flex;flex-direction:column;gap:10px;}
+.activity-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px;display:flex;align-items:center;gap:14px;
 }
-.add-deal-btn:hover{background:rgba(10,132,255,0.15);border-color:rgba(10,132,255,0.5);}
+.activity-icon{font-size:20px;flex-shrink:0;}
+.activity-info{flex:1;min-width:0;}
+.activity-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.activity-time{font-size:12px;color:var(--muted);margin-top:2px;}
+.badge-live{background:rgba(52,199,89,.15);color:var(--green);border:1px solid rgba(52,199,89,.3);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;white-space:nowrap;}
+.badge-draft{background:rgba(255,255,255,.07);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;white-space:nowrap;}
 
-/* ─── FORM PANEL ─── */
-.form-panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;display:none;margin-bottom:20px;}
-.form-panel.open{display:block;animation:tabIn .25s ease;}
-.form-panel h3{font-size:16px;font-weight:700;margin-bottom:20px;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-.form-group{display:flex;flex-direction:column;gap:6px;}
-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
-input[type="text"],input[type="number"],input[type="url"],select,textarea{
-  background:var(--surface2);border:1px solid var(--border);color:var(--text);
-  padding:11px 14px;border-radius:11px;font-size:14px;font-family:inherit;
-  outline:none;transition:border-color .2s,box-shadow .2s;
-}
-input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(10,132,255,0.1);}
-textarea{resize:vertical;min-height:80px;}
-.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
-.color-swatch{width:36px;height:36px;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:all .2s;}
-.color-swatch.sel{border-color:#fff;transform:scale(1.15);}
-.save-btn{background:var(--blue);color:#fff;border:none;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit;}
-.save-btn:hover{opacity:.85;}
-.cancel-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-left:10px;}
-
-/* ─── SETTINGS CARDS ─── */
-.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:20px;}
-.settings-card h3{font-size:16px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-.settings-card .card-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;}
-.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:12px;}
-.copy-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
-.wa-preview{background:#0B141A;border-radius:16px;padding:16px;margin-top:14px;font-size:13px;line-height:1.6;}
-.wa-msg{background:#1F2C34;border-radius:4px 12px 12px 12px;padding:10px 14px;display:inline-block;max-width:85%;margin-bottom:8px;}
-.link-preview{font-size:12px;color:#60A5FA;background:rgba(10,132,255,0.08);padding:10px 14px;border-radius:10px;margin-top:10px;word-break:break-all;font-family:monospace;}
-
-/* ─── VIDEO SECTION ─── */
-.video-preview-wrap{position:relative;border-radius:16px;overflow:hidden;background:var(--surface2);aspect-ratio:16/9;margin-top:16px;}
-.video-preview-wrap iframe{width:100%;height:100%;border:none;display:block;}
-.video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:14px;}
-.video-placeholder .big-icon{font-size:40px;}
-
-/* ─── INSTAGRAM GUIDE ─── */
-.ig-steps{display:flex;flex-direction:column;gap:14px;}
-.ig-step{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:flex-start;transition:border-color .2s;}
-.ig-step:hover{border-color:rgba(225,48,108,0.2);}
-.step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#E1306C,#833AB4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
-.step-body h4{font-size:15px;font-weight:700;margin-bottom:4px;}
-.step-body p{font-size:13px;color:var(--muted);line-height:1.6;}
-.step-body a{color:#60A5FA;text-decoration:none;}
-.step-body code{background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;font-size:12px;color:#60A5FA;}
-.tool-badge{display:inline-block;background:rgba(131,58,180,0.2);border:1px solid rgba(131,58,180,0.4);color:#C085F5;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700;margin:4px 4px 0 0;}
-.free-badge{display:inline-block;background:rgba(52,199,89,0.15);border:1px solid rgba(52,199,89,0.3);color:#34C759;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700;margin-left:4px;}
-
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--surface2);border:1px solid rgba(52,199,89,0.4);color:var(--text);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(0.34,1.56,0.64,1);}
-.toast.show{transform:translateY(0);opacity:1;}
-
-/* ─── VIDEO GENERATOR (HiggsField style) ─── */
-.vg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
-@media(max-width:800px){.vg-wrap{grid-template-columns:1fr;}}
-.vg-form-card{background:linear-gradient(145deg,#0d0d1a,#111120);border:1px solid rgba(120,80,255,0.25);border-radius:22px;padding:28px;}
-.vg-form-card h3{font-size:16px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.vg-form-card .sub{font-size:12px;color:var(--muted);margin-bottom:24px;}
-.vg-field{margin-bottom:16px;}
-.vg-field label{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(167,139,250,.7);margin-bottom:6px;}
-.vg-field input,.vg-field select,.vg-field textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(120,80,255,.2);color:var(--text);padding:11px 14px;border-radius:12px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;}
-.vg-field input:focus,.vg-field select:focus,.vg-field textarea:focus{border-color:rgba(120,80,255,.6);box-shadow:0 0 0 3px rgba(120,80,255,.1);}
-.vg-field textarea{resize:vertical;min-height:90px;line-height:1.6;}
-.vg-field select option{background:#1a1a2e;}
-.vg-style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
-.vg-style-btn{background:rgba(255,255,255,.04);border:1px solid rgba(120,80,255,.2);color:var(--muted);padding:8px 6px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;}
-.vg-style-btn.active{background:rgba(120,80,255,.2);border-color:rgba(120,80,255,.6);color:#a78bfa;}
-.vg-generate-btn{
-  width:100%;padding:14px;border-radius:14px;border:none;
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  color:#fff;font-size:15px;font-weight:700;font-family:inherit;
-  cursor:pointer;margin-top:8px;position:relative;overflow:hidden;
-  transition:opacity .2s,transform .15s;
-}
-.vg-generate-btn:hover{opacity:.9;transform:translateY(-1px);}
-.vg-generate-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.vg-generate-btn .shimmer{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimmer 1.5s infinite;}
-@keyframes shimmer{to{left:100%}}
-.vg-preview-card{background:linear-gradient(145deg,#0d0d1a,#111120);border:1px solid rgba(120,80,255,.25);border-radius:22px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.vg-preview-card h3{font-size:14px;font-weight:700;color:rgba(167,139,250,.8);align-self:flex-start;}
-.vg-canvas-wrap{width:100%;max-width:280px;border-radius:16px;overflow:hidden;border:1px solid rgba(120,80,255,.3);background:#000;aspect-ratio:9/16;position:relative;}
-#vgCanvas{width:100%;height:100%;display:block;}
-.vg-canvas-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,.2);}
-.vg-canvas-placeholder svg{width:40px;height:40px;opacity:.3;}
-.vg-progress-wrap{width:100%;max-width:280px;display:none;}
-.vg-progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
-.vg-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb);border-radius:2px;width:0%;transition:width .1s linear;}
-.vg-progress-label{font-size:12px;color:var(--muted);margin-top:6px;text-align:center;}
-.vg-download-btn{
-  width:100%;max-width:280px;padding:12px;border-radius:12px;
-  background:linear-gradient(135deg,#059669,#10b981);color:#fff;
-  border:none;font-size:14px;font-weight:700;font-family:inherit;
-  cursor:pointer;display:none;transition:opacity .2s,transform .15s;
-}
-.vg-download-btn:hover{opacity:.9;transform:translateY(-1px);}
-.vg-tips{background:rgba(120,80,255,.06);border:1px solid rgba(120,80,255,.15);border-radius:14px;padding:16px;font-size:12px;color:var(--muted);line-height:1.7;max-width:280px;width:100%;}
-.vg-tips strong{color:rgba(167,139,250,.9);display:block;margin-bottom:4px;}
-
-/* ─── DISPLAY CONTROL ─── */
-.dc-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
-.dc-publish-btn{background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
-.dc-publish-btn:hover{opacity:.85;}
-.dc-cat-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
-.dc-cat-toggle{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;}
-.dc-cat-toggle.on{background:rgba(10,132,255,.12);border-color:rgba(10,132,255,.3);color:var(--blue);}
-.dc-prod-list{display:flex;flex-direction:column;gap:10px;}
-.dc-prod-row{
-  display:grid;grid-template-columns:40px 1fr auto auto 100px auto;
-  align-items:center;gap:12px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:12px 16px;
-  transition:border-color .2s,opacity .3s;
-}
-.dc-prod-row.off{opacity:.4;}
-.dc-prod-emoji{font-size:24px;text-align:center;}
-.dc-prod-info .dc-prod-name{font-size:14px;font-weight:600;}
-.dc-prod-info .dc-prod-cat{font-size:11px;color:var(--muted);margin-top:2px;}
-.dc-price-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:9px;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:100px;text-align:right;transition:border-color .2s;}
-.dc-price-input:focus{border-color:var(--gold);}
-.dc-toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
-.dc-toggle input{opacity:0;width:0;height:0;}
-.dc-toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;cursor:pointer;transition:background .2s;}
-.dc-toggle-slider::before{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;}
-.dc-toggle input:checked+.dc-toggle-slider{background:var(--blue);}
-.dc-toggle input:checked+.dc-toggle-slider::before{transform:translateX(20px);}
-.dc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(255,214,10,.15);color:var(--gold);white-space:nowrap;}
-@media(max-width:640px){
-  .dc-prod-row{grid-template-columns:32px 1fr auto;gap:8px;}
-  .dc-prod-row .dc-badge,.dc-prod-row .dc-price-input{display:none;}
+.empty-state{
+  text-align:center;padding:40px 20px;color:var(--muted);
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  font-size:14px;
 }
 
-/* ─── ADD PRODUCT ─── */
-.add-prod-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(52,199,89,.08);border:1px dashed rgba(52,199,89,.3);color:#34C759;padding:14px;font-size:14px;font-weight:700;cursor:pointer;border-radius:14px;transition:all .2s;width:100%;font-family:inherit;margin-top:16px;}
-.add-prod-btn:hover{background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.5);}
-.del-custom-btn{background:rgba(255,69,58,.1);color:var(--red);border:none;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}
-/* ─── IG SHARE ─── */
-.ig-share-btn{width:100%;max-width:280px;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:none;transition:opacity .2s,transform .15s;margin-top:8px;}
-.ig-share-btn:hover{opacity:.9;transform:translateY(-1px);}
-/* ─── WAN2.1 ─── */
-.wan2-card{background:linear-gradient(145deg,#060d1f,#0a1530);border:1px solid rgba(0,200,255,0.25);border-radius:22px;padding:24px;margin-top:24px;display:none;}
-.wan2-card.show{display:block;animation:tabIn .25s ease;}
-.wan2-card h3{font-size:16px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#00c8ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.wan2-card .sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
-.wan2-key-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
-.wan2-key-wrap input{flex:1;min-width:200px;background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.25);color:var(--text);padding:10px 14px;border-radius:11px;font-size:13px;font-family:inherit;outline:none;font-family:monospace;}
-.wan2-key-wrap input:focus{border-color:rgba(0,200,255,.5);}
-.wan2-save-key{background:rgba(0,200,255,.12);border:1px solid rgba(0,200,255,.3);color:#00c8ff;padding:10px 18px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
-.wan2-prompt-box{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:16px;font-family:monospace;white-space:pre-wrap;word-break:break-word;}
-.wan2-gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#0066cc,#00c8ff);color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .2s,transform .15s;position:relative;overflow:hidden;}
-.wan2-gen-btn:hover{opacity:.9;transform:translateY(-1px);}
-.wan2-gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.wan2-result-video{width:100%;border-radius:16px;margin-top:14px;display:none;border:1px solid rgba(0,200,255,.3);}
-.wan2-status{font-size:13px;color:var(--muted);margin-top:10px;text-align:center;min-height:20px;}
-.wan2-step-badge{display:inline-block;background:rgba(0,200,255,.12);border:1px solid rgba(0,200,255,.25);color:#00c8ff;padding:2px 10px;border-radius:8px;font-size:11px;font-weight:700;margin:0 4px;}
-/* ─── RESPONSIVE ─── */
-@media(max-width:600px){
-  .admin-body{padding:70px 16px 40px;}
-  .form-row{grid-template-columns:1fr;}
-  .tabs{width:100%;}
-  .tab{flex:1;text-align:center;padding:8px 10px;font-size:13px;}
-  .login-box{width:100%;max-width:360px;padding:36px 24px;}
+/* ── FILTER BAR ────────────────────────────── */
+.filter-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-bar input,.filter-bar select{
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+  padding:9px 14px;color:var(--text);font-size:14px;outline:none;
+  transition:border-color .2s;
+}
+.filter-bar input{flex:1;min-width:140px;}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--green);}
+.filter-bar select option{background:var(--surface2);}
+
+/* ── PRODUCT GRID ──────────────────────────── */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.prod-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;transition:border-color .2s;
+}
+.prod-card:hover{border-color:var(--border2);}
+.prod-card-img{
+  height:140px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+}
+.prod-card-body{padding:14px;}
+.prod-card-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.pub-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;}
+.pub-badge.live{background:rgba(52,199,89,.15);color:var(--green);}
+.pub-badge.draft{background:rgba(255,255,255,.07);color:var(--muted);}
+.stock-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.stock-badge.in{background:rgba(52,199,89,.1);color:var(--green);}
+.stock-badge.limited{background:rgba(255,149,0,.1);color:var(--orange);}
+.stock-badge.out{background:rgba(255,59,48,.1);color:var(--red);}
+.prod-card-name{font-size:15px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.prod-card-cat{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.prod-card-price{font-size:16px;font-weight:800;color:var(--green);}
+.prod-old-price{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:6px;font-weight:400;}
+.prod-card-actions{
+  display:flex;align-items:center;gap:8px;padding:12px 14px 14px;
+  border-top:1px solid var(--border);
+}
+.icon-btn{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:8px;padding:7px 12px;font-size:14px;cursor:pointer;
+  transition:all .15s;flex:1;text-align:center;
+}
+.icon-btn:hover{background:rgba(255,255,255,.12);}
+.icon-btn.del:hover{background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3);}
+
+/* ── MODAL ─────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:1000;display:flex;align-items:flex-end;justify-content:center;
+  padding:0;
+}
+@media(min-width:600px){.modal-overlay{align-items:center;padding:20px;}}
+.modal-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:20px 20px 0 0;width:100%;max-width:560px;
+  max-height:92vh;overflow-y:auto;
+  animation:slideUp .25s ease;
+}
+@media(min-width:600px){.modal-box{border-radius:20px;}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px 0;position:sticky;top:0;
+  background:var(--surface);z-index:1;
+}
+.modal-header h2{font-size:18px;font-weight:700;}
+.modal-close{
+  background:rgba(255,255,255,.08);border:none;color:var(--muted);
+  width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;
+  transition:all .15s;
+}
+.modal-close:hover{background:rgba(255,59,48,.15);color:var(--red);}
+.modal-body{padding:20px 24px;}
+.modal-footer{
+  padding:16px 24px 24px;display:flex;gap:10px;justify-content:flex-end;
+  border-top:1px solid var(--border);
 }
 
-/* ── Post Creator ── */
-.upload-zone{border:2px dashed rgba(0,200,255,.3);border-radius:20px;padding:40px 20px;text-align:center;cursor:pointer;transition:.2s;background:rgba(0,200,255,.04);}
-.upload-zone:hover{border-color:rgba(0,200,255,.7);background:rgba(0,200,255,.08);}
-.upload-zone .upload-icon{font-size:48px;margin-bottom:12px;}
-.upload-zone h3{color:#fff;font-size:18px;margin-bottom:6px;}
-.upload-zone p{color:var(--muted);font-size:13px;margin:0;}
-.upload-zone .upload-sub{font-size:12px;margin-top:4px;opacity:.6;}
-.upload-choose-btn{margin-top:16px;background:rgba(0,200,255,.15);border:1px solid rgba(0,200,255,.3);color:#00c8ff;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
-.post-video-preview{width:100%;border-radius:16px;background:#000;max-height:320px;object-fit:contain;margin-bottom:16px;display:block;}
-.change-video-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);padding:7px 16px;border-radius:9px;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:20px;}
-.post-form-card{background:var(--surface2);border-radius:18px;padding:20px;margin-bottom:16px;}
-.post-form-card label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(0,200,255,.75);display:block;margin-bottom:6px;}
-.post-form-card input,.post-form-card textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s;}
-.post-form-card input:focus,.post-form-card textarea:focus{border-color:rgba(0,200,255,.5);}
-.post-form-card textarea{resize:vertical;line-height:1.6;}
-.post-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-.post-fg{margin-bottom:14px;}
-.post-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;}
-.post-publish-btn{padding:14px;border-radius:14px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
-.post-ig-btn{padding:14px;border-radius:14px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
-/* Posts Grid */
-.posts-section-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;padding-top:4px;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;}
-.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
-.post-card{background:var(--surface2);border-radius:16px;overflow:hidden;position:relative;}
-.post-card-video-wrap{position:relative;aspect-ratio:9/16;background:#000;overflow:hidden;cursor:pointer;}
-.post-card-video-wrap video{width:100%;height:100%;object-fit:cover;}
-.post-card-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(0,0,0,.3);transition:.2s;pointer-events:none;}
-.post-card:hover .post-card-play{background:rgba(0,0,0,.1);}
-.post-card-meta{padding:10px 12px;}
-.post-card-product{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.post-card-price{font-size:13px;color:#FFD60A;font-weight:800;margin-top:2px;}
-.post-card-actions{display:flex;gap:6px;padding:0 10px 10px;}
-.post-card-ig{flex:1;padding:7px 0;border-radius:8px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;}
-.post-card-del{padding:7px 10px;border-radius:8px;background:rgba(255,59,48,.15);border:1px solid rgba(255,59,48,.3);color:#ff3b30;font-size:11px;cursor:pointer;font-family:inherit;}
-/* Instagram overlay */
-.ig-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}
-.ig-overlay-card{background:#0a1530;border:1px solid rgba(0,200,255,.3);border-radius:20px;padding:28px;max-width:360px;width:100%;text-align:center;}
-.ig-overlay-card h3{color:#fff;font-size:17px;margin-bottom:8px;}
-.ig-overlay-card p{color:rgba(255,255,255,.55);font-size:13px;margin-bottom:20px;line-height:1.6;}
-.ig-steps-list{text-align:left;background:rgba(255,255,255,.04);border-radius:12px;padding:14px;margin-bottom:18px;font-size:13px;color:rgba(255,255,255,.75);line-height:2.2;}
-.ig-overlay-dl{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;}
-.ig-overlay-open{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#E1306C,#833AB4);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;}
-.ig-overlay-cancel{background:none;border:none;color:rgba(255,255,255,.35);font-size:12px;cursor:pointer;font-family:inherit;}
+/* form fields */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-group.span2{grid-column:span 2;}
+.field-group label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.field-group input,.field-group select,.field-group textarea{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:10px;
+  padding:11px 14px;color:var(--text);font-size:14px;outline:none;
+  transition:border-color .2s;font-family:inherit;
+}
+.field-group input:focus,.field-group select:focus,.field-group textarea:focus{border-color:var(--green);}
+.field-group select option{background:var(--surface2);}
+.field-group textarea{resize:vertical;min-height:80px;}
+.toggle-row{flex-direction:row;align-items:center;justify-content:space-between;}
+
+/* toggle switch */
+.toggle-switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-track{
+  position:absolute;inset:0;background:var(--surface3);border-radius:13px;cursor:pointer;
+  transition:background .2s;
+}
+.toggle-track::after{
+  content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;
+  background:#fff;border-radius:50%;transition:transform .2s;
+}
+.toggle-switch input:checked+.toggle-track{background:var(--green);}
+.toggle-switch input:checked+.toggle-track::after{transform:translateX(20px);}
+
+/* ── POSTS TAB ─────────────────────────────── */
+.post-creator{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:32px;}
+@media(min-width:600px){.post-creator{grid-template-columns:1fr 1fr;}}
+
+.upload-zone{
+  border:2px dashed var(--border2);border-radius:16px;
+  min-height:220px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;background:var(--surface);
+  padding:20px;text-align:center;
+}
+.upload-zone:hover{border-color:var(--green);background:rgba(52,199,89,.04);}
+.upload-icon{font-size:40px;margin-bottom:10px;}
+.upload-zone p{color:var(--muted);font-size:14px;margin-bottom:4px;}
+.upload-sub{font-size:12px;color:var(--muted2);}
+
+.post-fields{display:flex;flex-direction:column;gap:14px;}
+.post-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.post-actions .btn-primary,.post-actions .btn-secondary{flex:1;min-width:120px;}
+
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+.post-mini-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.post-mini-caption{padding:8px 10px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.post-mini-actions{display:flex;gap:6px;padding:0 8px 8px;}
+.btn-sm-ig{background:rgba(225,48,108,.12);border:1px solid rgba(225,48,108,.25);color:#E1306C;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;flex:1;}
+.btn-sm-del{background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.2);color:var(--red);border-radius:7px;padding:5px;font-size:12px;cursor:pointer;}
+.no-video{height:100px;display:flex;align-items:center;justify-content:center;color:var(--muted2);font-size:12px;}
+
+/* ── SETTINGS ──────────────────────────────── */
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;}
+.settings-section-title{font-size:15px;font-weight:700;margin-bottom:16px;}
+.input-row{display:flex;gap:10px;}
+.input-row input{flex:1;}
+.field-hint{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ── INSTAGRAM OVERLAY ─────────────────────── */
+.ig-box{max-width:400px;padding:32px 28px;border-radius:20px;}
+.ig-steps{display:flex;flex-direction:column;gap:10px;}
+.ig-step{background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--muted);}
+.ig-step strong{color:var(--text);}
+
+/* ── TOAST ─────────────────────────────────── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);padding:12px 20px;border-radius:12px;
+  font-size:14px;font-weight:500;z-index:9999;
+  transition:transform .3s ease,opacity .3s ease;opacity:0;
+  pointer-events:none;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 </style>
 </head>
 <body>
-<div class="toast" id="toast"></div>
 
-<!-- ─── LOGIN ─── -->
+<!-- ── LOGIN ── -->
 <div id="loginScreen">
   <div class="login-box">
-    <span class="login-icon">🔐</span>
-    <div class="login-logo"><span>Breo</span>mobile</div>
+    <div class="login-logo">🔐 <span>Breo</span>mobile</div>
     <p class="login-sub">Admin Control Panel</p>
-    <div class="input-wrap">
-      <span class="input-icon">👤</span>
-      <input type="text" id="loginUser" placeholder="Username" onkeypress="if(event.key==='Enter')doLogin()">
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
     </div>
-    <div class="input-wrap">
-      <span class="input-icon">🔑</span>
-      <input type="password" id="loginPass" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
     </div>
     <button class="login-btn" onclick="doLogin()">Sign In</button>
     <p class="login-err" id="loginErr">❌ Wrong credentials, try again</p>
-    <p class="login-note">Default login: admin / breo2025</p>
   </div>
 </div>
 
-<!-- ─── ADMIN PANEL ─── -->
+<!-- ── ADMIN PANEL ── -->
 <div id="adminPanel">
-  <nav class="admin-nav">
-
-
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-val" id="statDeals">0</div><div class="stat-note">Shown on homepage</div></div>
-      <div class="stat-card"><div class="stat-label">WhatsApp</div><div class="stat-val" id="statWa" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your business number</div></div>
-      <div class="stat-card"><div class="stat-label">Instagram</div><div class="stat-val" id="statIg" style="font-size:16px;margin-top:4px;">Not set</div><div class="stat-note">Your handle</div></div>
-      <div class="stat-card"><div class="stat-label">Posts</div><div class="stat-val" id="statVideo" style="font-size:16px;margin-top:4px;">None</div><div class="stat-note">On store front page</div></div>
+  <nav class="topnav">
+    <div class="nav-logo">⚡ <span>Breo</span>mobile</div>
+    <div class="nav-right">
+      <span class="nav-user">Admin</span>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
     </div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('deals',this)">📦 Deals</button>
-      <button class="tab" onclick="switchTab('posts',this)">📸 Posts</button>
-      <button class="tab" onclick="switchTab('whatsapp',this)">💬 WhatsApp</button>
-      <button class="tab" onclick="switchTab('instagram',this)">📸 Instagram</button>
-      <button class="tab" onclick="switchTab('display',this)">📱 Display</button>
+  </nav>
+
+  <div class="tab-nav">
+    <button class="tabn active" onclick="showTab('dashboard',this)">📊 Dashboard</button>
+    <button class="tabn" onclick="showTab('products',this)">📦 Products</button>
+    <button class="tabn" onclick="showTab('offers',this)">🎯 Offers</button>
+    <button class="tabn" onclick="showTab('posts',this)">📲 Instagram</button>
+    <button class="tabn" onclick="showTab('settings',this)">⚙️ Settings</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <div class="page-header"><h1>Dashboard</h1></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val" id="st-products">0</div><div class="stat-label">Products</div></div>
+        <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-val" id="st-offers">0</div><div class="stat-label">Offers</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" id="st-published">0</div><div class="stat-label">Published</div></div>
+        <div class="stat-card"><div class="stat-icon">📲</div><div class="stat-val" id="st-posts">0</div><div class="stat-label">Posts</div></div>
+      </div>
+      <div class="section-title">Recent Activity</div>
+      <div id="activityFeed" class="activity-feed"></div>
     </div>
 
-    <div class="tab-content active" id="tab-deals">
-      <div class="sec-title">Manage Deals</div>
-      <p class="sec-sub">These cards appear as offer tiles on your public site. Add, edit or remove deals here.</p>
-      <div class="form-panel" id="dealForm">
-        <h3 id="formTitle">Add New Deal</h3>
-        <div class="form-row">
-          <div class="form-group"><label>iPhone Model</label><select id="fModel"><option>iPhone 16 Pro Max</option><option>iPhone 16 Pro</option><option>iPhone 16</option><option>iPhone 15 Pro Max</option><option>iPhone 15 Pro</option><option>iPhone 15</option><option>iPhone 14 Pro Max</option><option>iPhone 14 Pro</option><option>iPhone 14</option><option>iPhone 13 Pro</option><option>iPhone 13</option><option>iPhone SE</option></select></div>
-          <div class="form-group"><label>Emoji Icon</label><select id="fEmoji"><option value="📱">📱 Phone</option><option value="✨">✨ Sparkle</option><option value="🎁">🎁 Gift</option><option value="⚡">⚡ Flash</option><option value="💜">💜 Purple</option><option value="🔥">🔥 Fire</option><option value="💎">💎 Diamond</option><option value="🌟">🌟 Star</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Sale Price (AED)</label><input type="number" id="fPrice" placeholder="e.g. 3999"></div>
-          <div class="form-group"><label>Old Price (AED)</label><input type="number" id="fOld" placeholder="e.g. 4500"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Offer Text</label><input type="text" id="fOffer" placeholder="e.g. Today Only!"></div>
-          <div class="form-group"><label>Badge Label</label><input type="text" id="fBadge" placeholder="e.g. HOT"></div>
-        </div>
-        <div class="form-group" style="margin-bottom:20px;"><label>Card Colour</label>
-          <div class="color-row" id="colorRow">
-            <div class="color-swatch sel" data-grad="linear-gradient(135deg,#0A84FF,#5856D6)" style="background:linear-gradient(135deg,#0A84FF,#5856D6)"></div>
-            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF375F,#FF9F0A)" style="background:linear-gradient(135deg,#FF375F,#FF9F0A)"></div>
-            <div class="color-swatch" data-grad="linear-gradient(135deg,#34C759,#30B0C7)" style="background:linear-gradient(135deg,#34C759,#30B0C7)"></div>
-            <div class="color-swatch" data-grad="linear-gradient(135deg,#BF5AF2,#5856D6)" style="background:linear-gradient(135deg,#BF5AF2,#5856D6)"></div>
-            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF9F0A,#FFD60A)" style="background:linear-gradient(135deg,#FF9F0A,#FFD60A)"></div>
-            <div class="color-swatch" data-grad="linear-gradient(135deg,#FF375F,#BF5AF2)" style="background:linear-gradient(135deg,#FF375F,#BF5AF2)"></div>
+    <!-- PRODUCTS -->
+    <div id="tab-products" class="tab-pane">
+      <div class="page-header">
+        <h1>Products</h1>
+        <button class="btn-primary" onclick="openProductForm(false)">＋ Add Product</button>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="productSearch" placeholder="🔍  Search products..." oninput="renderProducts()">
+        <select id="productCatFilter" onchange="renderProducts()">
+          <option value="">All Categories</option>
+          <option>iPhone</option>
+          <option>MacBook</option>
+          <option>iPad</option>
+          <option>Apple Watch</option>
+          <option>AirPods</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div id="productsGrid" class="products-grid"></div>
+    </div>
+
+    <!-- OFFERS -->
+    <div id="tab-offers" class="tab-pane">
+      <div class="page-header">
+        <h1>Special Offers</h1>
+        <button class="btn-primary" onclick="openProductForm(true)">＋ New Offer</button>
+      </div>
+      <div id="offersGrid" class="products-grid"></div>
+    </div>
+
+    <!-- INSTAGRAM POSTS -->
+    <div id="tab-posts" class="tab-pane">
+      <div class="page-header"><h1>Instagram Posts</h1></div>
+      <div class="post-creator">
+        <div class="upload-zone" id="uploadZone"
+          onclick="document.getElementById('postVideoFile').click()"
+          ondragover="event.preventDefault()"
+          ondrop="handleDrop(event)">
+          <input type="file" id="postVideoFile" accept="video/*" style="display:none" onchange="handleVideoFile(this.files[0])">
+          <div id="uploadZoneInner">
+            <div class="upload-icon">📹</div>
+            <p>Tap to upload video</p>
+            <p class="upload-sub">MP4 · MOV · up to 100MB</p>
           </div>
         </div>
-        <button class="save-btn" onclick="saveDeal()">Save Deal</button>
-        <button class="cancel-btn" onclick="closeForm()">Cancel</button>
-      </div>
-      <div class="deals-grid" id="dealsGrid"></div>
-      <button class="add-deal-btn" onclick="openAddForm()">＋ Add New Deal</button>
-    </div>
-
-    <!-- PROMO VIDEO TAB -->
-    <!-- POSTS TAB -->
-    <div class="tab-content" id="tab-posts">
-      <div class="sec-title">📸 Create Post</div>
-      <p class="sec-sub">Upload your video, add content, then publish it to your store and share to Instagram.</p>
-
-      <!-- Upload Zone -->
-      <div class="upload-zone" id="uploadZone" ondragover="event.preventDefault()" ondrop="handleDrop(event)" onclick="document.getElementById('postVideoFile').click()">
-        <div class="upload-icon">📹</div>
-        <h3>Upload Your Video</h3>
-        <p>Tap to select, or drag &amp; drop</p>
-        <p class="upload-sub">MP4, MOV, WebM · any size</p>
-        <button class="upload-choose-btn" onclick="event.stopPropagation();document.getElementById('postVideoFile').click()">Choose Video</button>
-      </div>
-      <input type="file" id="postVideoFile" accept="video/*" style="display:none" onchange="handleVideoUpload(this)">
-
-      <!-- Creator (shown after upload) -->
-      <div id="postCreatorWrap" style="display:none">
-        <video id="postVideoPreview" class="post-video-preview" controls playsinline></video>
-        <button class="change-video-btn" onclick="document.getElementById('postVideoFile').click()">🔄 Change Video</button>
-
-        <div class="post-form-card">
-          <div class="post-fg">
+        <div class="post-fields">
+          <div class="field-group">
             <label>Caption</label>
-            <textarea id="postCaption" rows="3" placeholder="🔥 iPhone 16 Pro Max — Today Only! Brand new, sealed box, official UAE warranty. Order now on WhatsApp!"></textarea>
+            <textarea id="postCaption" rows="3" placeholder="Write your caption here..."></textarea>
           </div>
-          <div class="post-form-row">
-            <div class="post-fg" style="margin:0">
-              <label>Product</label>
-              <input id="postProduct" type="text" placeholder="iPhone 16 Pro Max">
-            </div>
-            <div class="post-fg" style="margin:0">
-              <label>Price (AED)</label>
-              <input id="postPrice" type="number" placeholder="3999">
-            </div>
+          <div class="field-group">
+            <label>Product / Offer</label>
+            <select id="postProduct"><option value="">— None —</option></select>
           </div>
-          <div class="post-fg" style="margin:0">
+          <div class="field-group">
+            <label>Price (AED)</label>
+            <input type="number" id="postPrice" placeholder="e.g. 3499">
+          </div>
+          <div class="field-group">
             <label>Hashtags</label>
-            <input id="postHashtags" type="text" placeholder="#iPhone #Apple #Dubai #BreoMobile #UAEDeals">
+            <input type="text" id="postHashtags" placeholder="#breomobile #iphone #dubai">
+          </div>
+          <div class="post-actions">
+            <button class="btn-primary" onclick="publishPost()">🚀 Publish to Store</button>
+            <button class="btn-secondary" onclick="shareToInstagram()">📲 Share to Instagram</button>
           </div>
         </div>
-
-        <div class="post-actions">
-          <button class="post-publish-btn" onclick="publishPost()">✅ Publish to Store</button>
-          <button class="post-ig-btn" onclick="shareCurrentPostToInstagram()">📲 Instagram</button>
-        </div>
       </div>
-
-      <!-- Published Posts -->
-      <div id="publishedPostsSection" style="display:none">
-        <div class="posts-section-title">📋 Published Posts</div>
-        <div class="posts-grid" id="postsGrid"></div>
+      <div id="publishedSection" style="display:none">
+        <div class="section-title">Published Posts</div>
+        <div id="postsGrid" class="posts-grid"></div>
       </div>
     </div>
 
-    <div class="tab-content" id="tab-whatsapp">
-      <div class="sec-title">WhatsApp Setup</div>
-      <p class="sec-sub">Set your UAE number and copy your auto-reply messages for WhatsApp Business.</p>
-      <div class="settings-card" style="border-color:rgba(37,211,102,.3);">
-        <h3>📱 Your WhatsApp Number <span style="font-size:11px;font-weight:600;background:rgba(37,211,102,.15);color:#25D366;padding:3px 10px;border-radius:6px;margin-left:6px;">Controls Checkout</span></h3>
-        <p class="card-sub">This number receives ALL orders from your store. When a customer taps "Order via WhatsApp" on the checkout, their full order is sent here as a WhatsApp message.</p>
-        <div class="form-group" style="max-width:320px;">
-          <label>UAE Number — country code first, no spaces or +</label>
-          <input type="text" id="waNumber" placeholder="971500000000" style="font-size:18px;font-weight:700;letter-spacing:.04em;">
+    <!-- SETTINGS -->
+    <div id="tab-settings" class="tab-pane">
+      <div class="page-header"><h1>Settings</h1></div>
+      <div class="settings-card">
+        <div class="settings-section-title">💬 WhatsApp Integration</div>
+        <div class="field-group">
+          <label>WhatsApp Number</label>
+          <div class="input-row">
+            <input type="tel" id="waNumber" placeholder="+971501234567">
+            <button class="btn-save" onclick="saveSettings()">Save</button>
+          </div>
+          <p class="field-hint">Customers click "Buy on WhatsApp" → message sent to this number</p>
         </div>
-        <div class="link-preview" id="waLinkPreview">https://wa.me/971500000000</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-          <button class="save-btn" style="background:#25D366;" onclick="saveWaNumber()">✅ Save &amp; Activate</button>
-          <button class="copy-btn" onclick="copyWaLink()">📋 Copy Link</button>
-          <button class="copy-btn" onclick="testWaLink()" style="border-color:rgba(37,211,102,.4);color:#25D366;">▶ Test It</button>
-        </div>
-        <p id="waSaveConfirm" style="font-size:12px;color:#25D366;margin-top:8px;display:none;">✓ Active — all store checkouts now route to this number.</p>
       </div>
       <div class="settings-card">
-        <h3>💬 Greeting Message</h3>
-        <p class="card-sub">Copy this and set it as your Greeting Message in WhatsApp Business app → Settings → Business Tools → Greeting Message.</p>
-        <div class="wa-preview"><div class="wa-msg">Welcome to Breo Mobile! 👋 We have the latest iPhones at the best prices in UAE 🇦🇪. Reply with:<br><br>1️⃣ DEALS — Today's offers<br>2️⃣ PRICE — Full price list<br>3️⃣ ORDER — Buy now<br><br>Or just tell me which iPhone you want!</div></div>
-        <button class="save-btn" style="margin-top:14px;background:var(--green);" onclick="copyGreeting()">Copy Greeting</button>
+        <div class="settings-section-title">📸 Instagram</div>
+        <div class="field-group">
+          <label>Instagram Handle</label>
+          <div class="input-row">
+            <input type="text" id="igHandle" placeholder="@breomobile">
+            <button class="btn-save" onclick="saveSettings()">Save</button>
+          </div>
+        </div>
       </div>
       <div class="settings-card">
-        <h3>📋 Price List Quick Reply</h3>
-        <p class="card-sub">Save this as a Quick Reply with shortcut /price in WhatsApp Business.</p>
-        <div style="background:#0B141A;border-radius:12px;padding:14px;font-size:12px;line-height:1.9;white-space:pre-line;font-family:monospace;color:rgba(255,255,255,0.75);" id="priceListPreview"></div>
-        <button class="save-btn" style="margin-top:14px;background:var(--green);" onclick="copyPriceList()">Copy Price List</button>
-      </div>
-    </div>
-
-    <!-- INSTAGRAM TAB -->
-
-    <div class="tab-content" id="tab-instagram">
-      <div class="sec-title">Instagram Setup</div>
-      <p class="sec-sub">Link your Instagram and follow the daily post guide to drive orders.</p>
-      <div class="settings-card">
-        <h3>📸 Your Instagram Handle</h3>
-        <p class="card-sub">This adds your Instagram link to your website nav and footer.</p>
-        <div class="form-group" style="max-width:320px;">
-          <label>Instagram Username (without @)</label>
-          <input type="text" id="igHandle" placeholder="breomobile.uae">
-        </div>
-        <button class="save-btn" style="margin-top:14px;background:linear-gradient(135deg,#E1306C,#833AB4);" onclick="saveIgHandle()">Save Instagram</button>
-      </div>
-      <div class="settings-card" style="margin-top:20px;">
-        <h3>✍️ Caption Generator</h3>
-        <p class="card-sub">Generate a ready-to-post Instagram caption from your deals:</p>
-        <select id="captionDeal" onchange="genCaption()" style="max-width:300px;margin-bottom:14px;"></select>
-        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.85);white-space:pre-line;font-family:monospace;" id="captionOutput">Select a deal above to generate caption...</div>
-        <button class="save-btn" style="margin-top:14px;background:linear-gradient(135deg,#E1306C,#833AB4);" onclick="copyCaption()">📋 Copy Caption</button>
-      </div>
-      <div class="settings-card" style="margin-top:20px;">
-        <h3>🗓️ Daily Auto-Post Guide</h3>
-        <div class="ig-steps">
-          <div class="ig-step"><div class="step-num">1</div><div class="step-body"><h4>Create Your Video in Canva</h4><p>Go to <a href="https://canva.com" target="_blank">canva.com</a> — search "iPhone sale story" templates. Record or use video clips. Export as MP4. Do 7 versions on Sunday for the whole week.</p><span class="tool-badge">Canva</span><span class="free-badge">FREE</span></div></div>
-          <div class="ig-step"><div class="step-num">2</div><div class="step-body"><h4>Connect to Meta Business Suite</h4><p>Go to <a href="https://business.facebook.com" target="_blank">business.facebook.com</a>, connect your Instagram page, then use the free Content Planner to schedule posts.</p><span class="tool-badge">Meta Business Suite</span><span class="free-badge">FREE</span></div></div>
-          <div class="ig-step"><div class="step-num">3</div><div class="step-body"><h4>Put WhatsApp Link in Bio</h4><p>Edit Profile → Website → paste your WhatsApp link: <code id="bioLinkDisplay">https://wa.me/971500000000</code>. Every post ends with "Link in bio to order".</p></div></div>
-          <div class="ig-step"><div class="step-num">4</div><div class="step-body"><h4>Schedule 7 Days at Once</h4><p>Upload all 7 videos to Meta Suite every Sunday. Set time to 9:00 AM UAE daily. Instagram runs itself all week while you close deals on WhatsApp.</p><span class="tool-badge">30 min / week</span></div></div>
+        <div class="settings-section-title">🔐 Admin Password</div>
+        <div class="field-group">
+          <label>New Password</label>
+          <div class="input-row">
+            <input type="password" id="newPassword" placeholder="Min 4 characters">
+            <button class="btn-save" onclick="changePassword()">Update</button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- VIDEO GENERATOR TAB -->
-
-    <div class="tab-content" id="tab-display">
-      <div class="dc-header">
-        <div>
-          <div class="sec-title">📱 Display Control</div>
-          <p class="sec-sub" style="margin-bottom:0;">Choose which products appear on your store and set their prices.</p>
-        </div>
-        <button class="dc-publish-btn" onclick="saveDisplaySettings()">✅ Save &amp; Publish to Site</button>
-      </div>
-      <div style="background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#60A5FA;">
-        💡 Your store currently shows <strong id="dcActiveCount">0</strong> products. Toggle products on/off and edit prices below — changes go live instantly when you Save.
-      </div>
-      <div class="dc-cat-bar" id="dcCatBar"></div>
-      <div class="dc-prod-list" id="dcProdList"></div>
-      <!-- ADD PRODUCT FORM -->
-      <div class="form-panel" id="addProdForm" style="margin-top:16px;">
-        <h3>➕ Add New Product</h3>
-        <div class="form-row">
-          <div class="form-group"><label>Product Name</label><input type="text" id="apName" placeholder="e.g. iPhone 17 Pro Max"></div>
-          <div class="form-group"><label>Category</label><select id="apCat"><option>iPhone</option><option>MacBook</option><option>iPad</option><option>Watch</option><option>AirPods</option><option>Other</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Emoji</label><select id="apEmoji"><option value="📱">📱 Phone</option><option value="💻">💻 Laptop</option><option value="🖥">🖥 Tablet</option><option value="⌚">⌚ Watch</option><option value="🎧">🎧 Audio</option><option value="✨">✨ New</option></select></div>
-          <div class="form-group"><label>Spec (e.g. 256GB)</label><input type="text" id="apSpec" placeholder="e.g. 256GB"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Price (AED)</label><input type="number" id="apPrice" placeholder="e.g. 6499"></div>
-          <div class="form-group"><label>Badge (optional)</label><input type="text" id="apBadge" placeholder="e.g. NEW"></div>
-        </div>
-        <button class="save-btn" onclick="saveNewProduct()">Add to Store</button>
-        <button class="cancel-btn" onclick="closeAddProdForm()">Cancel</button>
-      </div>
-      <button class="add-prod-btn" id="addProdBtn" onclick="openAddProdForm()">＋ Add New Product (e.g. iPhone 17, custom device)</button>
     </div>
 
   </div><!-- /admin-body -->
 </div><!-- /adminPanel -->
 
-<script>
-// ─── AUTH ───
-const CREDS={user:'admin',pass:'breo2025'};
-function doLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  const p=document.getElementById('loginPass').value.trim();
-  const err=document.getElementById('loginErr');
-  if(u===CREDS.user&&p===CREDS.pass){
-    sessionStorage.setItem('breo_auth','1');
-    err.style.display='none';
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').style.display='block';
-    init();
-  } else {
-    err.style.display='block';err.style.animation='none';
-    requestAnimationFrame(()=>err.style.animation='shake .3s');
-  }
-}
-function doLogout(){sessionStorage.removeItem('breo_auth');location.reload();}
-if(sessionStorage.getItem('breo_auth')==='1'){
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('adminPanel').style.display='block';
-}
-
-// ─── DEALS ───
-const DEFAULT_DEALS=[
-  {emoji:'📱',title:'iPhone 15 Pro Max',price:'3999',old:'4500',offer:'Today Only!',badge:'HOT',grad:'linear-gradient(135deg,#0A84FF,#5856D6)'},
-  {emoji:'✨',title:'iPhone 15 Pro',price:'3299',old:'3800',offer:'Flash Deal',badge:'FLASH',grad:'linear-gradient(135deg,#FF375F,#FF9F0A)'},
-  {emoji:'🎁',title:'iPhone 14 Pro Max',price:'2799',old:'3200',offer:'Bundle Available',badge:'-12%',grad:'linear-gradient(135deg,#34C759,#30B0C7)'},
-  {emoji:'💜',title:'iPhone 14',price:'1999',old:'2400',offer:'In Stock Now',badge:'DEAL',grad:'linear-gradient(135deg,#BF5AF2,#5856D6)'}
-];
-function getDeals(){try{const s=localStorage.getItem('breo_deals');return s?JSON.parse(s):DEFAULT_DEALS;}catch(e){return DEFAULT_DEALS;}}
-function saveDeals(d){localStorage.setItem('breo_deals',JSON.stringify(d));updateStats();}
-let editIdx=-1;let selGrad='linear-gradient(135deg,#0A84FF,#5856D6)';
-function renderDealsAdmin(){
-  const deals=getDeals();
-  document.getElementById('dealsGrid').innerHTML=deals.map((d,i)=>`
-    <div class="deal-card">
-      <div class="deal-card-thumb" style="background:${d.grad}"><span>${d.emoji}</span></div>
-      <div class="deal-card-body">
-        <div class="deal-card-title">${d.title}</div>
-        <div class="deal-card-price">AED ${Number(d.price).toLocaleString()}</div>
-        <div class="deal-card-old">Was AED ${Number(d.old).toLocaleString()}</div>
-        <div class="deal-card-actions">
-          <button class="edit-btn" onclick="openEditForm(${i})">✏️ Edit</button>
-          <button class="del-btn" onclick="deleteDeal(${i})">🗑 Delete</button>
+<!-- ── PRODUCT MODAL ── -->
+<div id="productModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeProductModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Product</h2>
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field-group span2">
+          <label>Product Name *</label>
+          <input type="text" id="fName" placeholder="e.g. iPhone 16 Pro 256GB">
+        </div>
+        <div class="field-group span2">
+          <label>Description</label>
+          <textarea id="fDesc" rows="2" placeholder="Product details, specs, condition..."></textarea>
+        </div>
+        <div class="field-group">
+          <label>Category</label>
+          <select id="fCat">
+            <option>iPhone</option>
+            <option>MacBook</option>
+            <option>iPad</option>
+            <option>Apple Watch</option>
+            <option>AirPods</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Stock Status</label>
+          <select id="fStock">
+            <option value="in_stock">In Stock</option>
+            <option value="limited">Limited</option>
+            <option value="out_of_stock">Out of Stock</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Price (AED) *</label>
+          <input type="number" id="fPrice" placeholder="3999">
+        </div>
+        <div class="field-group">
+          <label>Offer Price (AED)</label>
+          <input type="number" id="fOfferPrice" placeholder="3499 (optional)">
+        </div>
+        <div class="field-group span2">
+          <label>Product Image</label>
+          <input type="file" id="fImage" accept="image/*" style="color:var(--muted)">
+        </div>
+        <div class="field-group span2">
+          <label>Product Video</label>
+          <input type="file" id="fVideo" accept="video/*" style="color:var(--muted)">
+        </div>
+        <div class="field-group span2 toggle-row">
+          <label style="text-transform:none;font-size:14px;font-weight:600;letter-spacing:0;">Publish to website immediately</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="fPublished" checked>
+            <span class="toggle-track"></span>
+          </label>
         </div>
       </div>
-    </div>`).join('');
-  updateStats();populateCaptionSelect();
-}
-function openAddForm(){
-  editIdx=-1;
-  document.getElementById('formTitle').textContent='Add New Deal';
-  document.getElementById('fPrice').value='';document.getElementById('fOld').value='';
-  document.getElementById('fOffer').value='Today Only!';document.getElementById('fBadge').value='HOT';
-  setGrad('linear-gradient(135deg,#0A84FF,#5856D6)');
-  document.getElementById('dealForm').classList.add('open');
-  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
-}
-function openEditForm(i){
-  editIdx=i;const d=getDeals()[i];
-  document.getElementById('formTitle').textContent='Edit Deal';
-  document.getElementById('fModel').value=d.title;document.getElementById('fEmoji').value=d.emoji;
-  document.getElementById('fPrice').value=d.price;document.getElementById('fOld').value=d.old;
-  document.getElementById('fOffer').value=d.offer;document.getElementById('fBadge').value=d.badge;
-  setGrad(d.grad);
-  document.getElementById('dealForm').classList.add('open');
-  document.getElementById('dealForm').scrollIntoView({behavior:'smooth'});
-}
-function closeForm(){document.getElementById('dealForm').classList.remove('open');editIdx=-1;}
-function saveDeal(){
-  const deal={title:document.getElementById('fModel').value,emoji:document.getElementById('fEmoji').value,
-    price:document.getElementById('fPrice').value||'0',old:document.getElementById('fOld').value||'0',
-    offer:document.getElementById('fOffer').value,badge:document.getElementById('fBadge').value,grad:selGrad};
-  const deals=getDeals();
-  if(editIdx>=0){deals[editIdx]=deal;}else{deals.push(deal);}
-  saveDeals(deals);renderDealsAdmin();closeForm();
-  toast('✅ Deal saved! Now live on your site.');
-}
-function deleteDeal(i){
-  if(!confirm('Delete this deal?'))return;
-  const deals=getDeals();deals.splice(i,1);saveDeals(deals);renderDealsAdmin();
-  toast('Deal removed.');
-}
-function setGrad(g){selGrad=g;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('sel',s.dataset.grad===g));}
-document.addEventListener('DOMContentLoaded',function(){
-  const cr=document.getElementById('colorRow');
-  if(cr)cr.addEventListener('click',function(e){const sw=e.target.closest('.color-swatch');if(sw)setGrad(sw.dataset.grad);});
-});
-
-// ─── STATS ───
-function updateStats(){
-  document.getElementById('statDeals').textContent=getDeals().length;
-  const num=localStorage.getItem('breo_wa')||'';
-  document.getElementById('statWa').textContent=num?'+'+num:'Not set';
-  document.getElementById('statWa').style.color=num?'var(--green)':'var(--muted)';
-  const ig=localStorage.getItem('breo_ig')||'';
-  document.getElementById('statIg').textContent=ig?'@'+ig:'Not set';
-  document.getElementById('statIg').style.color=ig?'#E1306C':'var(--muted)';
-  const vid=localStorage.getItem('breo_promo_video')||'';
-  document.getElementById('statVideo').textContent=vid?'Active':'None';
-  document.getElementById('statVideo').style.color=vid?'var(--blue)':'var(--muted)';
-}
-
-</script>
-<div id="igOverlayEl" class="ig-overlay" style="display:none">
-  <div class="ig-overlay-card">
-    <div style="font-size:36px;margin-bottom:10px;">📲</div>
-    <h3>Post to Instagram</h3>
-    <p>Follow these steps to post your video on Instagram:</p>
-    <div class="ig-steps-list">
-      <div>① Click <strong style="color:#34C759;">Download Video</strong> below</div>
-      <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap + → Reel</div>
-      <div>③ Select the downloaded video from gallery</div>
-      <div>④ Add caption &amp; post 🚀</div>
     </div>
-    <button class="ig-overlay-dl" id="igOverlayDlBtn">⬇ Download Video</button>
-    <button class="ig-overlay-open" onclick="window.open('https://www.instagram.com/','_blank');this.closest('.ig-overlay').style.display='none'">Open Instagram.com</button>
-    <button class="ig-overlay-cancel" onclick="this.closest('.ig-overlay').style.display='none'">Cancel</button>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeProductModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProduct()">Save Product</button>
+    </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ── INSTAGRAM OVERLAY ── -->
+<div id="igOverlay" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeIgOverlay()">
+  <div class="modal-box ig-box">
+    <div style="font-size:52px;text-align:center;margin-bottom:12px">📲</div>
+    <h3 style="text-align:center;margin-bottom:6px;font-size:18px;">Post to Instagram</h3>
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px;">Follow these steps to share your video</p>
+    <div class="ig-steps">
+      <div class="ig-step">① Tap <strong>Download Video</strong> below to save to your phone</div>
+      <div class="ig-step">② Open <strong style="color:#E1306C;">Instagram</strong> → tap <strong>+</strong> → choose Reel</div>
+      <div class="ig-step">③ Select the downloaded video from your gallery</div>
+      <div class="ig-step">④ Paste your caption and hashtags → Post 🚀</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button class="btn-primary" style="flex:1" id="igDlBtn">⬇ Download Video</button>
+      <button class="btn-secondary" style="flex:1" onclick="window.open('https://instagram.com','_blank');closeIgOverlay()">Open Instagram</button>
+    </div>
+    <button class="btn-ghost" style="width:100%;margin-top:10px;" onclick="closeIgOverlay()">Cancel</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-function switchTab(name,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');document.getElementById('tab-'+name).classList.add('active');
-}
+'use strict';
 
-// ─── PROMO VIDEO ───
-function savePromoVideo(){
-  const url=document.getElementById('promoVideoUrl').value.trim();
-  if(!url){toast('Please enter a YouTube URL first.');return;}
-  localStorage.setItem('breo_promo_video',url);previewVideo(url);updateStats();
-  toast('🎬 Video saved! Live on your homepage.');
-}
-function clearPromoVideo(){
-  localStorage.removeItem('breo_promo_video');
-  document.getElementById('promoVideoUrl').value='';
-  document.getElementById('videoPreviewWrap').innerHTML='<div class="video-placeholder"><span class="big-icon">🏙️</span><span>Paste a YouTube URL above to preview</span></div>';
-  updateStats();toast('Video removed.');
-}
-function previewVideo(url){
-  const match=url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^?&"'>]+)/);
-  if(match){
-    const vid=match[1];const wrap=document.getElementById('videoPreviewWrap');
-    wrap.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?rel=0" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
-    wrap.style.cssText='position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;margin-top:16px;';
-  } else {toast('Could not read that URL. Make sure it\'s a YouTube link.');}
-}
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const STORE_KEY='breo_products';
+const POSTS_KEY='breo_posts';
+const SETTINGS_KEY='breo_settings';
+let ADMIN_PASS='breo2025';
 
-// ─── WHATSAPP ───
-function saveWaNumber(){
-  const n=document.getElementById('waNumber').value.trim().replace(/\D/g,'');
-  if(!n){toast('Please enter a number first.');return;}
-  localStorage.setItem('breo_wa',n);
-  document.getElementById('waLinkPreview').textContent=`https://wa.me/${n}`;
-  const bioEl=document.getElementById('bioLinkDisplay');if(bioEl)bioEl.textContent=`https://wa.me/${n}`;
-  const confirm=document.getElementById('waSaveConfirm');if(confirm)confirm.style.display='block';
-  updateStats();toast('✅ WhatsApp number saved — checkout is now live!');
-}
-function testWaLink(){
-  const n=localStorage.getItem('breo_wa')||document.getElementById('waNumber').value.trim().replace(/\D/g,'');
-  if(!n){toast('Save a number first.');return;}
-  const msg=encodeURIComponent('Hi Breo Mobile! 👋\n\nThis is a test order:\n\n• iPhone 16 Pro (256GB) x1 = AED 5,199\n\n💰 Total: AED 5,199\n\nPlease confirm availability and delivery details. Thank you!');
-  window.open(`https://wa.me/${n}?text=${msg}`,'_blank');
-}
-function copyWaLink(){
-  const num=localStorage.getItem('breo_wa')||'971500000000';
-  navigator.clipboard.writeText(`https://wa.me/${num}?text=Hi%20I%20want%20to%20buy%20an%20iPhone`).then(()=>toast('📋 WhatsApp link copied!'));
-}
-function buildPriceList(){
-  const deals=getDeals();
-  return `📱 Breo Mobile — Price List\n${'─'.repeat(28)}\n\n${deals.map(d=>`${d.title}\n💰 AED ${Number(d.price).toLocaleString()} (Was ${Number(d.old).toLocaleString()})`).join('\n\n')}\n\n${'─'.repeat(28)}\nAll brand new · Warranty included\nSame-day delivery across UAE 🇦🇪\nReply with the model you want!`;
-}
-function renderWaPreview(){
-  document.getElementById('priceListPreview').textContent=buildPriceList();
-  const num=localStorage.getItem('breo_wa')||'971500000000';
-  document.getElementById('waLinkPreview').textContent=`https://wa.me/${num}`;
-}
-function copyGreeting(){
-  navigator.clipboard.writeText(`Welcome to Breo Mobile! 👋 We have the latest iPhones at the best prices in UAE 🇦🇪. Reply with:\n\n1️⃣ DEALS — Today's offers\n2️⃣ PRICE — Full price list\n3️⃣ ORDER — Buy now\n\nOr just tell me which iPhone you want!`).then(()=>toast('Greeting copied!'));
-}
-function copyPriceList(){navigator.clipboard.writeText(buildPriceList()).then(()=>toast('Price list copied!'));}
-document.addEventListener('DOMContentLoaded',function(){
-  const waInp=document.getElementById('waNumber');
-  if(waInp)waInp.addEventListener('input',function(){
-    const n=this.value.trim().replace(/\D/g,'');
-    document.getElementById('waLinkPreview').textContent=n?`https://wa.me/${n}`:'https://wa.me/...';
-  });
-});
-
-// ─── INSTAGRAM ───
-function saveIgHandle(){
-  const h=document.getElementById('igHandle').value.trim().replace('@','');
-  if(!h){toast('Please enter your Instagram username.');return;}
-  localStorage.setItem('breo_ig',h);updateStats();toast('📸 Instagram handle saved!');
-}
-function populateCaptionSelect(){
-  const sel=document.getElementById('captionDeal');if(!sel)return;
-  const deals=getDeals();
-  sel.innerHTML=deals.map((d,i)=>`<option value="${i}">${d.title}</option>`).join('');
-  genCaption();
-}
-function genCaption(){
-  const selEl=document.getElementById('captionDeal');if(!selEl)return;
-  const i=parseInt(selEl.value);const d=getDeals()[i];if(!d)return;
-  const wa=localStorage.getItem('breo_wa')||'971500000000';
-  const caption=`🔥 ${d.title} — Special Offer Today!\n\n💰 Only AED ${Number(d.price).toLocaleString()} (Was AED ${Number(d.old).toLocaleString()})\n✅ Brand new, sealed box, warranty included\n🚚 Same-day delivery across UAE\n\nDM us or tap link in bio to order on WhatsApp!\n👉 wa.me/${wa}\n\n#iPhone #iPhoneUAE #Dubai #UAEiPhone #DubaiTech #iPhoneDeals #BreoMobile #${d.title.replace(/\s+/g,'')}UAE`;
-  document.getElementById('captionOutput').textContent=caption;
-}
-function copyCaption(){
-  const txt=document.getElementById('captionOutput').textContent;
-  if(txt.includes('Select'))return;
-  navigator.clipboard.writeText(txt).then(()=>toast('Caption copied!'));
-}
-
-// ─── VIDEO GENERATOR ───
-let vgStyle='luxury';let vgVideoBlob=null;
-function setVgStyle(btn){
-  document.querySelectorAll('.vg-style-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');vgStyle=btn.dataset.style;
-  const w2=document.getElementById('wan2Card');
-  if(w2){w2.classList.toggle('show',vgStyle==='wan2');}
-  if(vgStyle==='wan2')updateWan2Prompt();
-}
-
-// ─── INDEXED DB ───────────────────────────────────────────────
-const BreoDB={
+// ── INDEXED DB ────────────────────────────────────────────────────────────────
+const DB={
   _db:null,
   open(){
     if(this._db)return Promise.resolve(this._db);
     return new Promise((res,rej)=>{
-      const req=indexedDB.open('breo-media',1);
-      req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');};
+      const req=indexedDB.open('breo-media',2);
+      req.onupgradeneeded=e=>{
+        const db=e.target.result;
+        if(!db.objectStoreNames.contains('media'))db.createObjectStore('media');
+        if(!db.objectStoreNames.contains('videos'))db.createObjectStore('videos');
+      };
       req.onsuccess=e=>{this._db=e.target.result;res(this._db);};
       req.onerror=rej;
     });
   },
-  async save(id,blob){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').put(blob,id);tx.oncomplete=res;tx.onerror=rej;});},
-  async get(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readonly');const r=tx.objectStore('videos').get(id);r.onsuccess=e=>res(e.target.result);r.onerror=rej;});},
-  async del(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').delete(id);tx.oncomplete=res;tx.onerror=rej;});}
+  async save(id,blob){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction('media','readwrite');
+      tx.objectStore('media').put(blob,id);
+      tx.oncomplete=res;tx.onerror=rej;
+    });
+  },
+  async get(id){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction('media','readonly');
+      const r=tx.objectStore('media').get(id);
+      r.onsuccess=e=>res(e.target.result);r.onerror=rej;
+    });
+  },
+  async del(id){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction('media','readwrite');
+      tx.objectStore('media').delete(id);
+      tx.oncomplete=res;tx.onerror=rej;
+    });
+  }
 };
 
-// ─── POST METADATA ────────────────────────────────────────────
-function getPosts(){try{return JSON.parse(localStorage.getItem('breo_posts')||'[]');}catch(e){return[];}}
-function savePosts(p){localStorage.setItem('breo_posts',JSON.stringify(p));}
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function getProducts(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){return[];}}
+function saveProducts(arr){localStorage.setItem(STORE_KEY,JSON.stringify(arr));}
+function getPosts(){try{return JSON.parse(localStorage.getItem(POSTS_KEY)||'[]');}catch(e){return[];}}
+function savePosts(arr){localStorage.setItem(POSTS_KEY,JSON.stringify(arr));}
+function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');}catch(e){return {};}}
+function saveSettingsData(obj){localStorage.setItem(SETTINGS_KEY,JSON.stringify(obj));}
 
-// ─── UPLOAD ───────────────────────────────────────────────────
-let currentPostBlob=null;
-function handleDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('video/'))loadVideo(f);}
-function handleVideoUpload(input){const f=input.files[0];if(f)loadVideo(f);}
-function loadVideo(file){
-  currentPostBlob=file;
-  const url=URL.createObjectURL(file);
-  document.getElementById('postVideoPreview').src=url;
-  document.getElementById('uploadZone').style.display='none';
-  document.getElementById('postCreatorWrap').style.display='block';
-  if(!document.getElementById('postHashtags').value)
-    document.getElementById('postHashtags').value='#iPhone #Apple #Dubai #BreoMobile #UAEDeals';
-}
-
-// ─── PUBLISH ──────────────────────────────────────────────────
-async function publishPost(){
-  if(!currentPostBlob){toast('Upload a video first.');return;}
-  const caption=document.getElementById('postCaption').value.trim();
-  const product=document.getElementById('postProduct').value.trim();
-  const price=document.getElementById('postPrice').value.trim();
-  const hashtags=document.getElementById('postHashtags').value.trim();
-  if(!product&&!caption){toast('Add a caption or product name.');return;}
-  const id='post_'+Date.now();
-  try{
-    await BreoDB.save(id,currentPostBlob);
-    const posts=getPosts();
-    posts.unshift({id,caption,product,price,hashtags,mimeType:currentPostBlob.type,createdAt:Date.now()});
-    savePosts(posts);
-    toast('✅ Published! Visible on your store now.');
-    updateStats();
-    renderPostsGrid();
-  }catch(e){toast('Error saving: '+e.message);}
-}
-
-// ─── INSTAGRAM SHARE ──────────────────────────────────────────
-async function shareCurrentPostToInstagram(){
-  if(!currentPostBlob){toast('Upload a video first.');return;}
-  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if(isMobile){
-    try{
-      const cap=(document.getElementById('postCaption').value||'')+'
-
-'+(document.getElementById('postHashtags').value||'');
-      const file=new File([currentPostBlob],'breo-post.mp4',{type:'video/mp4'});
-      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({files:[file],title:'Breo Mobile Offer',text:cap.trim()});return;
-      }
-    }catch(e){if(e.name==='AbortError')return;}
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  const err=document.getElementById('loginErr');
+  if(u==='admin'&&p===ADMIN_PASS){
+    sessionStorage.setItem('breo_auth','1');
+    err.style.display='none';
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  }else{
+    err.style.display='block';
+    err.style.animation='none';
+    requestAnimationFrame(()=>{err.style.animation='shake .3s';});
   }
-  showIgOverlay(currentPostBlob);
 }
 
-async function sharePostById(id){
-  const blob=await BreoDB.get(id);
-  if(!blob){toast('Video not found.');return;}
-  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if(isMobile){
-    try{
-      const post=getPosts().find(p=>p.id===id)||{};
-      const cap=(post.caption||'')+'
-
-'+(post.hashtags||'');
-      const file=new File([blob],'breo-post.mp4',{type:'video/mp4'});
-      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-        await navigator.share({files:[file],title:'Breo Mobile Offer',text:cap.trim()});return;
-      }
-    }catch(e){if(e.name==='AbortError')return;}
-  }
-  showIgOverlay(blob);
+function doLogout(){
+  sessionStorage.removeItem('breo_auth');
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
 }
 
-function showIgOverlay(blob){
-  let ov=document.getElementById('igOverlayEl');
-  if(!ov){ov=document.createElement('div');ov.id='igOverlayEl';ov.className='ig-overlay';
-    ov.innerHTML=`<div class="ig-overlay-card">
-      <div style="font-size:36px;margin-bottom:10px;">📲</div>
-      <h3>Post to Instagram</h3>
-      <p>Follow these steps to post your video on Instagram:</p>
-      <div class="ig-steps-list">
-        <div>① Click <strong style="color:#34C759;">Download Video</strong> below</div>
-        <div>② Open <strong style="color:#E1306C;">Instagram</strong> → tap <strong>+</strong> → Reel</div>
-        <div>③ Select the downloaded video</div>
-        <div>④ Add caption &amp; post 🚀</div>
+function changePassword(){
+  const p=document.getElementById('newPassword').value.trim();
+  if(!p||p.length<4){toast('Password must be at least 4 characters');return;}
+  ADMIN_PASS=p;
+  document.getElementById('newPassword').value='';
+  toast('Password updated for this session');
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(name,btn){
+  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tabn').forEach(t=>t.classList.remove('active'));
+  const pane=document.getElementById('tab-'+name);
+  if(pane)pane.classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function updateDashboard(){
+  const prods=getProducts();
+  const posts=getPosts();
+  document.getElementById('st-products').textContent=prods.filter(p=>!p.isOffer).length;
+  document.getElementById('st-offers').textContent=prods.filter(p=>p.isOffer).length;
+  document.getElementById('st-published').textContent=prods.filter(p=>p.published).length;
+  document.getElementById('st-posts').textContent=posts.length;
+  const feed=document.getElementById('activityFeed');
+  const all=[...prods,...posts].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,8);
+  if(!all.length){feed.innerHTML='<div class="empty-state">No activity yet — add your first product!</div>';return;}
+  feed.innerHTML=all.map(item=>`
+    <div class="activity-item">
+      <div class="activity-icon">${item.isOffer?'🎯':item.caption!==undefined?'📲':'📦'}</div>
+      <div class="activity-info">
+        <div class="activity-name">${item.name||item.caption||'Post'}</div>
+        <div class="activity-time">${timeAgo(item.createdAt)}</div>
       </div>
-      <button class="ig-overlay-dl" id="igOverlayDlBtn">⬇ Download Video</button>
-      <button class="ig-overlay-open" onclick="window.open('https://www.instagram.com/','_blank');document.getElementById('igOverlayEl').style.display='none'">Open Instagram.com</button>
-      <button class="ig-overlay-cancel" onclick="document.getElementById('igOverlayEl').style.display='none'">Cancel</button>
-    </div>`;
-    document.body.appendChild(ov);
-    ov.addEventListener('click',e=>{if(e.target===ov)ov.style.display='none';});
-  }
-  document.getElementById('igOverlayDlBtn').onclick=()=>{
+      <span class="${item.published!==false?'badge-live':'badge-draft'}">${item.published!==false?'Live':'Draft'}</span>
+    </div>`).join('');
+}
+
+function timeAgo(d){
+  const m=Math.floor((Date.now()-new Date(d))/60000);
+  if(m<1)return'just now';if(m<60)return m+'m ago';
+  const h=Math.floor(m/60);if(h<24)return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+
+// ── PRODUCTS ──────────────────────────────────────────────────────────────────
+let editingId=null;
+let editingIsOffer=false;
+
+function getCatEmoji(cat){
+  return{iPhone:'📱',MacBook:'💻',iPad:'🖥️','Apple Watch':'⌚',AirPods:'🎧'}[cat]||'📦';
+}
+
+function renderProducts(){
+  const all=getProducts().filter(p=>!p.isOffer);
+  const q=(document.getElementById('productSearch').value||'').toLowerCase();
+  const cat=document.getElementById('productCatFilter').value;
+  const filtered=all.filter(p=>{
+    if(q&&!(p.name||'').toLowerCase().includes(q))return false;
+    if(cat&&p.category!==cat)return false;
+    return true;
+  });
+  const grid=document.getElementById('productsGrid');
+  grid.innerHTML=filtered.length?filtered.map(p=>productCardHTML(p)).join(''):'<div class="empty-state">No products yet — click ＋ Add Product to get started.</div>';
+  loadCardImages(filtered);
+}
+
+function renderOffers(){
+  const offers=getProducts().filter(p=>p.isOffer);
+  const grid=document.getElementById('offersGrid');
+  grid.innerHTML=offers.length?offers.map(p=>productCardHTML(p)).join(''):'<div class="empty-state">No offers yet — click ＋ New Offer to create one.</div>';
+  loadCardImages(offers);
+}
+
+function productCardHTML(p){
+  const stockClass=p.stock==='out_of_stock'?'out':p.stock==='limited'?'limited':'in';
+  const stockLabel=p.stock==='out_of_stock'?'Out of Stock':p.stock==='limited'?'Limited':'In Stock';
+  return`<div class="prod-card">
+    <div class="prod-card-img" id="cimg-${p.id}"><span class="prod-emoji">${getCatEmoji(p.category)}</span></div>
+    <div class="prod-card-body">
+      <div class="prod-card-header">
+        <span class="pub-badge ${p.published?'live':'draft'}">${p.published?'● Live':'○ Draft'}</span>
+        <span class="stock-badge ${stockClass}">${stockLabel}</span>
+      </div>
+      <div class="prod-card-name">${p.name||'Unnamed'}</div>
+      <div class="prod-card-cat">${p.category||''}</div>
+      <div class="prod-card-price">AED ${Number(p.offerPrice||p.price||0).toLocaleString()}
+        ${p.offerPrice?`<span class="prod-old-price">AED ${Number(p.price).toLocaleString()}</span>`:''}
+      </div>
+    </div>
+    <div class="prod-card-actions">
+      <button class="icon-btn" title="Edit" onclick="openEditProduct('${p.id}')">✏️ Edit</button>
+      <button class="icon-btn" title="${p.published?'Unpublish':'Publish'}" onclick="togglePublish('${p.id}')">${p.published?'🚫 Hide':'✅ Show'}</button>
+      <button class="icon-btn del" title="Delete" onclick="deleteProduct('${p.id}')">🗑</button>
+    </div>
+  </div>`;
+}
+
+async function loadCardImages(prods){
+  for(const p of prods){
+    if(!p.imageId)continue;
+    const blob=await DB.get(p.imageId);
+    if(!blob)continue;
+    const el=document.getElementById('cimg-'+p.id);
+    if(!el)continue;
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='breo-post-'+Date.now()+'.mp4';a.click();
+    el.style.backgroundImage=`url(${url})`;
+    el.style.backgroundSize='cover';
+    el.style.backgroundPosition='center';
+    const em=el.querySelector('.prod-emoji');
+    if(em)em.style.display='none';
+  }
+}
+
+function openProductForm(isOffer){
+  editingId=null;
+  editingIsOffer=!!isOffer;
+  document.getElementById('modalTitle').textContent=isOffer?'New Offer':'Add Product';
+  document.getElementById('fName').value='';
+  document.getElementById('fDesc').value='';
+  document.getElementById('fCat').value='iPhone';
+  document.getElementById('fStock').value='in_stock';
+  document.getElementById('fPrice').value='';
+  document.getElementById('fOfferPrice').value='';
+  document.getElementById('fPublished').checked=true;
+  document.getElementById('fImage').value='';
+  document.getElementById('fVideo').value='';
+  document.getElementById('productModal').style.display='flex';
+}
+
+function openEditProduct(id){
+  const p=getProducts().find(x=>x.id===id);
+  if(!p)return;
+  editingId=id;
+  editingIsOffer=!!p.isOffer;
+  document.getElementById('modalTitle').textContent=p.isOffer?'Edit Offer':'Edit Product';
+  document.getElementById('fName').value=p.name||'';
+  document.getElementById('fDesc').value=p.description||'';
+  document.getElementById('fCat').value=p.category||'iPhone';
+  document.getElementById('fStock').value=p.stock||'in_stock';
+  document.getElementById('fPrice').value=p.price||'';
+  document.getElementById('fOfferPrice').value=p.offerPrice||'';
+  document.getElementById('fPublished').checked=p.published!==false;
+  document.getElementById('fImage').value='';
+  document.getElementById('fVideo').value='';
+  document.getElementById('productModal').style.display='flex';
+}
+
+function closeProductModal(){
+  document.getElementById('productModal').style.display='none';
+  editingId=null;
+}
+
+async function saveProduct(){
+  const name=document.getElementById('fName').value.trim();
+  const price=parseFloat(document.getElementById('fPrice').value);
+  if(!name){toast('⚠️ Product name is required');return;}
+  if(!price){toast('⚠️ Price is required');return;}
+  const products=getProducts();
+  const id=editingId||('prod_'+Date.now());
+  const existing=editingId?products.find(p=>p.id===editingId):null;
+  const prod={
+    id,name,
+    description:document.getElementById('fDesc').value.trim(),
+    category:document.getElementById('fCat').value,
+    stock:document.getElementById('fStock').value,
+    price,
+    offerPrice:parseFloat(document.getElementById('fOfferPrice').value)||null,
+    published:document.getElementById('fPublished').checked,
+    isOffer:editingIsOffer,
+    imageId:existing?existing.imageId:null,
+    videoId:existing?existing.videoId:null,
+    createdAt:existing?existing.createdAt:new Date().toISOString()
+  };
+  const imgFile=document.getElementById('fImage').files[0];
+  if(imgFile){
+    const imgId='img_'+id;
+    await DB.save(imgId,imgFile);
+    prod.imageId=imgId;
+  }
+  const vidFile=document.getElementById('fVideo').files[0];
+  if(vidFile){
+    const vidId='vid_'+id;
+    await DB.save(vidId,vidFile);
+    prod.videoId=vidId;
+  }
+  if(editingId){
+    const idx=products.findIndex(p=>p.id===editingId);
+    if(idx!==-1)products[idx]=prod;
+  }else{
+    products.unshift(prod);
+  }
+  saveProducts(products);
+  closeProductModal();
+  renderProducts();
+  renderOffers();
+  updateDashboard();
+  populatePostProductSelect();
+  toast(editingId?'✅ Product updated!':'✅ Product added!');
+}
+
+function togglePublish(id){
+  const products=getProducts();
+  const p=products.find(x=>x.id===id);
+  if(!p)return;
+  p.published=!p.published;
+  saveProducts(products);
+  renderProducts();
+  renderOffers();
+  updateDashboard();
+  toast(p.published?'✅ Published to store':'🚫 Hidden from store');
+}
+
+async function deleteProduct(id){
+  if(!confirm('Delete this product? This cannot be undone.'))return;
+  let products=getProducts();
+  const p=products.find(x=>x.id===id);
+  if(p){
+    if(p.imageId)await DB.del(p.imageId).catch(()=>{});
+    if(p.videoId)await DB.del(p.videoId).catch(()=>{});
+  }
+  products=products.filter(x=>x.id!==id);
+  saveProducts(products);
+  renderProducts();
+  renderOffers();
+  updateDashboard();
+  populatePostProductSelect();
+  toast('🗑 Deleted');
+}
+
+// ── INSTAGRAM POSTS ───────────────────────────────────────────────────────────
+let currentVideoBlob=null;
+let currentVideoId=null;
+
+function handleVideoFile(file){
+  if(!file)return;
+  currentVideoBlob=file;
+  currentVideoId='vid_post_'+Date.now();
+  const zone=document.getElementById('uploadZoneInner');
+  const url=URL.createObjectURL(file);
+  zone.innerHTML=`<video src="${url}" controls muted playsinline style="max-width:100%;max-height:180px;border-radius:10px;pointer-events:auto"></video>
+    <p style="margin-top:8px;font-size:12px;color:var(--muted);">${file.name}</p>
+    <button class="btn-ghost" style="margin-top:8px;font-size:12px;padding:6px 14px;" onclick="clearVideoUpload(event)">✕ Remove</button>`;
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('video/'))handleVideoFile(file);
+}
+
+function clearVideoUpload(e){
+  if(e)e.stopPropagation();
+  currentVideoBlob=null;currentVideoId=null;
+  document.getElementById('uploadZoneInner').innerHTML=`
+    <div class="upload-icon">📹</div>
+    <p>Tap to upload video</p>
+    <p class="upload-sub">MP4 · MOV · up to 100MB</p>`;
+  document.getElementById('postVideoFile').value='';
+}
+
+async function publishPost(){
+  if(!currentVideoBlob){toast('⚠️ Upload a video first');return;}
+  const caption=document.getElementById('postCaption').value.trim();
+  const product=document.getElementById('postProduct').value;
+  const price=document.getElementById('postPrice').value;
+  const hashtags=document.getElementById('postHashtags').value.trim();
+  await DB.save(currentVideoId,currentVideoBlob);
+  const posts=getPosts();
+  posts.unshift({id:currentVideoId,caption,product,price,hashtags,published:true,createdAt:new Date().toISOString()});
+  savePosts(posts);
+  toast('🚀 Post published to store!');
+  document.getElementById('postCaption').value='';
+  document.getElementById('postHashtags').value='';
+  document.getElementById('postPrice').value='';
+  clearVideoUpload(null);
+  renderPostsGrid();
+  updateDashboard();
+}
+
+async function shareToInstagram(){
+  if(!currentVideoBlob){toast('⚠️ Upload a video first');return;}
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile&&navigator.share&&navigator.canShare){
+    try{
+      const file=new File([currentVideoBlob],'breo-post.mp4',{type:'video/mp4'});
+      if(navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'Breo Mobile Offer'});
+        return;
+      }
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  openIgOverlay(currentVideoBlob);
+}
+
+function openIgOverlay(blob){
+  document.getElementById('igOverlay').style.display='flex';
+  document.getElementById('igDlBtn').onclick=()=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='breo-post-'+Date.now()+'.mp4';a.click();
     setTimeout(()=>URL.revokeObjectURL(url),5000);
   };
-  ov.style.display='flex';
 }
 
-// ─── RENDER POSTS GRID ────────────────────────────────────────
+function closeIgOverlay(){
+  document.getElementById('igOverlay').style.display='none';
+}
+
 async function renderPostsGrid(){
   const posts=getPosts();
+  const section=document.getElementById('publishedSection');
   const grid=document.getElementById('postsGrid');
-  const section=document.getElementById('publishedPostsSection');
-  if(!grid)return;
   if(!posts.length){section.style.display='none';return;}
-  section.style.display='block';grid.innerHTML='';
+  section.style.display='block';
+  grid.innerHTML='';
   for(const post of posts){
-    const card=document.createElement('div');card.className='post-card';
-    const blob=await BreoDB.get(post.id);
+    const card=document.createElement('div');
+    card.className='post-mini-card';
+    const blob=await DB.get(post.id);
     const vurl=blob?URL.createObjectURL(blob):'';
-    card.innerHTML=`
-      <div class="post-card-video-wrap" onclick="togglePostVideo(this)">
-        ${vurl?`<video src="${vurl}" playsinline muted loop></video><div class="post-card-play">▶</div>`:'<div style="height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:12px;">No video</div>'}
-      </div>
-      <div class="post-card-meta">
-        ${post.product?`<div class="post-card-product">${post.product}</div>`:''}
-        ${post.price?`<div class="post-card-price">AED ${Number(post.price).toLocaleString()}</div>`:''}
-      </div>
-      <div class="post-card-actions">
-        <button class="post-card-ig" onclick="sharePostById('${post.id}')">📲 Share</button>
-        <button class="post-card-del" onclick="deletePost('${post.id}')">🗑️</button>
+    card.innerHTML=vurl
+      ?`<video src="${vurl}" muted loop playsinline style="width:100%;display:block;cursor:pointer" onclick="this.paused?this.play():this.pause()"></video>`
+      :'<div class="no-video">No video</div>';
+    card.innerHTML+=`<div class="post-mini-caption">${post.caption||'No caption'}</div>
+      <div class="post-mini-actions">
+        <button class="btn-sm-ig" onclick="sharePostById('${post.id}')">📲 Share</button>
+        <button class="btn-sm-del" onclick="deletePost('${post.id}')">🗑</button>
       </div>`;
     grid.appendChild(card);
   }
 }
-function togglePostVideo(wrap){
-  const v=wrap.querySelector('video');if(!v)return;
-  const pi=wrap.querySelector('.post-card-play');
-  if(v.paused){v.play();if(pi)pi.style.display='none';}else{v.pause();if(pi)pi.style.display='flex';}
-}
-async function deletePost(id){
-  if(!confirm('Delete this post? It will be removed from the store too.'))return;
-  await BreoDB.del(id);
-  savePosts(getPosts().filter(p=>p.id!==id));
-  toast('Post deleted.');renderPostsGrid();updateStats();
-}
 
-// ─── UPDATE STATS ─────────────────────────────────────────────
-function updateStats(){
-  const deals=JSON.parse(localStorage.getItem('breo_deals')||'[]');
-  const el=document.getElementById('statDeals');if(el)el.textContent=deals.filter(d=>d.on!==false).length||deals.length;
-  const wa=localStorage.getItem('breo_wa');const wel=document.getElementById('statWa');if(wel)wel.textContent=wa?'+'+wa:'Not set';
-  const ig=localStorage.getItem('breo_ig');const iel=document.getElementById('statIg');if(iel)iel.textContent=ig?'@'+ig:'Not set';
-  const posts=getPosts();const pel=document.getElementById('statVideo');if(pel)pel.textContent=posts.length?posts.length+' post'+(posts.length>1?'s':''):'None';
-}
-
-
-// ─── INIT ────────────────────────────────────────────────────
-window.addEventListener('load',()=>{
-  if(sessionStorage.getItem('breo_auth')==='1'){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').style.display='block';
-    init();
+async function sharePostById(id){
+  const blob=await DB.get(id);
+  if(!blob){toast('Video not found');return;}
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile&&navigator.share&&navigator.canShare){
+    try{
+      const file=new File([blob],'breo-post.mp4',{type:'video/mp4'});
+      if(navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'Breo Mobile Offer'});
+        return;
+      }
+    }catch(e){if(e.name==='AbortError')return;}
   }
-});
-function init(){
-  updateStats();
-  renderDealsAdmin();
-  renderDcPanel();
+  openIgOverlay(blob);
+}
+
+async function deletePost(id){
+  if(!confirm('Delete this post?'))return;
+  await DB.del(id).catch(()=>{});
+  savePosts(getPosts().filter(p=>p.id!==id));
   renderPostsGrid();
-  const wa=localStorage.getItem('breo_wa');if(wa){document.getElementById('waNumber').value=wa;}
-  const ig=localStorage.getItem('breo_ig');if(ig){document.getElementById('igHandle').value=ig;}
-  const ds=localStorage.getItem('breo_display');
-  if(ds){try{dcSettings=JSON.parse(ds);}catch(e){}}
-  // Populate caption deal select
-  const sel=document.getElementById('captionDeal');
-  if(sel){const deals=JSON.parse(localStorage.getItem('breo_deals')||'[]');sel.innerHTML='<option value="">— Select a deal —</option>';deals.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.model+' · AED '+d.price;sel.appendChild(o);});}
-  const bioEl=document.getElementById('bioLinkDisplay');const waNum=localStorage.getItem('breo_wa');if(bioEl&&waNum)bioEl.textContent='https://wa.me/'+waNum;
+  updateDashboard();
+  toast('🗑 Deleted');
 }
 
-// ─── DISPLAY CONTROL ───
-// ─── CUSTOM PRODUCTS ───
-function getCustomProducts(){try{const s=localStorage.getItem('breo_custom_products');return s?JSON.parse(s):[];}catch(e){return [];}}
-function openAddProdForm(){
-  document.getElementById('addProdForm').classList.add('open');
-  document.getElementById('addProdBtn').style.display='none';
-  document.getElementById('addProdForm').scrollIntoView({behavior:'smooth'});
-}
-function closeAddProdForm(){
-  document.getElementById('addProdForm').classList.remove('open');
-  document.getElementById('addProdBtn').style.display='flex';
-}
-function saveNewProduct(){
-  const name=document.getElementById('apName').value.trim();
-  const cat=document.getElementById('apCat').value;
-  const emoji=document.getElementById('apEmoji').value;
-  const spec=document.getElementById('apSpec').value.trim()||'—';
-  const price=parseInt(document.getElementById('apPrice').value)||0;
-  const badge=document.getElementById('apBadge').value.trim();
-  if(!name){toast('Please enter a product name.');return;}
-  const custom=getCustomProducts();
-  const id='c'+Date.now();
-  custom.push({id,cat,emoji,name,spec,defaultPrice:price,badge,custom:true});
-  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
-  const settings=getDcSettings();
-  settings[id]={on:true,price};
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  ['apName','apSpec','apBadge'].forEach(k=>document.getElementById(k).value='');
-  document.getElementById('apPrice').value='';
-  closeAddProdForm();renderDcPanel();
-  toast(name+' added to your store!');
-}
-function deleteCustomProduct(id){
-  if(!confirm('Remove this product from store?'))return;
-  let custom=getCustomProducts();
-  const name=custom.find(p=>p.id===id)?.name||'Product';
-  custom=custom.filter(p=>p.id!==id);
-  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
-  const settings=getDcSettings();delete settings[id];
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  renderDcPanel();toast(name+' removed.');
+// ── SETTINGS ──────────────────────────────────────────────────────────────────
+function loadSettings(){
+  const s=getSettings();
+  if(s.waNumber)document.getElementById('waNumber').value=s.waNumber;
+  if(s.igHandle)document.getElementById('igHandle').value=s.igHandle;
 }
 
-// ─── DISPLAY CONTROL ───
-const DC_PRODUCTS=[
-  {id:1,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro Max',spec:'256GB',defaultPrice:5999,badge:'NEW'},
-  {id:2,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro',spec:'256GB',defaultPrice:5199,badge:'NEW'},
-  {id:3,cat:'iPhone',emoji:'📱',name:'iPhone 15 Pro Max',spec:'256GB',defaultPrice:4499,badge:''},
-  {id:4,cat:'iPhone',emoji:'📱',name:'iPhone 15',spec:'128GB',defaultPrice:2799,badge:''},
-  {id:5,cat:'iPhone',emoji:'📱',name:'iPhone 14 Pro Max',spec:'256GB',defaultPrice:3799,badge:''},
-  {id:6,cat:'iPhone',emoji:'📱',name:'iPhone 14',spec:'128GB',defaultPrice:2299,badge:''},
-  {id:7,cat:'iPhone',emoji:'📱',name:'iPhone 13',spec:'128GB',defaultPrice:1799,badge:''},
-  {id:8,cat:'iPhone',emoji:'📱',name:'iPhone SE',spec:'64GB',defaultPrice:1299,badge:''},
-  {id:9,cat:'MacBook',emoji:'💻',name:'MacBook Air M3',spec:'8GB 256GB',defaultPrice:4299,badge:'NEW'},
-  {id:10,cat:'MacBook',emoji:'💻',name:'MacBook Pro M3',spec:'16GB 512GB',defaultPrice:7299,badge:''},
-  {id:11,cat:'iPad',emoji:'🖥',name:'iPad Pro M4',spec:'256GB Wi-Fi',defaultPrice:2899,badge:'NEW'},
-  {id:12,cat:'iPad',emoji:'🖥',name:'iPad Air M2',spec:'128GB Wi-Fi',defaultPrice:1999,badge:''},
-  {id:13,cat:'Watch',emoji:'⌚',name:'Apple Watch Series 10',spec:'GPS 46mm',defaultPrice:1599,badge:'NEW'},
-  {id:14,cat:'Watch',emoji:'⌚',name:'Apple Watch Ultra 2',spec:'GPS+Cell',defaultPrice:3499,badge:''},
-  {id:15,cat:'AirPods',emoji:'🎧',name:'AirPods Pro 2',spec:'USB-C',defaultPrice:999,badge:''},
-  {id:16,cat:'AirPods',emoji:'🎧',name:'AirPods Max',spec:'USB-C',defaultPrice:2299,badge:''},
-];
-function getDcSettings(){
-  try{const s=localStorage.getItem('breo_display');if(s)return JSON.parse(s);}catch(e){}
-  const def={};DC_PRODUCTS.forEach(p=>{def[p.id]={on:p.cat==='iPhone',price:p.defaultPrice};});return def;
-}
-function getAllDcProducts(){return [...DC_PRODUCTS,...getCustomProducts()];}
-function renderDcPanel(){
-  const settings=getDcSettings();
-  const allProds=getAllDcProducts();
-  const cats=[...new Set(allProds.map(p=>p.cat))];
-  const catBar=document.getElementById('dcCatBar');
-  const list=document.getElementById('dcProdList');
-  if(!catBar||!list)return;
-  catBar.innerHTML=cats.map(cat=>{
-    const anyOn=allProds.filter(p=>p.cat===cat).some(p=>settings[p.id]?.on);
-    const em=cat==='iPhone'?'📱':cat==='MacBook'?'💻':cat==='iPad'?'🖥':cat==='Watch'?'⌚':cat==='AirPods'?'🎧':'📦';
-    return '<div class="dc-cat-toggle'+(anyOn?' on':'')+'" onclick="dcToggleCat(\''+cat+'\',this)">'+em+' '+cat+'</div>';
-  }).join('');
-  list.innerHTML=allProds.map(p=>{
-    const cfg=settings[p.id]||{on:false,price:p.defaultPrice};
-    const delBtn=p.custom?'<button class="del-custom-btn" onclick="deleteCustomProduct(\''+p.id+'\')">✕ Remove</button>':'<span></span>';
-    const custLabel=p.custom?' <span style="font-size:10px;color:#34C759;background:rgba(52,199,89,.12);padding:1px 6px;border-radius:4px;">Custom</span>':'';
-    return '<div class="dc-prod-row'+(cfg.on?'':' off')+'" id="dcrow-'+p.id+'">'+
-      '<div class="dc-prod-emoji">'+p.emoji+'</div>'+
-      '<div class="dc-prod-info"><div class="dc-prod-name">'+p.name+custLabel+'</div><div class="dc-prod-cat">'+p.cat+' · '+p.spec+'</div></div>'+
-      (p.badge?'<span class="dc-badge">'+p.badge+'</span>':delBtn)+
-      '<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--muted);">AED</span>'+
-      '<input class="dc-price-input" id="dcprice-'+p.id+'" type="number" value="'+cfg.price+'" onchange="dcPriceChange(\''+p.id+'\',this.value)">'+
-      '</div><label class="dc-toggle"><input type="checkbox" id="dctoggle-'+p.id+'" '+(cfg.on?'checked':'')+' onchange="dcToggleProd(\''+p.id+'\',this.checked)">'+
-      '<span class="dc-toggle-slider"></span></label></div>';
-  }).join('');
-  updateDcCount(settings);
-}
-function dcToggleProd(id,on){
-  const settings=getDcSettings();
-  const allP=getAllDcProducts();
-  if(!settings[id])settings[id]={on:false,price:allP.find(p=>String(p.id)===String(id))?.defaultPrice||0};
-  settings[id].on=on;
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  const row=document.getElementById('dcrow-'+id);if(row)row.classList.toggle('off',!on);
-  updateDcCount(settings);
-}
-function dcPriceChange(id,val){
-  const settings=getDcSettings();
-  if(!settings[id])settings[id]={on:true,price:0};
-  settings[id].price=parseInt(val)||0;
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-}
-function dcToggleCat(cat,el){
-  const settings=getDcSettings();
-  const catProds=getAllDcProducts().filter(p=>p.cat===cat);
-  const anyOn=catProds.some(p=>settings[p.id]?.on);
-  const newState=!anyOn;
-  catProds.forEach(p=>{
-    if(!settings[p.id])settings[p.id]={on:newState,price:p.defaultPrice};
-    settings[p.id].on=newState;
-    const cb=document.getElementById('dctoggle-'+p.id);if(cb)cb.checked=newState;
-    const row=document.getElementById('dcrow-'+p.id);if(row)row.classList.toggle('off',!newState);
-  });
-  el.classList.toggle('on',newState);
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  updateDcCount(settings);
-}
-function updateDcCount(settings){
-  const count=Object.values(settings).filter(v=>v.on).length;
-  const el=document.getElementById('dcActiveCount');if(el)el.textContent=count;
-}
-function saveDisplaySettings(){
-  const settings=getDcSettings();
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  const count=Object.values(settings).filter(v=>v.on).length;
-  toast(count+' products now live on your store!');
+function saveSettings(){
+  const s=getSettings();
+  s.waNumber=document.getElementById('waNumber').value.trim();
+  s.igHandle=document.getElementById('igHandle').value.trim();
+  saveSettingsData(s);
+  // Also save to legacy keys for store.html compat
+  if(s.waNumber)localStorage.setItem('breo_wa',s.waNumber.replace(/\D/g,''));
+  if(s.igHandle)localStorage.setItem('breo_ig',s.igHandle.replace('@',''));
+  toast('✅ Settings saved!');
 }
 
-// ─── TOAST ───
+function populatePostProductSelect(){
+  const sel=document.getElementById('postProduct');
+  const prods=getProducts().filter(p=>p.published);
+  sel.innerHTML='<option value="">— None —</option>'+prods.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-// ─── INIT ───
-function init(){
-  renderDealsAdmin();renderWaPreview();
-  const waNum=localStorage.getItem('breo_wa');
-  if(waNum){document.getElementById('waNumber').value=waNum;const c=document.getElementById('waSaveConfirm');if(c)c.style.display='block';}
-  const igH=localStorage.getItem('breo_ig');
-  if(igH)document.getElementById('igHandle').value=igH;
-  const vid=localStorage.getItem('breo_promo_video');
-  renderDcPanel();
-  // Restore wan2 key
-  const w2k=localStorage.getItem('breo_fal_key');
-  if(w2k){
-    const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
-    const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
-    if(setup&&saved){setup.style.display='none';saved.style.display='flex';}
-  }
-  if(cv){
-    const cx=cv.getContext('2d');
-    cx.fillStyle='#0d0d1a';cx.fillRect(0,0,cv.width,cv.height);
-    cx.font='48px serif';cx.textAlign='center';cx.fillText('🎬',cv.width/2,cv.height/2-20);
-    cx.font='700 16px Inter,sans-serif';cx.fillStyle='rgba(167,139,250,0.4)';
-    cx.fillText('Select style & Generate',cv.width/2,cv.height/2+30);
-  }
-  updateStats();
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function initAdmin(){
+  updateDashboard();
+  renderProducts();
+  renderOffers();
+  renderPostsGrid();
+  loadSettings();
+  populatePostProductSelect();
 }
-function saveDisplaySettings(){
-  const settings=getDcSettings();
-  localStorage.setItem('breo_display',JSON.stringify(settings));
-  const count=Object.values(settings).filter(v=>v.on).length;
-  toast(count+' products now live on your store!');
-}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  if(sessionStorage.getItem('breo_auth')==='1'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  }
+  document.getElementById('loginPass').addEventListener('keypress',e=>{
+    if(e.key==='Enter')doLogin();
+  });
+  document.getElementById('loginUser').addEventListener('keypress',e=>{
+    if(e.key==='Enter')document.getElementById('loginPass').focus();
+  });
+});
 </script>
 </body>
 </html>
