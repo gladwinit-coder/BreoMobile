@@ -984,6 +984,181 @@ function init(){
   if(sel){const deals=JSON.parse(localStorage.getItem('breo_deals')||'[]');sel.innerHTML='<option value="">— Select a deal —</option>';deals.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.model+' · AED '+d.price;sel.appendChild(o);});}
   const bioEl=document.getElementById('bioLinkDisplay');const waNum=localStorage.getItem('breo_wa');if(bioEl&&waNum)bioEl.textContent='https://wa.me/'+waNum;
 }
+
+// ─── DISPLAY CONTROL ───
+// ─── CUSTOM PRODUCTS ───
+function getCustomProducts(){try{const s=localStorage.getItem('breo_custom_products');return s?JSON.parse(s):[];}catch(e){return [];}}
+function openAddProdForm(){
+  document.getElementById('addProdForm').classList.add('open');
+  document.getElementById('addProdBtn').style.display='none';
+  document.getElementById('addProdForm').scrollIntoView({behavior:'smooth'});
+}
+function closeAddProdForm(){
+  document.getElementById('addProdForm').classList.remove('open');
+  document.getElementById('addProdBtn').style.display='flex';
+}
+function saveNewProduct(){
+  const name=document.getElementById('apName').value.trim();
+  const cat=document.getElementById('apCat').value;
+  const emoji=document.getElementById('apEmoji').value;
+  const spec=document.getElementById('apSpec').value.trim()||'—';
+  const price=parseInt(document.getElementById('apPrice').value)||0;
+  const badge=document.getElementById('apBadge').value.trim();
+  if(!name){toast('Please enter a product name.');return;}
+  const custom=getCustomProducts();
+  const id='c'+Date.now();
+  custom.push({id,cat,emoji,name,spec,defaultPrice:price,badge,custom:true});
+  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
+  const settings=getDcSettings();
+  settings[id]={on:true,price};
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  ['apName','apSpec','apBadge'].forEach(k=>document.getElementById(k).value='');
+  document.getElementById('apPrice').value='';
+  closeAddProdForm();renderDcPanel();
+  toast(name+' added to your store!');
+}
+function deleteCustomProduct(id){
+  if(!confirm('Remove this product from store?'))return;
+  let custom=getCustomProducts();
+  const name=custom.find(p=>p.id===id)?.name||'Product';
+  custom=custom.filter(p=>p.id!==id);
+  localStorage.setItem('breo_custom_products',JSON.stringify(custom));
+  const settings=getDcSettings();delete settings[id];
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  renderDcPanel();toast(name+' removed.');
+}
+
+// ─── DISPLAY CONTROL ───
+const DC_PRODUCTS=[
+  {id:1,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro Max',spec:'256GB',defaultPrice:5999,badge:'NEW'},
+  {id:2,cat:'iPhone',emoji:'📱',name:'iPhone 16 Pro',spec:'256GB',defaultPrice:5199,badge:'NEW'},
+  {id:3,cat:'iPhone',emoji:'📱',name:'iPhone 15 Pro Max',spec:'256GB',defaultPrice:4499,badge:''},
+  {id:4,cat:'iPhone',emoji:'📱',name:'iPhone 15',spec:'128GB',defaultPrice:2799,badge:''},
+  {id:5,cat:'iPhone',emoji:'📱',name:'iPhone 14 Pro Max',spec:'256GB',defaultPrice:3799,badge:''},
+  {id:6,cat:'iPhone',emoji:'📱',name:'iPhone 14',spec:'128GB',defaultPrice:2299,badge:''},
+  {id:7,cat:'iPhone',emoji:'📱',name:'iPhone 13',spec:'128GB',defaultPrice:1799,badge:''},
+  {id:8,cat:'iPhone',emoji:'📱',name:'iPhone SE',spec:'64GB',defaultPrice:1299,badge:''},
+  {id:9,cat:'MacBook',emoji:'💻',name:'MacBook Air M3',spec:'8GB 256GB',defaultPrice:4299,badge:'NEW'},
+  {id:10,cat:'MacBook',emoji:'💻',name:'MacBook Pro M3',spec:'16GB 512GB',defaultPrice:7299,badge:''},
+  {id:11,cat:'iPad',emoji:'🖥',name:'iPad Pro M4',spec:'256GB Wi-Fi',defaultPrice:2899,badge:'NEW'},
+  {id:12,cat:'iPad',emoji:'🖥',name:'iPad Air M2',spec:'128GB Wi-Fi',defaultPrice:1999,badge:''},
+  {id:13,cat:'Watch',emoji:'⌚',name:'Apple Watch Series 10',spec:'GPS 46mm',defaultPrice:1599,badge:'NEW'},
+  {id:14,cat:'Watch',emoji:'⌚',name:'Apple Watch Ultra 2',spec:'GPS+Cell',defaultPrice:3499,badge:''},
+  {id:15,cat:'AirPods',emoji:'🎧',name:'AirPods Pro 2',spec:'USB-C',defaultPrice:999,badge:''},
+  {id:16,cat:'AirPods',emoji:'🎧',name:'AirPods Max',spec:'USB-C',defaultPrice:2299,badge:''},
+];
+function getDcSettings(){
+  try{const s=localStorage.getItem('breo_display');if(s)return JSON.parse(s);}catch(e){}
+  const def={};DC_PRODUCTS.forEach(p=>{def[p.id]={on:p.cat==='iPhone',price:p.defaultPrice};});return def;
+}
+function getAllDcProducts(){return [...DC_PRODUCTS,...getCustomProducts()];}
+function renderDcPanel(){
+  const settings=getDcSettings();
+  const allProds=getAllDcProducts();
+  const cats=[...new Set(allProds.map(p=>p.cat))];
+  const catBar=document.getElementById('dcCatBar');
+  const list=document.getElementById('dcProdList');
+  if(!catBar||!list)return;
+  catBar.innerHTML=cats.map(cat=>{
+    const anyOn=allProds.filter(p=>p.cat===cat).some(p=>settings[p.id]?.on);
+    const em=cat==='iPhone'?'📱':cat==='MacBook'?'💻':cat==='iPad'?'🖥':cat==='Watch'?'⌚':cat==='AirPods'?'🎧':'📦';
+    return '<div class="dc-cat-toggle'+(anyOn?' on':'')+'" onclick="dcToggleCat(\''+cat+'\',this)">'+em+' '+cat+'</div>';
+  }).join('');
+  list.innerHTML=allProds.map(p=>{
+    const cfg=settings[p.id]||{on:false,price:p.defaultPrice};
+    const delBtn=p.custom?'<button class="del-custom-btn" onclick="deleteCustomProduct(\''+p.id+'\')">✕ Remove</button>':'<span></span>';
+    const custLabel=p.custom?' <span style="font-size:10px;color:#34C759;background:rgba(52,199,89,.12);padding:1px 6px;border-radius:4px;">Custom</span>':'';
+    return '<div class="dc-prod-row'+(cfg.on?'':' off')+'" id="dcrow-'+p.id+'">'+
+      '<div class="dc-prod-emoji">'+p.emoji+'</div>'+
+      '<div class="dc-prod-info"><div class="dc-prod-name">'+p.name+custLabel+'</div><div class="dc-prod-cat">'+p.cat+' · '+p.spec+'</div></div>'+
+      (p.badge?'<span class="dc-badge">'+p.badge+'</span>':delBtn)+
+      '<div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--muted);">AED</span>'+
+      '<input class="dc-price-input" id="dcprice-'+p.id+'" type="number" value="'+cfg.price+'" onchange="dcPriceChange(\''+p.id+'\',this.value)">'+
+      '</div><label class="dc-toggle"><input type="checkbox" id="dctoggle-'+p.id+'" '+(cfg.on?'checked':'')+' onchange="dcToggleProd(\''+p.id+'\',this.checked)">'+
+      '<span class="dc-toggle-slider"></span></label></div>';
+  }).join('');
+  updateDcCount(settings);
+}
+function dcToggleProd(id,on){
+  const settings=getDcSettings();
+  const allP=getAllDcProducts();
+  if(!settings[id])settings[id]={on:false,price:allP.find(p=>String(p.id)===String(id))?.defaultPrice||0};
+  settings[id].on=on;
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  const row=document.getElementById('dcrow-'+id);if(row)row.classList.toggle('off',!on);
+  updateDcCount(settings);
+}
+function dcPriceChange(id,val){
+  const settings=getDcSettings();
+  if(!settings[id])settings[id]={on:true,price:0};
+  settings[id].price=parseInt(val)||0;
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+}
+function dcToggleCat(cat,el){
+  const settings=getDcSettings();
+  const catProds=getAllDcProducts().filter(p=>p.cat===cat);
+  const anyOn=catProds.some(p=>settings[p.id]?.on);
+  const newState=!anyOn;
+  catProds.forEach(p=>{
+    if(!settings[p.id])settings[p.id]={on:newState,price:p.defaultPrice};
+    settings[p.id].on=newState;
+    const cb=document.getElementById('dctoggle-'+p.id);if(cb)cb.checked=newState;
+    const row=document.getElementById('dcrow-'+p.id);if(row)row.classList.toggle('off',!newState);
+  });
+  el.classList.toggle('on',newState);
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  updateDcCount(settings);
+}
+function updateDcCount(settings){
+  const count=Object.values(settings).filter(v=>v.on).length;
+  const el=document.getElementById('dcActiveCount');if(el)el.textContent=count;
+}
+function saveDisplaySettings(){
+  const settings=getDcSettings();
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  const count=Object.values(settings).filter(v=>v.on).length;
+  toast(count+' products now live on your store!');
+}
+}
+
+// ─── TOAST ───
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ─── INIT ───
+function init(){
+  renderDealsAdmin();renderWaPreview();
+  const waNum=localStorage.getItem('breo_wa');
+  if(waNum){document.getElementById('waNumber').value=waNum;const c=document.getElementById('waSaveConfirm');if(c)c.style.display='block';}
+  const igH=localStorage.getItem('breo_ig');
+  if(igH)document.getElementById('igHandle').value=igH;
+  const vid=localStorage.getItem('breo_promo_video');
+  renderDcPanel();
+  // Restore wan2 key
+  const w2k=localStorage.getItem('breo_fal_key');
+  if(w2k){
+    const ki=document.getElementById('wan2ApiKey');if(ki)ki.value=w2k;
+    const setup=document.getElementById('wan2KeySetup');const saved=document.getElementById('wan2KeySaved');
+    if(setup&&saved){setup.style.display='none';saved.style.display='flex';}
+  }
+  if(cv){
+    const cx=cv.getContext('2d');
+    cx.fillStyle='#0d0d1a';cx.fillRect(0,0,cv.width,cv.height);
+    cx.font='48px serif';cx.textAlign='center';cx.fillText('🎬',cv.width/2,cv.height/2-20);
+    cx.font='700 16px Inter,sans-serif';cx.fillStyle='rgba(167,139,250,0.4)';
+    cx.fillText('Select style & Generate',cv.width/2,cv.height/2+30);
+  }
+  updateStats();
+}
+function saveDisplaySettings(){
+  const settings=getDcSettings();
+  localStorage.setItem('breo_display',JSON.stringify(settings));
+  const count=Object.values(settings).filter(v=>v.on).length;
+  toast(count+' products now live on your store!');
+}
 </script>
 </body>
 </html>
